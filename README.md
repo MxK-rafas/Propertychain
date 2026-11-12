@@ -15,7 +15,7 @@ Cadastro de impressão digital de documentos e consulta pública no celular. **M
 
 Proprietários e herdeiros têm dificuldade de apresentar documentos de imóveis antigos; compradores e corretores precisam conferir sua origem. Esta versão permite cadastrar o hash de um arquivo na Solana Devnet e consultar esse registro sem carteira, inclusive em outro celular.
 
-O caminho tem quatro telas: **cadastrar documento → validação simulada pelo cartório → verificar documento → resultado**. Há um único botão principal em cada tela. O resultado distingue registro real na rede de testes, comparação exata de arquivo e informações fictícias.
+O app começa com uma entrada demonstrativa por perfil (proprietário, comprador/verificador ou cartório), sem autenticação. O percurso mantém quatro telas: **cadastrar documento → validação simulada pelo cartório → verificar documento → resultado**. Há um único botão principal em cada tela. O resultado distingue registro real na rede de testes, comparação exata de arquivo e informações fictícias.
 
 O autor definiu meta de **1–5 segundos para consultar uma transação já confirmada**, quando possível. Assinar na carteira e confirmar uma nova transação são tempos separados, dependentes da pessoa e da rede; não há garantia de cinco segundos para o processo inteiro.
 

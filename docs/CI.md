@@ -1,4 +1,4 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e nove testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
 
 # Integração contínua e limites da evidência
 
@@ -6,7 +6,7 @@ O workflow [.github/workflows/ci.yml](../.github/workflows/ci.yml) mantém o job
 
 O código Solidity permanece preservado. Esse job testa somente o legado Hardhat, **não** Phantom, Solana, Memo, velocidade de consulta ou publicação Vercel. Não é critério suficiente de entrega do MVP atual.
 
-O job Frontend (telas e arquivo local) executa npm ci, seis testes e npm run build (incluindo TypeScript), usando frontend/package-lock.json. Os testes novos devem usar arquivos fictícios; nunca anexar foto real a Actions ou artefatos.
+O job Frontend (telas e arquivo local) executa npm ci, nove testes e npm run build (incluindo TypeScript), usando frontend/package-lock.json. Os testes novos devem usar arquivos fictícios; nunca anexar foto real a Actions ou artefatos.
 
 ## Reproduzir o legado (opcional)
 

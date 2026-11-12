@@ -18,3 +18,16 @@
 .error-message{font-size:14px;line-height:1.6;color:#8a302b;border-left:3px solid currentColor;padding-left:12px}
 .guide-note{max-width:350px}.demo-banner{font-weight:600}.result-origin small{line-height:1.6}
 @media(max-width:700px){.file-label,.text-link,.text-button{font-size:16px}.file-help{font-size:13px}.app-footer p{font-size:11px}.prototype-tag{font-size:8px}}
+
+/* Entrada por perfil: seleção demonstrativa, sem autenticação. */
+.profile-options{border:0;padding:0;margin:20px 0;display:grid;gap:12px;min-width:0}
+.profile-option{display:flex;align-items:center;gap:10px;padding:16px 12px;background:white;border:1px solid var(--line);border-radius:13px;cursor:pointer}
+.profile-option:has(input:checked){background:#edf3e7;border-color:#839e70}
+.profile-option:focus-within{outline:3px solid #8aab72;outline-offset:3px}
+.profile-option input{width:18px;height:18px;accent-color:var(--green);flex-shrink:0;margin:0}
+.profile-option svg{width:20px;height:20px;color:#6e865c}
+.profile-option strong{font-size:15px;font-weight:600;display:block;line-height:1.4}
+.profile-option small{font-size:12px;color:var(--muted);line-height:1.6;display:block;margin-top:4px}
+.switch-profile{font-size:12px;margin:0 auto 8px;padding:3px 8px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;border:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:700px){.profile-option strong{font-size:16px}.profile-option small{font-size:14px}.switch-profile{font-size:14px}}

@@ -16,7 +16,17 @@ O autor pediu um modelo fictício e fornecerá uma foto de documento real para t
 
 ## O que o app faz (tela por tela)
 
-Manter quatro telas, um objetivo e um botão principal em cada uma. Voltar, escolher arquivo, abrir explorador e compartilhar link são controles secundários. Estados de carteira, espera e erro aparecem dentro dessas telas.
+Manter uma tela inicial de seleção de perfil e as quatro telas do percurso, com um objetivo e um botão principal em cada uma. Voltar, escolher arquivo, abrir explorador e compartilhar link são controles secundários. Estados de carteira, espera e erro aparecem dentro dessas telas.
+
+### Entrada — escolher perfil (demonstração)
+
+Acrescentada por pedido do autor após testar o app. Ao abrir a URL sem rota ou com rota desconhecida, mostrar “Como deseja entrar?”. Apresentar três opções de perfil (seleção única) e um único botão principal: “Entrar na demonstração”.
+
+- Proprietário: abre a tela de cadastro.
+- Comprador / verificador: abre diretamente a consulta, sem carteira.
+- Cartório: abre a etapa de validação simulada, sem conta ou aprovação real.
+
+A escolha apenas organiza a apresentação; não autentica usuários nem concede permissões. Não criar contas, senhas, painel ou integração de carteiras nesta mudança. Preservar os links diretos das quatro etapas. Oferecer “Trocar perfil”; voltar da primeira tela de cada caminho retorna à entrada.
 
 ### 1. Cadastrar documento
 

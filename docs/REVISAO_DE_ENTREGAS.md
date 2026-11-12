@@ -34,3 +34,7 @@ O autor aprovou o plano registrado na issue #21. Implementados frontend React/Ty
 Validação: seis testes de comportamento, TypeScript e build passaram. Chromium foi executado em 390×844 e 1440×1000, cobrindo navegação, troca de arquivo, ausência de dados fictícios, zero requisições após seleção/navegação, descarte da seleção ao recarregar, ausência de overflow horizontal e erros JavaScript. A build também serve o PDF fictício com hash idêntico à fixture. CI do frontend adicionada separadamente da EVM.
 
 Aceite manual do autor pendente: seguir frontend/README.md. Não avançar para a etapa 3 até ele informar o resultado. Nenhuma transação ou publicação Vercel foi realizada.
+
+## Ajuste solicitado após teste: entrada por perfil
+
+Adicionada tela “Como deseja entrar?” antes do percurso. Proprietário vai para cadastro, comprador/verificador para consulta e cartório para a demonstração de validação. Um botão principal, três opções de perfil e ação secundária Trocar perfil; sem autenticação, contas, senhas ou autorização real. Rotas diretas preservadas; a rota padrão/desconhecida abre a entrada. Nove testes e TypeScript/build passaram, incluindo três caminhos de perfil; Chromium mobile conferiu entrada e retorno. Atualização no mesmo PR de teste, sem integrar na main antes do aceite.
