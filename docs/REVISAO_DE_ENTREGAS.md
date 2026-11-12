@@ -1,3 +1,5 @@
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+
 # Revisão atual de entregas — consolidação para Solana
 
 Base analisada: `869ea6c2c2c8629fdfbf416fc58c0f7be83fab8b`. A comparação completa está em [COMPARACAO_E_ALINHAMENTO.md](COMPARACAO_E_ALINHAMENTO.md). A revisão anterior de código EVM/CI foi preservada em [historico/REVISAO_ANTES_SOLANA.md](historico/REVISAO_ANTES_SOLANA.md).
@@ -24,3 +26,15 @@ Conferir SHA-256 e leitura do PDF, links locais da documentação ativa, instru�
 ## Evidências futuras a registrar
 
 Link da transação Devnet, resultado do Memo/hash, navegador/aparelhos usados, comparação do mesmo arquivo, erro para arquivo diferente, tabela de dez consultas (mediana/máximo/erros) e URL real da Vercel. Mostrar o link da transação antes de anunciar sucesso.
+
+## Etapa 2 — entrega aprovada para implementação
+
+O autor aprovou o plano registrado na issue #21. Implementados frontend React/TypeScript/Vite, quatro telas, seleção local de PDF/JPEG/PNG, remoção de metadados fictícios para outro arquivo, erros de tipo/arquivo vazio e retorno ao exemplo. Não há leitura/hash, upload, persistência, Phantom ou acesso Solana.
+
+Validação: seis testes de comportamento, TypeScript e build passaram. Chromium foi executado em 390×844 e 1440×1000, cobrindo navegação, troca de arquivo, ausência de dados fictícios, zero requisições após seleção/navegação, descarte da seleção ao recarregar, ausência de overflow horizontal e erros JavaScript. A build também serve o PDF fictício com hash idêntico à fixture. CI do frontend adicionada separadamente da EVM.
+
+Aceite manual do autor pendente: seguir frontend/README.md. Não avançar para a etapa 3 até ele informar o resultado. Nenhuma transação ou publicação Vercel foi realizada.
+
+## Ajuste solicitado após teste: entrada por perfil
+
+Adicionada tela “Como deseja entrar?” antes do percurso. Proprietário vai para cadastro, comprador/verificador para consulta e cartório para a demonstração de validação. Um botão principal, três opções de perfil e ação secundária Trocar perfil; sem autenticação, contas, senhas ou autorização real. Rotas diretas preservadas; a rota padrão/desconhecida abre a entrada. Nove testes e TypeScript/build passaram, incluindo três caminhos de perfil; Chromium mobile conferiu entrada e retorno. Atualização no mesmo PR de teste, sem integrar na main antes do aceite.
