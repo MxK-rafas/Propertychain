@@ -1,3 +1,5 @@
+> **LEGADO EVM.** Este documento descreve apenas o código Solidity/Hardhat preservado. Não é requisito, arquitetura ou próximo passo do MVP Solana. Consulte [../SPEC.md](../SPEC.md). Referências a frontend futuro neste histórico não autorizam integrar o contrato ao app atual.
+
 # Nó e dados locais
 
 O ambiente da issue #39 usa somente o Hardhat em `127.0.0.1:8545`, chainId **31337**. Não exige carteira, faucet, RPC público, chave privada ou arquivo `.env`. As contas locais são públicas e descartáveis; não as use em redes públicas. O nó não é publicado na rede externa.
@@ -57,3 +59,4 @@ npm run test:local
 ```
 
 O teste inicia e encerra seu próprio nó, verifica permissões e exportação da configuração, confere hashes e estados usando um provedor sem carteira, repete o seed e verifica que nenhum bloco novo foi criado. Também verifica erros de deploy ausente, rede incorreta e nó reiniciado. Os arquivos locais anteriores são restaurados ao final. Se um nó de desenvolvimento estiver usando a porta, o teste falha sem encerrá-lo.
+

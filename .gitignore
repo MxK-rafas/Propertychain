@@ -37,3 +37,9 @@ yarn-error.log*
 .vscode/
 .DS_Store
 Thumbs.db
+
+
+# Vercel e arquivos pessoais de teste (nunca publicar)
+.vercel/
+private-test-files/
+testes-privados/

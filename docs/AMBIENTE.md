@@ -1,48 +1,41 @@
-# Ambiente de desenvolvimento
+# Ambiente do MVP atual
 
-Passo a passo da issue #12. Use **apenas uma carteira de testes**, nunca a que tenha valor real.
+Seguir [SPEC.md](../SPEC.md) e [AGENTS.md](../AGENTS.md). O app funcional ainda será implementado; instruções abaixo preparam seu desenvolvimento, sem afirmar que scripts inexistentes já executam.
 
-## 1. Ferramentas
-1. **Git**: https://git-scm.com
-2. **Node.js LTS**: https://nodejs.org (confira com `node -v` e `npm -v`)
-3. **VS Code** com uma extensão de Solidity (por exemplo, a da Nomic Foundation para Hardhat)
+## Ferramentas
 
-## 2. Carteira de testes
-1. Instale a MetaMask (extensão do navegador).
-2. Crie uma **carteira nova só para este projeto**. Guarde a frase de recuperação fora do computador e **nunca** a coloque no repositório.
-3. Opcional, mas recomendado: crie uma segunda e uma terceira conta na mesma carteira para simular proprietário, comprador e cartório demo (usadas na issue #6).
+Git, Node.js 22 ou 24 LTS com npm e acesso ao repositório GitHub. Para cadastrar, Phantom com uma carteira exclusiva de testes e SOL da Devnet obtido em faucet. Não comprar moedas. Para consultar, basta navegador e internet.
 
-## 3. ETH de teste e RPC
-1. Obtenha ETH de teste da **Sepolia** em um faucet. Faucets mudam e às vezes exigem login ou saldo mínimo; procure um atualizado (provedores como Alchemy, Infura e Google Cloud costumam oferecer).
-2. Crie uma conta em um provedor de RPC (Alchemy, Infura ou similar), crie um app para Sepolia e copie a URL.
-3. Para verificar o contrato no explorador da Sepolia (issue #20), crie uma chave de API no Etherscan.
+No computador, planejar suporte à extensão Phantom. No celular, planejar cadastro no navegador da Phantom; consulta deve funcionar no navegador comum, sem instalar carteira.
 
-## 4. Variáveis de ambiente
-Copie `.env.example` para `.env` (que já está no `.gitignore`) e preencha. **Nunca faça commit do `.env`.**
+Nunca solicitar frase-semente ou exportação de chave privada. Não há chave privada de deploy e não há programa próprio a publicar.
 
-Para o deploy, use uma chave privada **exportada da carteira de testes**, nunca da carteira pessoal.
+## Configuração pública planejada
 
-## 5. Compilar e testar o projeto existente
+Copiar as variáveis de [.env.example](../.env.example) para a configuração local do frontend quando ele existir. `VITE_SOLANA_CLUSTER=devnet` e `VITE_SOLANA_RPC_URL` são públicas; nunca inserir segredos em variáveis Vite. Não usar um RPC cujo token precise ficar secreto num bundle público. O endpoint público é ponto de partida, sujeito a limites e indisponibilidade.
 
-Use Node.js 22 LTS. Não inicialize outro projeto Hardhat dentro de `contracts/`.
+## Estado atual e primeiro passo
 
-```bash
-cd contracts
-npm ci
-npm run compile
-npm test
-npm run coverage
-```
+`frontend/prototype/` contém só referência visual. O frontend React/TypeScript/Vite, suas dependências, scripts de build e testes serão criados na etapa 2 após apresentação do plano e aprovação. Não executar `npm ci` na raiz ou em `frontend/` antes de existir `package.json`/lockfile.
 
-Esses comandos usam a rede local em memória e não precisam de carteira, RPC ou `.env`. O Hardhat baixa o compilador Solidity na primeira execução. Os passos de carteira e Sepolia acima preparam uma etapa futura; a configuração atual ainda não lê `.env` nem disponibiliza deploy público.
+Para abrir a referência visual, seguir [frontend/prototype/README.md](../frontend/prototype/README.md). Para revisar o modelo, abrir [documento-ficticio.pdf](../fixtures/documento-ficticio.pdf).
 
-## 6. Problemas comuns
-| Sintoma | Causa provável | O que fazer |
-|---------|----------------|-------------|
-| Transação falha por falta de saldo | Sem ETH de teste | Pedir mais no faucet |
-| Rede errada na MetaMask | Conectada na mainnet | Trocar para Sepolia |
-| Erro 429 ou de limite no RPC | Plano gratuito esgotado | Aguardar ou trocar de provedor |
+## Arquivo real de teste
 
-## 7. Desenvolvimento sem Sepolia
+Será fornecido pelo autor. Manter em uma pasta local ignorada, por exemplo `private-test-files/`, fora de `public/`, `fixtures/` e do build. A implementação deve ler apenas no navegador. Não anexar ao PR, Actions, logs ou Vercel.
 
-Para executar deploy e seed usando apenas o nó Hardhat local, veja [AMBIENTE_LOCAL.md](AMBIENTE_LOCAL.md). Para reproduzir a CI e configurar o check obrigatório, veja [CI.md](CI.md).
+## Publicação futura
+
+Na Vercel, conectar este repositório; usar `frontend` como raiz, Vite, `npm ci`, `npm run build` e `dist` quando esses scripts existirem. Configurar Devnet/RPC público, confirmar que a build não contém a foto e testar HTTPS em dois aparelhos. Ver [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md).
+
+## Problemas a tratar
+
+| Situação | Orientação simples |
+|---|---|
+| Phantom indisponível | Explicar como abrir em ambiente compatível; consulta continua sem carteira |
+| Sem saldo de teste | Orientar faucet Devnet; não pedir compra ou chave privada |
+| Usuário cancelou | Manter o arquivo selecionado e permitir tentar de novo |
+| RPC indisponível/limitado | Informar falha temporária, sem mostrar sucesso fictício |
+| Arquivo divergiu | Explicar que é necessário o mesmo arquivo digital; outra foto pode ter hash diferente |
+
+O ambiente Hardhat é legado independente: [AMBIENTE_LOCAL.md](AMBIENTE_LOCAL.md). Não é requisito do MVP Solana.

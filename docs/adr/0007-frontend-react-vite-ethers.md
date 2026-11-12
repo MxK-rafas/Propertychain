@@ -1,3 +1,5 @@
+> **SUBSTITUÍDA para o MVP atual** pela [ADR 0008](0008-solana-devnet-mvp.md) e [SPEC.md](../../SPEC.md). Conteúdo abaixo preservado como histórico da fase EVM, sem autorizar sua implementação no app Solana.
+
 # ADR 0007 · React, TypeScript, Vite e ethers v6
 
 **Status:** Proposto
@@ -12,3 +14,4 @@ React + TypeScript + Vite no frontend, ethers v6 para leitura (provedor somente 
 - Stack comum, com bastante material de apoio.
 - Duas formas de provedor (leitura pública e carteira), organizadas em `lib/provider` (#37).
 - Deploy estático simples (Vercel ou GitHub Pages, #4).
+

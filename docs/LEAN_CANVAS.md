@@ -1,3 +1,5 @@
+> **Fonte de negócio preservada.** A ficha/canvas contém hipóteses e a redação entregue na formação. O escopo operacional atual é [SPEC.md](../SPEC.md): Solana Devnet, Phantom, cartório apenas visualmente simulado, dados fictícios e foto local para teste. Não há atestação de titular, aprovação de cartório on-chain ou prova de propriedade neste MVP.
+
 # Lean Canvas
 
 Lean Canvas do projeto (formação, bloco 5), transcrito na issue #9. Cada campo é uma hipótese a testar, não um fato. A nota final lista pontos de redação a alinhar com [`ESCOPO_JURIDICO.md`](ESCOPO_JURIDICO.md).
@@ -53,4 +55,4 @@ Textos mantidos como entregues. Ao reaproveitar no app, no README e no pitch, us
 Pontos de atenção para a revisão da issue #8 e para o pitch (#7):
 - A vantagem injusta depende de parcerias com cartórios. A norma proposta ao CNJ pelo ONR sobre blockchain ligada a imóveis pode afetar essa hipótese; confira o estado atual antes de apresentar.
 - A "Proposta de valor" promete saber quem é o dono em minutos. No protótipo a promessa correta é verificar a origem e a validação dos documentos, não a propriedade.
-- Os custos citam L2; o protótipo roda na Sepolia (testnet), e L2 é evolução futura (#36).
+- Os custos citam L2; a versão atual usa Solana Devnet por escolha do autor; a menção a L2 permanece apenas como hipótese original de custos.
