@@ -1,3 +1,5 @@
+> **Fonte de negócio preservada.** A ficha/canvas contém hipóteses e a redação entregue na formação. O escopo operacional atual é [SPEC.md](../SPEC.md): Solana Devnet, Phantom, cartório apenas visualmente simulado, dados fictícios e foto local para teste. Não há atestação de titular, aprovação de cartório on-chain ou prova de propriedade neste MVP.
+
 # Ficha do projeto
 
 Texto entregue na atividade "Ficha do projeto" da formação (versão atualizada). Transcrito na issue #9 sem os colchetes do modelo. A nota final lista pontos de redação a alinhar com [`ESCOPO_JURIDICO.md`](ESCOPO_JURIDICO.md).

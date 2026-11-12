@@ -1,3 +1,5 @@
+> **SUBSTITUÍDA para o MVP atual** pela [ADR 0008](0008-solana-devnet-mvp.md) e [SPEC.md](../../SPEC.md). Conteúdo abaixo preservado como histórico da fase EVM, sem autorizar sua implementação no app Solana.
+
 # ADR 0006 · Submissão nasce Pendente; só o validador confirma
 
 **Status:** Proposto
@@ -12,3 +14,4 @@ Toda submissão nasce com status Pending. Apenas o papel VALIDATOR muda para Val
 - A confiança vem da validação do cartório fora da chain, não da blockchain.
 - Hash já cadastrado reverte; um submissor mal-intencionado pode ocupar um hash, mas o documento aparecerá como Pendente ou Rejeitado e o validador decide.
 - Spam de submissões é um risco a avaliar na revisão de segurança (#32).
+

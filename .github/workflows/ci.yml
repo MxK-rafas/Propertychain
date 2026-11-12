@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   contracts:
-    name: Contratos
+    name: Contratos legados (EVM)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -44,3 +44,4 @@ jobs:
             contracts/coverage.json
             contracts/coverage-summary.json
           if-no-files-found: ignore
+

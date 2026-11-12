@@ -1,0 +1,23 @@
+{
+  "ficticio": true,
+  "versao": 1,
+  "arquivo": "documento-ficticio.pdf",
+  "sha256": "d7266d0a2f4b3f727327086e5718c63cf2e675bf59f206e5aa2415b3a5bdc4dd",
+  "tipo": "Escritura do imóvel",
+  "titular": "Maria Oliveira",
+  "titularAnterior": "João Oliveira",
+  "endereco": "Rua das Palmeiras, 120",
+  "cartorioSimulado": "Cartório de exemplo",
+  "historico": [
+    {
+      "ano": 1985,
+      "titular": "João Oliveira",
+      "descricao": "Titular anterior fictício"
+    },
+    {
+      "ano": 2024,
+      "titular": "Maria Oliveira",
+      "descricao": "Transferência por herança fictícia"
+    }
+  ]
+}

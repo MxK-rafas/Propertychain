@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#214c3d">
+  <meta name="description" content="Protótipo visual de cadastro e verificação de documentos de imóveis. Todas as informações e validações são fictícias.">
+  <title>Documentos do imóvel · Protótipo</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="house" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v11h14V9M9 20v-7h6v7"/></symbol>
+    <symbol id="doc" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8zM14 3v5h5M8 12h8M8 16h6"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="back" viewBox="0 0 24 24"><path d="M20 12H5m6-6-6 6 6 6"/></symbol>
+    <symbol id="shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v.5"/></symbol>
+  </defs></svg>
+  <div class="studio">
+    <aside class="guide" aria-label="Navegação do protótipo">
+      <a class="studio-brand" href="#cadastro"><span class="brand-mark"><svg><use href="#house"/></svg></span>Documentos do imóvel</a>
+      <div class="guide-content">
+        <span class="eyebrow">PROTÓTIPO INTERATIVO</span>
+        <h1>A história do imóvel,<br><em>mais clara.</em></h1>
+        <p class="guide-intro">Do cadastro à consulta, um caminho simples para verificar a origem de um documento.</p>
+        <nav class="steps" aria-label="Telas da demonstração">
+          <a href="#cadastro" data-step="0"><span class="step-number">01</span><span><strong>Cadastrar documento</strong><small>O ponto de partida</small></span><span class="step-current" aria-hidden="true">↗</span></a>
+          <a href="#validacao" data-step="1"><span class="step-number">02</span><span><strong>Validação pelo cartório</strong><small>Uma etapa de confiança</small></span><span class="step-current" aria-hidden="true">↗</span></a>
+          <a href="#consulta" data-step="2"><span class="step-number">03</span><span><strong>Verificar documento</strong><small>A consulta de quem precisa saber</small></span><span class="step-current" aria-hidden="true">↗</span></a>
+          <a href="#resultado" data-step="3"><span class="step-number">04</span><span><strong>Resultado da verificação</strong><small>A origem e o histórico, juntos</small></span><span class="step-current" aria-hidden="true">↗</span></a>
+        </nav>
+        <div class="guide-note"><svg><use href="#info"/></svg><p>Explore as quatro telas.<br>Todos os dados são fictícios.</p></div>
+      </div>
+      <span class="guide-footer">BASEADO NO SEU LEAN CANVAS <span>•</span> VERSÃO 02</span>
+    </aside>
+
+    <div class="preview-area">
+      <div class="preview-label"><span class="live-dot"></span> VISUALIZAÇÃO DO APP <span class="preview-mobile">CELULAR</span></div>
+      <main class="phone" aria-label="Protótipo do aplicativo">
+        <header class="app-header"><span class="app-logo"><svg><use href="#house"/></svg></span><span>Documentos<br><strong>do imóvel</strong></span><span class="prototype-tag">PROTÓTIPO</span></header>
+        <div class="demo-banner"><span class="demo-dot"></span>Demonstração · dados fictícios</div>
+        <div class="screen-scroll" id="scroll-region">
+          <div class="screen-top"><button class="back-button" id="back-button" aria-label="Voltar à tela anterior"><svg><use href="#back"/></svg></button><span id="screen-count">ETAPA 1 DE 4</span><div class="progress-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+          <div id="screen" aria-live="polite" aria-atomic="true"></div>
+        </div>
+        <footer class="app-footer"><button id="primary" class="primary" type="button"><span>Cadastrar documento</span><svg><use href="#arrow"/></svg></button><p id="footer-note">Cadastro demonstrativo. Nenhum arquivo será enviado.</p><div class="home-indicator" aria-hidden="true"></div></footer>
+      </main>
+      <p class="preview-caption">Toque no botão verde para percorrer a demonstração.</p>
+    </div>
+  </div>
+  <script src="./app.js?v=2"></script>
+</body>
+</html>

@@ -1,3 +1,22 @@
+# [Legado EVM] Contrato: validar e rejeitar documento
+
+Issue GitHub: [#16](https://github.com/MxK-rafas/Propertychain/issues/16). ID original do kit: 10. O nome histórico do arquivo é preservado; o título e escopo desta seção são atuais.
+
+## Escopo atual — 12/11/2026
+
+Aprovação/rejeição por VALIDATOR existe só no legado. Cartório no MVP é simulado na interface.
+
+Fonte de verdade: [SPEC.md](../SPEC.md). Implementação pelo **Codex**, conforme [AGENTS.md](../AGENTS.md): plano antes do código, uma etapa por vez e pausa para o autor testar. Não tratar esta atualização documental como conclusão de funcionalidade.
+
+## Pronto quando
+
+Nenhuma segunda carteira, assinatura ou estado institucional on-chain é exigido.
+
+O estado aberto/fechado no GitHub preserva o histórico; o enquadramento atual (Legado EVM) define se a tarefa pertence ao MVP. Conteúdo histórico abaixo não amplia o escopo.
+
+<details>
+<summary>Descrição anterior preservada (histórico)</summary>
+
 ## Contexto
 O cartório simulado analisa o documento fora da chain e registra o resultado.
 
@@ -18,3 +37,5 @@ O cartório simulado analisa o documento fora da chain e registra o resultado.
 
 
 Origem: tarefa 10 do kit. Issue atual: https://github.com/MxK-rafas/Propertychain/issues/16
+
+</details>

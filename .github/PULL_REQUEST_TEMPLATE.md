@@ -1,15 +1,20 @@
-## O que muda
-<!-- Resumo em 1-3 linhas -->
+## Problema e resultado
+
+<!-- Explique o comportamento final e a relação com SPEC.md. -->
 
 ## Issue relacionada
-Closes #
+
+<!-- Referencie tarefas atuais de ISSUES.md. Não feche uma implementação só por documentá-la. -->
 
 ## Como testar
-<!-- Passos -->
 
-## Checklist
-- [ ] Critérios de aceite da issue atendidos
-- [ ] Testes passando
-- [ ] Documentação atualizada (se necessário)
-- [ ] Nenhum segredo ou chave no commit
-- [ ] Textos seguem as regras de linguagem do escopo jurídico
+<!-- Passos simples; evidência real de Devnet quando houver blockchain. -->
+
+## Conferência
+
+- [ ] Escopo de SPEC.md e fluxo de AGENTS.md respeitados
+- [ ] Verificações apropriadas passaram; testes EVM não são apresentados como Solana
+- [ ] Dados fictícios e foto real não foram misturados
+- [ ] Nenhuma foto real, chave, frase-semente ou segredo no código/build/logs
+- [ ] Não há funcionalidade de Depois/Um dia incluída
+- [ ] Documentação e evidências refletem o que foi realmente testado

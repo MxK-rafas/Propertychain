@@ -1,10 +1,14 @@
-# Integração contínua
+# Integração contínua e limites da evidência
 
-O workflow `.github/workflows/ci.yml` executa em todo Pull Request e em pushes para `main`. Usa Node.js 22, permissões de leitura e um limite de dez minutos. Não recebe chaves privadas nem usa Sepolia.
+O workflow [.github/workflows/ci.yml](../.github/workflows/ci.yml) mantém o job **Contratos legados (EVM)**: Node.js 22, instalação, compilação, testes, cobertura mínima de 90% por contrato e teste local de deploy/seed. Nenhuma carteira pública ou chave privada é usada.
 
-O job **Contratos** instala as dependências com `npm ci`, compila, executa os testes unitários, gera a cobertura e exige **90% de linhas por contrato**. Em seguida recompila os artefatos sem instrumentação e testa o fluxo de deploy e seed contra um nó Hardhat real via RPC. O relatório de cobertura é anexado como artefato `cobertura-contratos`.
+O código Solidity permanece preservado. Esse job testa somente o legado Hardhat, **não** Phantom, Solana, Memo, velocidade de consulta ou publicação Vercel. Não é critério suficiente de entrega do MVP atual.
 
-Para reproduzir em `contracts/`:
+Na etapa 2 da [spec](../SPEC.md), quando existirem package.json e lockfile no frontend, adicionar verificações de tipos, testes relevantes e build do app. Não adicionar agora um job que falha por chamar scripts inexistentes. Os testes novos devem usar arquivos fictícios; nunca anexar foto real a Actions ou artefatos.
+
+## Reproduzir o legado (opcional)
+
+Em `contracts/`, usando o lockfile já versionado:
 
 ```bash
 npm ci
@@ -16,16 +20,6 @@ npm run compile -- --force
 npm run test:local
 ```
 
-A porta 8545 precisa estar livre para a última etapa. O comando `coverage:check` falha se faltar relatório, faltar algum contrato no relatório ou a cobertura de linhas estiver abaixo de 90%. Lint do frontend deve ser adicionado quando o frontend existir (#21).
+A porta 8545 precisa estar livre para o último passo. Isso não instala nem inicia um app Solana.
 
-## Exigir o resultado antes de mesclar (#13)
-
-O workflow executa os checks; a proteção de branch impede o merge quando eles falham. A integração GitHub desta sessão retornou `403 Resource not accessible by integration` ao consultar a proteção, portanto não foi possível verificar ou alterar sua configuração. A issue #13 permanece aberta nessa parte.
-
-Uma conta com acesso administrativo deve conferir em **Settings → Branches → proteção de main** (ou em um ruleset equivalente):
-
-1. Exigir Pull Request para alterações na `main`.
-2. Exigir status checks antes de mesclar e selecionar **Contratos**, do app GitHub Actions, depois da primeira execução.
-3. Exigir branch atualizada e impedir bypass para quem também deve respeitar a regra.
-
-Preserve outras proteções já existentes. Esta revisão não habilita auto-merge nem mescla o PR. Sem essa regra, um usuário com permissão de escrita ainda pode mesclar um PR com check vermelho.
+Proteção da main e exigência administrativa de checks não foram modificadas nesta consolidação. A implementação futura deve ser validada com os critérios da [spec](../SPEC.md) e do [plano de testes](PLANO_DE_TESTES.md).

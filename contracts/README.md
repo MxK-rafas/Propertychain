@@ -1,3 +1,5 @@
+> **LEGADO EVM.** Este documento descreve apenas o código Solidity/Hardhat preservado. Não é requisito, arquitetura ou próximo passo do MVP Solana. Consulte [../SPEC.md](../SPEC.md). Referências a frontend futuro neste histórico não autorizam integrar o contrato ao app atual.
+
 # Contrato DocumentRegistry
 
 Protótipo educacional em rede de testes. Sem valor legal. Não substitui o registro no Cartório de Registro de Imóveis. Veja [`docs/ESCOPO_JURIDICO.md`](../docs/ESCOPO_JURIDICO.md).
@@ -51,3 +53,4 @@ O admin (`DEFAULT_ADMIN_ROLE`) concede e revoga o papel `VALIDATOR_ROLE`, que re
 ## Nó e seed locais
 
 Após instalar as dependências, use `npm run node`, `npm run deploy:local` e `npm run seed:local`. O primeiro comando fica aberto em um terminal; os demais executam em outro. Veja [ambiente local](../docs/AMBIENTE_LOCAL.md) e [CI](../docs/CI.md). `npm run test:local` verifica o fluxo com um nó próprio, exigindo a porta 8545 livre.
+

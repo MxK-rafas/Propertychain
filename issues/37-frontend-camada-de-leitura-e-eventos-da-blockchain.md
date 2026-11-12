@@ -1,3 +1,22 @@
+# [Atual] Frontend: ler transação e Memo na Solana
+
+Issue GitHub: [#37](https://github.com/MxK-rafas/Propertychain/issues/37). ID original do kit: 37. O nome histórico do arquivo é preservado; o título e escopo desta seção são atuais.
+
+## Escopo atual — 12/11/2026
+
+Substitui varredura de eventos EVM: buscar assinatura diretamente, validar Memo e erro/finalidade; nenhuma carteira para ler.
+
+Fonte de verdade: [SPEC.md](../SPEC.md). Implementação pelo **Codex**, conforme [AGENTS.md](../AGENTS.md): plano antes do código, uma etapa por vez e pausa para o autor testar. Não tratar esta atualização documental como conclusão de funcionalidade.
+
+## Pronto quando
+
+Consulta real sem carteira; sem usar valor de URL/log como prova; caso sem arquivo distingue existência de correspondência.
+
+O estado aberto/fechado no GitHub preserva o histórico; o enquadramento atual (Atual) define se a tarefa pertence ao MVP. Conteúdo histórico abaixo não amplia o escopo.
+
+<details>
+<summary>Descrição anterior preservada (histórico)</summary>
+
 ## Contexto
 A verificação pública, a linha do tempo (#26) e a lista de pendências do validador (#28) dependem de leituras e de eventos. RPCs públicos da Sepolia costumam limitar o intervalo de blocos em `getLogs`, então a leitura de eventos precisa ser feita com cuidado, e a verificação precisa funcionar sem carteira.
 
@@ -19,3 +38,5 @@ A verificação pública, a linha do tempo (#26) e a lista de pendências do val
 
 
 Origem: tarefa 37 do kit. Issue atual: https://github.com/MxK-rafas/Propertychain/issues/37
+
+</details>
