@@ -1,3 +1,5 @@
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+
 # Arquitetura atual — Solana Devnet
 
 Fonte de verdade: [SPEC.md](../SPEC.md). A escolha anterior Sepolia/Solidity foi substituída por decisão expressa do autor.
@@ -19,7 +21,7 @@ flowchart LR
 
 | Tema | Decisão atual |
 |---|---|
-| Frontend | React + TypeScript + Vite a implementar; protótipo HTML separado como referência |
+| Frontend | React + TypeScript + Vite implementados na etapa 2; integração Solana pendente; protótipo HTML separado como referência |
 | Blockchain | Solana Devnet; SOL de teste |
 | Carteira | Uma Phantom para registrar; nenhuma para consultar |
 | Bibliotecas | Solana AI Kit, @solana/kit e integração atual da Phantom, com compatibilidade conferida antes da implementação |
