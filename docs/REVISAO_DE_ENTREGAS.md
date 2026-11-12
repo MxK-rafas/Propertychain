@@ -63,3 +63,14 @@ Oito tarefas têm implementação completa e são vinculadas ao PR para fechamen
 Configurar CI e confirmar o ambiente de testes da Sepolia; fechar as decisões de arquitetura; implementar o frontend de cadastro e verificação, incluindo o cálculo local do hash, a referência opaca e o painel do validador. A revogação do documento-base preserva atestações históricas: a interface deverá indicar o status desse documento.
 
 O script de bootstrap foi substituído por consulta do backlog, pois reexecutar a versão do kit neste repositório criaria duplicatas e referências incorretas. A configuração de proteção da main, Projects, topics e milestones não foi alterada nesta revisão.
+
+
+## Continuação: CI e ambiente local
+
+Após o merge do PR #42, foram implementados o workflow de CI, o gate de 90% de linhas por contrato, deploy/seed local e exportação de ABI/configuração. A primeira revisão acima fica preservada como histórico.
+
+- **#19**: 33 testes unitários aprovados, 100% de cobertura e workflow para executá-los em Pull Requests. A confirmação no GitHub Actions consta no novo PR.
+- **#13**: workflow pronto, incluindo teste RPC e relatório como artefato. A proteção da main permanece pendente: a credencial recebeu `403 Resource not accessible by integration` ao consultar esse recurso. Veja [CI.md](CI.md).
+- **#39**: nó, deploy, validador, cinco documentos, duas atestações, seed repetível e exportação implementados. O teste de integração verifica o fluxo completo com consultas sem carteira e detecta reinício do nó. O critério de aplicativo conectado aguarda o frontend da #21; a issue permanece aberta. Veja [AMBIENTE_LOCAL.md](AMBIENTE_LOCAL.md).
+
+O gate também foi validado com relatório de 0% de linhas, que falhou como esperado, antes de restaurar o relatório real. Nenhuma carteira ou chave de rede pública foi utilizada.

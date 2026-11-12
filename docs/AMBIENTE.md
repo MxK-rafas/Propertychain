@@ -42,3 +42,7 @@ Esses comandos usam a rede local em memória e não precisam de carteira, RPC ou
 | Transação falha por falta de saldo | Sem ETH de teste | Pedir mais no faucet |
 | Rede errada na MetaMask | Conectada na mainnet | Trocar para Sepolia |
 | Erro 429 ou de limite no RPC | Plano gratuito esgotado | Aguardar ou trocar de provedor |
+
+## 7. Desenvolvimento sem Sepolia
+
+Para executar deploy e seed usando apenas o nó Hardhat local, veja [AMBIENTE_LOCAL.md](AMBIENTE_LOCAL.md). Para reproduzir a CI e configurar o check obrigatório, veja [CI.md](CI.md).

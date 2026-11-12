@@ -65,6 +65,16 @@ Os testes usam a rede local em memória do Hardhat. Não exigem MetaMask, RPC da
 
 Não execute `hardhat init`: o projeto já está configurado. Para detalhes, veja [ambiente](docs/AMBIENTE.md) e [API do contrato](contracts/README.md).
 
+## Desenvolvimento com blockchain local
+
+Dentro de `contracts/`, após `npm ci`, use `npm run node` em um terminal e `npm run deploy:local` seguido de `npm run seed:local` em outro. O deploy exporta ABI e configuração para o futuro frontend. O seed inclui cinco documentos fictícios e duas atestações, sem chaves reais. Veja [ambiente local](docs/AMBIENTE_LOCAL.md).
+
+O frontend ainda não foi implementado: esses comandos preparam a blockchain e os dados de desenvolvimento.
+
+## Integração contínua
+
+O [workflow de CI](.github/workflows/ci.yml) compila, testa, exige cobertura mínima de 90% por contrato e verifica deploy/seed em um nó local. Os detalhes e a configuração administrativa para exigir o check estão em [docs/CI.md](docs/CI.md).
+
 ## Configuração
 
 O arquivo [.env.example](.env.example) documenta as variáveis previstas para deploy e frontend. O contrato e os testes locais ainda não carregam esse arquivo. Não é necessário preenchê-lo para os comandos acima. A configuração da Sepolia, os scripts de deploy e o frontend fazem parte do backlog.
@@ -83,7 +93,7 @@ Contrato atual: Solidity 0.8.24, Hardhat 2 e OpenZeppelin AccessControl.
 
 Frontend e rede pública planejados:
 
-Solidity + Hardhat + OpenZeppelin · React + TypeScript + Vite + ethers v6 · Sepolia · GitHub Actions
+React + TypeScript + Vite + ethers v6 · Sepolia. GitHub Actions já possui workflow para os contratos.
 
 ## Licença
 
