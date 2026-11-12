@@ -15,7 +15,10 @@ cache/
 typechain-types/
 coverage/
 coverage.json
+coverage-summary.json
 .nyc_output/
+/contracts/deployments/
+/frontend/generated/
 
 # Builds e ferramentas do frontend
 dist/

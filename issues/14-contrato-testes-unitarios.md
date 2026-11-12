@@ -2,12 +2,12 @@
 Cobrir fluxos felizes e casos de erro.
 
 ## Tarefas
-- [ ] Testes de submissão, validação, rejeição, revogação, atestação e consultas
-- [ ] Casos negativos: sem permissão, hash duplicado, estados inválidos, documento de outro imóvel
-- [ ] Gerar relatório de cobertura (`hardhat coverage`)
+- [x] Testes de submissão, validação, rejeição, revogação, atestação e consultas
+- [x] Casos negativos: sem permissão, hash duplicado, estados inválidos, documento de outro imóvel
+- [x] Gerar relatório de cobertura (`hardhat coverage`)
 
 ## Critérios de aceite
-- [ ] Cobertura de linhas ≥ 90%
+- [x] Cobertura de linhas ≥ 90%
 - [ ] Todos os testes rodam na CI
 
 ## Detalhes
@@ -16,3 +16,5 @@ Cobrir fluxos felizes e casos de erro.
 
 
 Origem: tarefa 14 do kit. Issue atual: https://github.com/MxK-rafas/Propertychain/issues/19
+
+Implementação de CI no novo PR; sua execução será conferida antes da conclusão.

@@ -47,3 +47,7 @@ O admin (`DEFAULT_ADMIN_ROLE`) concede e revoga o papel `VALIDATOR_ROLE`, que re
 - Revogar um documento **não** apaga atestações de titular feitas com base nele; elas ficam no histórico. A interface deve mostrar o status atual do documento-base (issues #26 e #29).
 - `getDocumentsByProperty` devolve a lista inteira. Para um imóvel com muitos documentos, a leitura pode ficar cara; no MVP isso não é problema.
 - Contrato sem proxy: mudanças exigem novo deploy.
+
+## Nó e seed locais
+
+Após instalar as dependências, use `npm run node`, `npm run deploy:local` e `npm run seed:local`. O primeiro comando fica aberto em um terminal; os demais executam em outro. Veja [ambiente local](../docs/AMBIENTE_LOCAL.md) e [CI](../docs/CI.md). `npm run test:local` verifica o fluxo com um nó próprio, exigindo a porta 8545 livre.

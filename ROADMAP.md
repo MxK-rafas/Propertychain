@@ -1,6 +1,6 @@
 # Roadmap
 
-Roadmap do Propertychain. Caixas marcadas indicam implementação revisada na branch de importação; a conclusão no GitHub depende do merge do PR. As semanas são relativas ao início; ajuste conforme o prazo da formação.
+Roadmap do Propertychain. Caixas marcadas indicam implementação revisada. A importação foi integrada no PR #42; a CI e o ambiente local estão no PR seguinte. A conclusão de uma issue no GitHub depende do merge e de todos os critérios de aceite. As semanas são relativas ao início; ajuste conforme o prazo da formação.
 
 ## Visão geral
 
