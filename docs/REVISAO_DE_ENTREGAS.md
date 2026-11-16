@@ -38,3 +38,7 @@ Aceite manual do autor pendente: seguir frontend/README.md. Não avançar para a
 ## Ajuste solicitado após teste: entrada por perfil
 
 Adicionada tela “Como deseja entrar?” antes do percurso. Proprietário vai para cadastro, comprador/verificador para consulta e cartório para a demonstração de validação. Um botão principal, três opções de perfil e ação secundária Trocar perfil; sem autenticação, contas, senhas ou autorização real. Rotas diretas preservadas; a rota padrão/desconhecida abre a entrada. Nove testes e TypeScript/build passaram, incluindo três caminhos de perfil; Chromium mobile conferiu entrada e retorno. Atualização no mesmo PR de teste, sem integrar na main antes do aceite.
+
+## 16/11/2026 — aceite da etapa 2 e entrega da etapa 3
+
+O autor declarou que está tudo certo e autorizou continuar. PR #45 integrado com CI verde. Etapa 3 preparada em novo PR: SHA-256 local; conexão/desconexão Phantom; validação de endereço e genesis Devnet com Kit 8.6.0; tratamento de recusa, indisponibilidade e troca de conta. 23 testes locais e build passaram. Nenhuma assinatura/transação enviada. Leitura pública de getGenesisHash conferida. Testes de carteira são controlados; teste com extensão real pelo autor continua pendente. Não avançar à escrita Memo antes desse aceite.

@@ -16,3 +16,7 @@ O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também
 - Não implementar itens de Depois/Um dia. Não marcar testes EVM como evidência de Solana.
 
 O pedido atual consolidou escopo, referência visual e documentação no repositório. O autor aprovou o plano do primeiro bloco. A etapa 2 (React, telas, arquivo local e testes) foi implementada, com operações ainda simuladas. Respeitar a pausa para o autor testar antes de avançar para Phantom/SHA-256.
+
+## Progresso em 16/11/2026
+
+O autor testou e aprovou a entrada/percurso e autorizou continuar. PR #45 integrado após aceite e CI. Próximo bloco: etapa 3, SHA-256 local e conexão Phantom com conferência do RPC Devnet. Implementação desta etapa deve permanecer em PR até novo teste do autor; ainda não enviar transações ou avançar à etapa 4. Não afirmar que conexão no app altera a rede selecionada na interface da Phantom.

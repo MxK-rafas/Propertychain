@@ -26,8 +26,9 @@ O autor definiu meta de **1–5 segundos para consultar uma transação já conf
 | Spec, arquitetura, instruções para IA e backlog atual | Consolidados neste repositório |
 | Quatro telas finais deste chat | Referência visual em [frontend/prototype](frontend/prototype/README.md), totalmente simulada |
 | Modelo de documento fictício | [PDF](fixtures/documento-ficticio.pdf), [dados e SHA-256](fixtures/documento-ficticio.json) |
-| Frontend React e seleção de arquivo local | Etapa 2 implementada; operações simuladas, aguardando teste do autor |
-| Phantom, SHA-256 e leitura/escrita Solana | **A implementar**, nas próximas etapas da spec |
+| Frontend React e seleção de arquivo local | Etapa 2 testada e aprovada pelo autor; PR #45 integrado |
+| SHA-256 e conexão Phantom | Etapa 3 implementada em PR para teste; cálculo local e conferência do RPC Devnet |
+| Registro Memo e consulta de transação Solana | **A implementar**, nas próximas etapas da spec |
 | Publicação na Vercel | Planejada; nenhum deploy Vercel foi realizado nesta consolidação |
 | Foto real para teste | Será fornecida pelo autor e permanecerá local; não consta do repositório |
 | Solidity/Hardhat | Código legado preservado em `contracts/`; não é dependência do novo MVP |
@@ -69,3 +70,7 @@ Os testes antigos permanecem documentados em [contracts/README.md](contracts/REA
 ## Licença
 
 MIT. Veja [LICENSE](LICENSE).
+
+## Testar a etapa 3
+
+Veja [frontend/README.md](frontend/README.md). O app calcula a impressão digital sem enviar o arquivo e conecta Phantom mediante sua aprovação, conferindo o RPC Devnet. Carteira real precisa ser testada pelo autor; não há assinatura ou transação enviada nesta etapa. As ações de cadastro e consulta da blockchain continuam demonstrativas.

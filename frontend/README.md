@@ -1,34 +1,54 @@
-# PropertyChain — etapa 2
+# PropertyChain — etapa 3: carteira e impressão digital
 
-Uma tela de entrada por perfil e as quatro telas do percurso estão implementadas em React + TypeScript + Vite, com seleção local de PDF/JPEG/PNG. **Cadastro, cartório e consulta continuam simulados.** Não há conexão com Phantom, cálculo de hash, transação ou consulta Solana nesta entrega.
+O autor aprovou as telas/entrada da etapa 2. Esta versão acrescenta **cálculo SHA-256 real no dispositivo e conexão com Phantom**. Cadastro, cartório e consulta de transações continuam demonstrações. **Nenhuma transação ou assinatura é solicitada nesta etapa.**
 
-O arquivo escolhido fica apenas na memória da página. Não há upload, OCR, leitura de conteúdo, armazenamento ou log do arquivo. Ao escolher outro arquivo, os dados de Maria, endereço e histórico fictícios desaparecem. Ao atualizar ou fechar a página, a seleção é descartada.
+## Abrir
 
-## Abrir no computador
-
-Instale Node.js 22.12 ou superior (22/24 LTS) e baixe este repositório. Abra um terminal dentro da pasta `frontend` e execute:
+Com Node.js 22.12+ (preferencialmente 24 LTS), abra um terminal na pasta `frontend`:
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Abra o endereço mostrado pelo terminal, normalmente `http://localhost:5173`. Mantenha o terminal aberto durante o teste; pressione Ctrl+C quando terminar. Não coloque seu arquivo de teste dentro do repositório: selecione-o no botão do app, a partir da pasta em que ele já está.
+Abra o endereço mostrado, normalmente `http://localhost:5173/`, sem fragmento para escolher perfil. Para cálculo SHA-256, use localhost ou HTTPS: navegadores bloqueiam Web Crypto em endereços HTTP de rede local. A publicação HTTPS na Vercel será feita em outra etapa. Para encerrar o servidor, Ctrl+C.
 
-Para usar um celular na mesma rede Wi-Fi, abra o endereço `Network` mostrado pelo Vite. Se a rede/firewall impedir acesso, faça primeiro o teste no computador. Esta opção é local e não é uma publicação na Vercel.
+## Testar — cálculo sem carteira
 
-## Teste de aceite do autor
+1. Entre como Proprietário. No painel “Impressão digital do arquivo”, clique em “Calcular impressão digital”.
+2. O PDF fictício deve produzir o SHA-256 de `../fixtures/documento-ficticio.json`. O resultado identifica bytes; não é aprovação de cartório.
+3. Selecione um PDF/JPEG/PNG local. O código anterior deve sumir; calcule novamente. Os dados fictícios de Maria continuam ocultos para outro arquivo.
+4. Repita com uma cópia idêntica: o código deve ser igual. Altere o arquivo ou tire outra foto: o código pode mudar. Não há reconhecimento visual ou OCR.
+5. Entre como Comprador/verificador: também é possível calcular localmente, **sem conectar carteira**. Ainda não há busca ou comparação com registro on-chain.
 
-1. Na entrada, escolha Proprietário e clique em “Entrar na demonstração”. Abra o exemplo e percorra: cadastrar → cartório simulado → consultar → resultado.
-2. Confira que nenhuma tela afirma ter confirmado um registro real na Devnet.
-3. Volte ao cadastro e escolha uma imagem ou PDF do dispositivo. O nome do arquivo deve aparecer; Maria, o endereço e o histórico fictícios devem desaparecer em todas as telas.
-4. No resultado desse arquivo, confira “Não identificado pelo app” e a explicação de que o conteúdo não foi analisado.
-5. Volte ao cadastro e use “Usar exemplo fictício”. Os dados de demonstração devem voltar.
-6. Selecione um arquivo e atualize a página: a seleção deve desaparecer. Experimente também voltar às telas e repetir a consulta.
+Seu arquivo nunca é enviado ou salvo. Para o exemplo, o app baixa somente o PDF fictício público de seus próprios assets. Arquivos escolhidos são lidos em memória no dispositivo. Ao trocar arquivo, resultados antigos são invalidados; ao atualizar a página, a seleção é descartada.
 
-**Pausa:** informe o que funcionou e o que precisa melhorar antes de avançarmos para Phantom e SHA-256.
+## Testar — Phantom
 
-## Verificações de desenvolvimento
+1. Use a extensão Phantom oficial no computador ou o navegador interno da Phantom no celular. Use carteira exclusiva de testes. Nunca forneça frase-semente ou chave privada ao app/Codex.
+2. No perfil Proprietário, clique em “Conectar Phantom de teste”. Aprove somente a conexão. Não deverá aparecer pedido para assinar/enviar transação ou mensagem.
+3. O app confere um endereço público válido e se o servidor configurado pertence à Devnet (`getGenesisHash`). Só depois mostra “Carteira conectada · RPC Solana Devnet confirmado”.
+4. Essa indicação é a **rede do app/RPC**; não significa que o app alterou a seleção de rede na interface Phantom. Para os testes futuros, configure a Phantom para rede de testes também.
+5. Teste cancelar a conexão. O app deve explicar em português e permitir tentar novamente.
+6. Teste desconectar e trocar a conta na Phantom: o app deve retirar o estado pronto e exigir nova conexão/conferência.
+7. Sem Phantom, a mensagem deve explicar como abrir em um ambiente compatível. Compradores não precisam dela para calcular.
+
+Não é necessário SOL para conectar e calcular; saldo de teste será necessário para registrar na etapa seguinte. O endpoint público pode falhar ou limitar requisições; nesse caso o app não anuncia a conexão pronta. A espera do RPC tem limite de 15 segundos, contado após aprovar a carteira.
+
+## O que continua simulado
+
+“Continuar demonstração” percorre o cartório simulado, consulta e resultado. Nenhum desses passos grava ou verifica documentos na blockchain. O resultado simulado não prova integridade, autenticidade jurídica ou propriedade. Não mostrar um link de transação inventado.
+
+## Configuração e verificações
+
+Valores públicos opcionais em `.env.local` na pasta frontend:
+
+```text
+VITE_SOLANA_CLUSTER=devnet
+VITE_SOLANA_RPC_URL=https://api.devnet.solana.com
+```
+
+Sem eles, esses são os padrões. Outro cluster/genesis é recusado. Não inserir segredos em `VITE_*` (esses valores entram no navegador). Não há chave privada de deploy. O endereço público da carteira é usado apenas no estado da página; o RPC de conferência recebe só a chamada getGenesisHash, sem arquivo, hash ou endereço da carteira como parâmetro.
 
 ```bash
 npm test
@@ -36,12 +56,8 @@ npm run build
 npm run preview
 ```
 
-`test` executa nove testes de comportamento. `build` verifica TypeScript e gera `dist/`. `preview` abre a build local; não faz deploy.
+23 testes cobrem cálculo conhecido, PDF canônico, arquivo alterado, invalidação de leitura antiga, RPC Devnet, rede incompatível, cancelamento, desconexão/troca de conta e o percurso anterior. Os testes de carteira usam um provedor simulado e RPC controlado: não substituem seu teste com a extensão real. Uma leitura do endpoint Devnet público foi conferida separadamente, sem carteira e sem transação.
 
-O PDF/JSON fictício é importado da pasta `../fixtures/`; apenas esses assets públicos entram na build. Não colocar fotos reais em `src`, `public`, `fixtures` ou `dist`. As dependências são registradas em `package-lock.json` e a CI roda com `npm ci`.
+O [Solana AI Kit](https://github.com/solanabr/ai-kit) foi consultado em modo sem instalação; ver [referências e decisões](../docs/SOLANA_AI_KIT.md). Dependência runtime `@solana/kit` 8.6.0, carregada sob demanda; Phantom usa a integração direta oficial em módulo isolado. Não há agentes autônomos ou carteira de servidor.
 
-O protótipo HTML original permanece em `prototype/` como referência. A [SPEC.md](../SPEC.md) e o [AGENTS.md](../AGENTS.md) orientam as próximas etapas. Vercel, carteira, hash e rede serão trabalhados nas etapas correspondentes, após o aceite desta entrega.
-
-## Apresentação por perfil
-
-Ao abrir o endereço principal, aparece a escolha de perfil. Proprietário abre cadastro, Comprador / verificador abre consulta e Cartório abre validação simulada. Não é login real: nenhuma conta, senha, carteira ou permissão é criada. Use “Trocar perfil” para reiniciar a apresentação em outro caminho. Voltar da primeira tela de cada caminho retorna à entrada. Rotas diretas continuam acessíveis.
+**Pausa para seu teste:** confirme cálculo e conexão/cancelamento com a Phantom antes de avançarmos para o registro Memo. Sem transação nesta entrega, não há link do explorador a apresentar.

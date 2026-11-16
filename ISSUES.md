@@ -1,3 +1,5 @@
+> Progresso em 16/11/2026: etapa 2 testada/aceita e PR #45 integrado. Issues #13, #21, #26, #28 e #35 concluídas para a entrega de telas. Etapa 3 (#22/#23) implementada em PR e aguarda teste do autor; registro/consulta on-chain ainda pendentes.
+
 # Tarefas conciliadas com o MVP atual
 
 As 41 tarefas originais continuam rastreáveis. Nomes dos arquivos preservam o ID do kit, e os links usam o número real no GitHub. O enquadramento abaixo substitui o plano antigo de Sepolia. O estado histórico aberto/fechado não é prova de que o novo requisito Solana foi entregue.
