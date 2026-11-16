@@ -1,6 +1,8 @@
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+
 # Ambiente do MVP atual
 
-Seguir [SPEC.md](../SPEC.md) e [AGENTS.md](../AGENTS.md). O app funcional ainda será implementado; instruções abaixo preparam seu desenvolvimento, sem afirmar que scripts inexistentes já executam.
+Seguir [SPEC.md](../SPEC.md) e [AGENTS.md](../AGENTS.md). O app de telas está implementado, ainda com operações simuladas. Execute as instruções de frontend/README.md para testar.
 
 ## Ferramentas
 
@@ -16,7 +18,7 @@ Copiar as variáveis de [.env.example](../.env.example) para a configuração lo
 
 ## Estado atual e primeiro passo
 
-`frontend/prototype/` contém só referência visual. O frontend React/TypeScript/Vite, suas dependências, scripts de build e testes serão criados na etapa 2 após apresentação do plano e aprovação. Não executar `npm ci` na raiz ou em `frontend/` antes de existir `package.json`/lockfile.
+`frontend/prototype/` preserva a referência original. O app React está em `frontend/src/`; em `frontend/`, execute `npm ci` e `npm run dev`. Testes: `npm test`. Build: `npm run build`. Não executar npm na raiz, que não tem package.json.
 
 Para abrir a referência visual, seguir [frontend/prototype/README.md](../frontend/prototype/README.md). Para revisar o modelo, abrir [documento-ficticio.pdf](../fixtures/documento-ficticio.pdf).
 

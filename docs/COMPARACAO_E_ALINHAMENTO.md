@@ -1,3 +1,5 @@
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+
 # Comparação: canvas, telas/spec do chat e PropertyChain
 
 Data: 12/11/2026. Base inspecionada no GitHub: `main`, commit **869ea6c2c2c8629fdfbf416fc58c0f7be83fab8b** (PR #43 integrado). Foram lidos README, roadmap, arquitetura, ADRs, documentos, backlog, contrato, scripts/testes e configuração. O frontend possuía apenas `.gitkeep`; não havia app funcional nem deploy público comprovado.

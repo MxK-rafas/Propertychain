@@ -1,6 +1,8 @@
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+
 # Roadmap do PropertyChain
 
-O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. A implementação funcional ainda não foi iniciada; documentação e referência visual não contam como integração Solana entregue.
+O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. A etapa 2 de frontend foi implementada e aguarda o teste do autor. A integração Solana ainda não começou.
 
 ## Agora — seis etapas com pausa para o autor testar
 

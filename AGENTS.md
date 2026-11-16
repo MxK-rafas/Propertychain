@@ -15,4 +15,4 @@ O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também
 - Mostrar link da transação no explorador Devnet antes de anunciar sucesso; verificar confirmação, ausência de erro e Memo/hash esperado.
 - Não implementar itens de Depois/Um dia. Não marcar testes EVM como evidência de Solana.
 
-O pedido atual consolidou escopo, referência visual e documentação no repositório. A implementação funcional deve começar pela etapa 1 da spec, respeitando as pausas de teste.
+O pedido atual consolidou escopo, referência visual e documentação no repositório. O autor aprovou o plano do primeiro bloco. A etapa 2 (React, telas, arquivo local e testes) foi implementada, com operações ainda simuladas. Respeitar a pausa para o autor testar antes de avançar para Phantom/SHA-256.

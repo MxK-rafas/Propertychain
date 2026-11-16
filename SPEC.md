@@ -16,7 +16,17 @@ O autor pediu um modelo fictício e fornecerá uma foto de documento real para t
 
 ## O que o app faz (tela por tela)
 
-Manter quatro telas, um objetivo e um botão principal em cada uma. Voltar, escolher arquivo, abrir explorador e compartilhar link são controles secundários. Estados de carteira, espera e erro aparecem dentro dessas telas.
+Manter uma tela inicial de seleção de perfil e as quatro telas do percurso, com um objetivo e um botão principal em cada uma. Voltar, escolher arquivo, abrir explorador e compartilhar link são controles secundários. Estados de carteira, espera e erro aparecem dentro dessas telas.
+
+### Entrada — escolher perfil (demonstração)
+
+Acrescentada por pedido do autor após testar o app. Ao abrir a URL sem rota ou com rota desconhecida, mostrar “Como deseja entrar?”. Apresentar três opções de perfil (seleção única) e um único botão principal: “Entrar na demonstração”.
+
+- Proprietário: abre a tela de cadastro.
+- Comprador / verificador: abre diretamente a consulta, sem carteira.
+- Cartório: abre a etapa de validação simulada, sem conta ou aprovação real.
+
+A escolha apenas organiza a apresentação; não autentica usuários nem concede permissões. Não criar contas, senhas, painel ou integração de carteiras nesta mudança. Preservar os links diretos das quatro etapas. Oferecer “Trocar perfil”; voltar da primeira tela de cada caminho retorna à entrada.
 
 ### 1. Cadastrar documento
 
@@ -114,7 +124,7 @@ A foto real será fornecida posteriormente pelo autor. Ler somente em memória n
 
 - Repositório único: `MxK-rafas/Propertychain`.
 - Frontend funcional a implementar em `frontend/`; referência visual separada em `frontend/prototype/`.
-- Publicação futura na Vercel: raiz `frontend`, instalação `npm ci`, build `npm run build`, saída `dist` e HTTPS. Esses scripts ainda serão criados durante a implementação; não afirmar que já funcionam.
+- Publicação futura na Vercel: raiz `frontend`, instalação `npm ci`, build `npm run build`, saída `dist` e HTTPS. Os scripts já existem na entrega da etapa 2; isso não significa que houve publicação Vercel.
 - Preferir rotas por fragmento (`#consulta`) para permitir abertura direta sem reescrita de servidor. O link identifica a transação e preserva o domínio local ou publicado.
 - Variáveis planejadas: `VITE_SOLANA_CLUSTER=devnet` e `VITE_SOLANA_RPC_URL`. Só valores públicos podem estar em `VITE_*`; não colocar tokens secretos do provedor no frontend.
 - Não há chave privada de deploy ou endereço de contrato próprio.
@@ -171,7 +181,7 @@ Estas instruções são para o Codex e qualquer IA de programação:
 
 ### 1. Revisar modelo, decisões e plano
 
-Revisar o PDF fictício, o escopo da foto local, a arquitetura Solana e o plano. Esta consolidação fornece os documentos, mas não substitui o aceite do autor.
+Revisar o PDF fictício, o escopo da foto local, a arquitetura Solana e o plano. O autor aprovou no chat o plano do primeiro bloco de implementação; a entrega da etapa 2 aguarda seu teste.
 
 **Pronto quando:** abro o modelo, confirmo que é fictício e aprovo o plano sem compartilhar foto real, frase-semente ou chave privada.
 
@@ -204,3 +214,7 @@ Implementar link público sem carteira, leitura da transação, comparação opc
 Conectar o repositório ao projeto Vercel, configurar build/variáveis públicas e repetir testes de leitura no link HTTPS.
 
 **Pronto quando:** abro o app publicado em dois aparelhos, cadastro com Phantom onde suportado, consulto no outro sem carteira, não encontro foto real no código/build/logs e consigo explicar o que é registro real e o que é simulação.
+
+## Estado após a entrega da etapa 2
+
+App React com quatro telas, seleção local de arquivo, scripts, seis testes e CI implementados. Operações continuam simuladas: não há carteira, hash ou transação real. O autor aprovou o plano e deve testar conforme frontend/README.md antes de avançar às etapas seguintes.

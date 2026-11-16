@@ -15,7 +15,7 @@ Cadastro de impressão digital de documentos e consulta pública no celular. **M
 
 Proprietários e herdeiros têm dificuldade de apresentar documentos de imóveis antigos; compradores e corretores precisam conferir sua origem. Esta versão permite cadastrar o hash de um arquivo na Solana Devnet e consultar esse registro sem carteira, inclusive em outro celular.
 
-O caminho tem quatro telas: **cadastrar documento → validação simulada pelo cartório → verificar documento → resultado**. Há um único botão principal em cada tela. O resultado distingue registro real na rede de testes, comparação exata de arquivo e informações fictícias.
+O app começa com uma entrada demonstrativa por perfil (proprietário, comprador/verificador ou cartório), sem autenticação. O percurso mantém quatro telas: **cadastrar documento → validação simulada pelo cartório → verificar documento → resultado**. Há um único botão principal em cada tela. O resultado distingue registro real na rede de testes, comparação exata de arquivo e informações fictícias.
 
 O autor definiu meta de **1–5 segundos para consultar uma transação já confirmada**, quando possível. Assinar na carteira e confirmar uma nova transação são tempos separados, dependentes da pessoa e da rede; não há garantia de cinco segundos para o processo inteiro.
 
@@ -26,7 +26,8 @@ O autor definiu meta de **1–5 segundos para consultar uma transação já conf
 | Spec, arquitetura, instruções para IA e backlog atual | Consolidados neste repositório |
 | Quatro telas finais deste chat | Referência visual em [frontend/prototype](frontend/prototype/README.md), totalmente simulada |
 | Modelo de documento fictício | [PDF](fixtures/documento-ficticio.pdf), [dados e SHA-256](fixtures/documento-ficticio.json) |
-| App React/Solana, Phantom e leitura RPC | **A implementar**, seguindo as etapas da spec |
+| Frontend React e seleção de arquivo local | Etapa 2 implementada; operações simuladas, aguardando teste do autor |
+| Phantom, SHA-256 e leitura/escrita Solana | **A implementar**, nas próximas etapas da spec |
 | Publicação na Vercel | Planejada; nenhum deploy Vercel foi realizado nesta consolidação |
 | Foto real para teste | Será fornecida pelo autor e permanecerá local; não consta do repositório |
 | Solidity/Hardhat | Código legado preservado em `contracts/`; não é dependência do novo MVP |
@@ -44,7 +45,8 @@ Para comparar arquivos, eles precisam ter os mesmos bytes. **Duas fotos do mesmo
 ```text
 SPEC.md                especificação ativa
 AGENTS.md              instruções de trabalho para a IA
-frontend/prototype/    quatro telas aprovadas, apenas referência visual
+frontend/src/          app React da etapa 2, com operações simuladas
+frontend/prototype/    referência visual original preservada
 fixtures/              documento e dados inteiramente fictícios
 docs/                  arquitetura, privacidade, ambiente e decisões
 docs/historico/        evidências da fase EVM, sem efeito sobre o escopo atual
@@ -54,9 +56,9 @@ contracts/             legado Solidity/Hardhat preservado
 
 ## Como continuar
 
-Entregue `AGENTS.md` e `SPEC.md` ao Codex e peça que comece pela etapa 1: apresentar o plano e aguardar sua aprovação. O frontend funcional ainda não tem `package.json`, scripts de build ou configuração Vercel pronta. Não executar comandos de uma implementação inexistente.
+O autor aprovou o plano do primeiro bloco. O frontend React, scripts, lockfile, testes e CI já estão implementados. Abra [frontend/README.md](frontend/README.md) para executar e testar esta entrega. Parar para o autor testar antes de avançar para Phantom e hash; a integração Solana e a publicação Vercel continuam pendentes.
 
-Para explorar somente a referência visual, consulte [frontend/prototype/README.md](frontend/prototype/README.md). Para preparar o desenvolvimento futuro, consulte [docs/AMBIENTE.md](docs/AMBIENTE.md).
+Para explorar somente a referência visual original, consulte [frontend/prototype/README.md](frontend/prototype/README.md). Para preparar o desenvolvimento futuro, consulte [docs/AMBIENTE.md](docs/AMBIENTE.md).
 
 ## Configuração e segurança
 

@@ -1,3 +1,5 @@
+> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+
 # Publicação prevista na Vercel
 
 Repositório único: [MxK-rafas/Propertychain](https://github.com/MxK-rafas/Propertychain). O autor autorizou Vercel como destino. Esta consolidação não cria conta Vercel, integração, projeto hospedado ou deploy.
@@ -12,7 +14,7 @@ Repositório único: [MxK-rafas/Propertychain](https://github.com/MxK-rafas/Prop
 6. Publicar e testar link HTTPS no celular; a rota por fragmento deve abrir diretamente a consulta recebida.
 7. Testar cadastro no ambiente Phantom suportado e consulta em outro navegador/aparelho sem carteira. Registrar link real e evidências na revisão de entregas.
 
-Os comandos de build acima são a configuração alvo; scripts/package.json/lockfile do frontend ainda serão implementados. `contracts/` não faz parte do build Vercel. Não configurar endereço EVM, bloco de deploy ou chave privada.
+Os comandos de build já existem na etapa 2. O deploy Vercel ainda não foi executado; o app atual tem operações simuladas. `contracts/` não faz parte do build Vercel. Não configurar endereço EVM, bloco de deploy ou chave privada.
 
 ## Referência visual
 
