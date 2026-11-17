@@ -9,6 +9,7 @@ import { buildMemo, prepareMemo, signAndSubmit, confirmMemo, validateSigned, val
 import { clearPending, readPending, savePending, PENDING_KEY } from './memo-record';
 import { DEVNET_GENESIS } from './preparation';
 const hash = 'a'.repeat(64);
+const computeBudgetProgram = 'ComputeBudget111111111111111111111111111111';
 const signal = () => new AbortController().signal;
 let signer: Awaited<ReturnType<typeof generateKeyPairSigner>>;
 let approve: ReturnType<typeof vi.fn>;
@@ -34,13 +35,18 @@ function txResponse(record: { hash: string; payer: string; signature: string }) 
   return { meta: { err: null }, transaction: { signatures: [record.signature], message: { header: { numRequiredSignatures: 1 }, accountKeys: [record.payer, MEMO_PROGRAM], instructions: [{ programIdIndex: 1, accounts: [] as number[], data: getBase58Decoder().decode(new TextEncoder().encode(MEMO_PREFIX + record.hash)) }] } } };
 }
 describe('Registro Memo sem carteira ou rede reais nos testes', () => {
-  it('compila só um Memo, sem transferência', () => {
+  it('compila um Memo e uma instrução de taxa de prioridade zero', () => {
     const tx = buildMemo(hash, signer.address, { blockhash: '11111111111111111111111111111111' as Blockhash, lastValidBlockHeight: 100n });
     const message = getCompiledTransactionMessageDecoder().decode(tx.messageBytes);
     if (message.version !== 0) throw new Error('Esperada transação v0');
-    expect(message.staticAccounts).toEqual([signer.address, MEMO_PROGRAM]);
-    expect(message.instructions).toHaveLength(1);
-    expect(new TextDecoder().decode(message.instructions[0].data)).toBe(MEMO_PREFIX + hash);
+    expect(message.staticAccounts[0]).toBe(signer.address);
+    expect(message.staticAccounts.slice(1).sort()).toEqual([computeBudgetProgram, MEMO_PROGRAM]);
+    expect(message.instructions).toHaveLength(2);
+    const [budget, memo] = message.instructions;
+    expect(message.staticAccounts[budget.programAddressIndex]).toBe(computeBudgetProgram);
+    expect(budget.data).toEqual(Uint8Array.of(3, 0, 0, 0, 0, 0, 0, 0, 0));
+    expect(message.staticAccounts[memo.programAddressIndex]).toBe(MEMO_PROGRAM);
+    expect(new TextDecoder().decode(memo.data)).toBe(MEMO_PREFIX + hash);
   });
   it('prepara taxa e simulação sem pedir assinatura', async () => {
     const draft = await prepareMemo(hash, signer.address, signal());
@@ -105,9 +111,18 @@ describe('Registro Memo sem carteira ou rede reais nos testes', () => {
   });
   it('recusa alteração do conteúdo mesmo com assinatura válida', async () => {
     const draft = await prepareMemo(hash, signer.address, signal());
-    const other = buildMemo('b'.repeat(64), signer.address, { blockhash: '11111111111111111111111111111111' as Blockhash, lastValidBlockHeight: 100n });
+    const blockhash = (await generateKeyPairSigner()).address as string as Blockhash;
+    const other = buildMemo('b'.repeat(64), signer.address, { blockhash, lastValidBlockHeight: 100n });
     const signed = await signTransaction([signer.keyPair], other);
-    await expect(validateSigned(draft, new Uint8Array(getTransactionEncoder().encode(signed)))).rejects.toThrow('alterou');
+    approve.mockResolvedValue([{ signedTransaction: new Uint8Array(getTransactionEncoder().encode(signed)) }]);
+    const onSignature = vi.fn();
+    await expect(signAndSubmit(draft, signal(), () => true, onSignature)).rejects.toMatchObject({
+      diagnostic: 'PC_WALLET_MESSAGE',
+      message: expect.stringContaining('Campos divergentes (blockhash da transação, instruções).'),
+    });
+    expect(onSignature).not.toHaveBeenCalled();
+    expect(readPending()).toBeNull();
+    expect(state.calls.some(c => c.method === 'sendTransaction')).toBe(false);
   });
   it('recusa ausência de assinatura', async () => {
     const draft = await prepareMemo(hash, signer.address, signal());
@@ -130,6 +145,21 @@ describe('Registro Memo sem carteira ou rede reais nos testes', () => {
     tx.transaction.message.instructions.push(tx.transaction.message.instructions[0]);
     expect(validateRecordedTransaction(tx, record)).toBe(false);
     tx.transaction.message.instructions.pop(); tx.transaction.message.accountKeys[1] = signer.address;
+    expect(validateRecordedTransaction(tx, record)).toBe(false);
+  });
+  it('confere registros com taxa de prioridade zero e recusa outra taxa ou programa', () => {
+    const record = { hash, payer: signer.address, signature: '1'.repeat(64) };
+    const tx = txResponse(record);
+    const { accountKeys, instructions } = tx.transaction.message;
+    accountKeys.push(computeBudgetProgram);
+    const data = getBase58Decoder().decode(Uint8Array.of(3, 0, 0, 0, 0, 0, 0, 0, 0));
+    instructions.unshift({ programIdIndex: 2, accounts: [], data });
+    expect(validateRecordedTransaction(tx, record)).toBe(true);
+
+    instructions[0].data = getBase58Decoder().decode(Uint8Array.of(3, 1, 0, 0, 0, 0, 0, 0, 0));
+    expect(validateRecordedTransaction(tx, record)).toBe(false);
+    instructions[0].data = data;
+    accountKeys[2] = signer.address;
     expect(validateRecordedTransaction(tx, record)).toBe(false);
   });
   it('conserva somente recibo público e ignora JSON inválido', () => {

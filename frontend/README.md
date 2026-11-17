@@ -19,7 +19,7 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 1. Use primeiro o PDF fictício. Você pode abrir o exemplo ou escolher um PDF/JPEG/PNG local; nenhum arquivo é enviado. Para arquivos próprios, dados de Maria/endereço/histórico são ocultados.
 2. Clique em **Calcular impressão digital** e depois **Conectar Phantom de teste**. O app confere o RPC Devnet por getGenesisHash; isso não altera a seleção de rede da interface da Phantom.
-3. Clique em **Preparar registro na Devnet**. Esta ação não assina nem publica a transação: busca blockhash, estima taxa, confere saldo de teste e envia somente o hash ao RPC para simular o Memo.
+3. Clique em **Preparar registro na Devnet**. O app busca o blockhash, monta o Memo com taxa de prioridade zero, estima a taxa total, confere o saldo e simula a transação no RPC antes de solicitar a assinatura.
 4. Confira o resumo: Solana Devnet, seu endereço público como pagador, o hash, a taxa estimada e a operação Memo sem transferências para terceiros. Se não quiser continuar, use Cancelar preparação.
 5. Clique em **Aprovar registro na Phantom**. Agora a Phantom solicita sua aprovação de uma transação Devnet v0. Confira a carteira/rede e aprove. O app valida a assinatura e rejeita alteração da mensagem pela carteira antes de enviar.
 6. O link **Acompanhar transação no explorador Devnet** aparece com a assinatura. Ele indica uma tentativa, ainda não sucesso. O app faz um único envio, com preflight; não reconstrói nem reenvia automaticamente.
@@ -28,7 +28,7 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 ## Recusa, falha e resposta incerta
 
-- Se a Phantom fechar e aparecer um erro, informe a mensagem completa e diga se apareceu o link do explorador. Erros agora distinguem retorno da carteira (`PC_WALLET`), verificação criptográfica no navegador (`PC_CRYPTO`), consulta do prazo após aprovação (`PC_LIFETIME`), armazenamento do comprovante (`PC_RECEIPT`) e consulta após tentativa de envio (`PC_CONFIRM`). Não exponha frase-semente ou chave privada. Uma alteração da mensagem pela carteira é recusada e explicada diretamente.
+- Se a Phantom fechar e aparecer um erro, informe a mensagem completa e diga se apareceu o link do explorador. Os códigos identificam falhas no retorno da carteira (`PC_WALLET`), alterações na mensagem (`PC_WALLET_MESSAGE`), verificação criptográfica no navegador (`PC_CRYPTO`), consulta do prazo após aprovação (`PC_LIFETIME`), armazenamento do comprovante (`PC_RECEIPT`) e consulta após tentativa de envio (`PC_CONFIRM`). Em caso de alteração, o app bloqueia o envio e informa os campos divergentes que conseguiu identificar.
 - Um erro genérico da versão anterior não permite concluir se houve envio. Se houver comprovante, use **Conferir registro existente**; não apague o armazenamento nem inicie uma segunda tentativa para investigar.
 - Cancele na Phantom: o app deve explicar em português, sem enviar ou avançar.
 - Sem saldo de teste: a preparação para antes de pedir assinatura. Solicite SOL Devnet no faucet, sem dinheiro real.
@@ -54,7 +54,7 @@ VITE_SOLANA_CLUSTER=devnet
 VITE_SOLANA_RPC_URL=https://api.devnet.solana.com
 ```
 
-Outro cluster/genesis é recusado. Não colocar tokens secretos em VITE_*. Dependências: @solana/kit 8.6.0 e Wallet Standard; assinatura em bytes pelo recurso `solana:signTransaction` da Phantom. Transação v0 com apenas Memo, sem lookup tables. Se o recurso estiver indisponível, atualize a Phantom e conecte novamente; o app não usa uma carteira de servidor como alternativa.
+Outro cluster/genesis é recusado. Não colocar tokens secretos em VITE_*. Dependências: @solana/kit 8.6.0 e Wallet Standard; assinatura em bytes pelo recurso `solana:signTransaction` da Phantom. A transação v0 inclui o Memo e a instrução Compute Budget que define a taxa de prioridade como zero. A conferência também aceita registros anteriores com apenas o Memo. Se o recurso de assinatura estiver indisponível, atualize a Phantom e conecte novamente.
 
 ```bash
 npm test

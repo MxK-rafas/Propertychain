@@ -1,24 +1,30 @@
 import {
   address, appendTransactionMessageInstruction, compileTransaction, createSolanaRpc,
-  createTransactionMessage, getBase58Encoder, getBase64Decoder, getBase64EncodedWireTransaction,
+  createTransactionMessage, getBase58Decoder, getBase58Encoder, getBase64Decoder, getBase64EncodedWireTransaction, getCompiledTransactionMessageDecoder,
   getPublicKeyFromAddress, getSignatureFromTransaction, getTransactionDecoder, getTransactionEncoder,
   pipe, setTransactionMessageFeePayer, setTransactionMessageLifetimeUsingBlockhash, signature, verifySignature,
 } from '@solana/kit';
-import type { Blockhash, TransactionMessageBytesBase64 } from '@solana/kit';
+import type { Blockhash, TransactionMessageBytes, TransactionMessageBytesBase64 } from '@solana/kit';
 import { getWallets } from '@wallet-standard/app';
 import { checkDevnet, getPhantom } from './preparation';
 import { savePending } from './memo-record';
 import type { MemoRecord } from './memo-record';
-import { memoStage } from './memo-errors';
+import { MemoStageError, memoStage } from './memo-errors';
 
 export const MEMO_PROGRAM = 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr';
 export const MEMO_PREFIX = 'propertychain:v1:sha256:';
+const COMPUTE_BUDGET_PROGRAM = address('ComputeBudget111111111111111111111111111111');
+// SetComputeUnitPrice (3), followed by a zero u64 in micro-lamports per compute unit.
+const ZERO_PRIORITY_FEE_DATA = Uint8Array.of(3, 0, 0, 0, 0, 0, 0, 0, 0);
+const ZERO_PRIORITY_FEE_BASE58 = getBase58Decoder().decode(ZERO_PRIORITY_FEE_DATA);
+
 export function buildMemo(hash: string, payer: string, lifetime: { blockhash: Blockhash; lastValidBlockHeight: bigint }) {
   if (!/^[a-f0-9]{64}$/.test(hash)) throw new Error('Calcule uma impressão digital válida antes de registrar.');
   const message = pipe(
     createTransactionMessage({ version: 0 }),
     tx => setTransactionMessageFeePayer(address(payer), tx),
     tx => setTransactionMessageLifetimeUsingBlockhash(lifetime, tx),
+    tx => appendTransactionMessageInstruction({ programAddress: COMPUTE_BUDGET_PROGRAM, data: ZERO_PRIORITY_FEE_DATA.slice() }, tx),
     tx => appendTransactionMessageInstruction({ programAddress: address(MEMO_PROGRAM), data: new TextEncoder().encode(MEMO_PREFIX + hash) }, tx),
   );
   return compileTransaction(message);
@@ -43,10 +49,38 @@ export async function prepareMemo(hash: string, payer: string, signal: AbortSign
   return { hash, payer, fee, lastValidBlockHeight: lifetime.lastValidBlockHeight, transaction };
 }
 
+function describeMessageChanges(expectedBytes: TransactionMessageBytes, returnedBytes: TransactionMessageBytes): string {
+  const decoder = getCompiledTransactionMessageDecoder();
+  try {
+    const expected = decoder.decode(expectedBytes);
+    const returned = decoder.decode(returnedBytes);
+    const fields: [string, unknown, unknown][] = [
+      ['versão da mensagem', expected.version, returned.version],
+      ['conta pagadora', expected.staticAccounts[0], returned.staticAccounts[0]],
+      ['blockhash da transação', expected.lifetimeToken, returned.lifetimeToken],
+      ['permissões das contas', expected.header, returned.header],
+      ['demais contas', expected.staticAccounts.slice(1), returned.staticAccounts.slice(1)],
+      ['instruções', 'instructions' in expected ? expected.instructions : undefined, 'instructions' in returned ? returned.instructions : undefined],
+      ['tabelas de endereços', expected.version === 0 ? expected.addressTableLookups : undefined,
+        returned.version === 0 ? returned.addressTableLookups : undefined],
+    ];
+    const changes = fields.filter(([, before, after]) => JSON.stringify(before) !== JSON.stringify(after));
+    return changes.length
+      ? `Campos divergentes (${changes.map(([label]) => label).join(', ')}).`
+      : 'Os bytes da mensagem diferem, mas os campos comparados coincidem.';
+  } catch {
+    return 'A mensagem devolvida não pôde ser interpretada para identificar os campos divergentes.';
+  }
+}
+
 /** Reject wallet modifications, extra instructions and signatures for another payer. */
 export async function validateSigned(draft: MemoDraft, bytes: Uint8Array) {
   const signed = getTransactionDecoder().decode(bytes);
-  if (signed.messageBytes.length !== draft.transaction.messageBytes.length || signed.messageBytes.some((byte, i) => byte !== draft.transaction.messageBytes[i])) throw new Error('A carteira alterou o conteúdo da transação. Nenhum envio foi realizado.');
+  const expectedBytes = draft.transaction.messageBytes;
+  if (signed.messageBytes.length !== expectedBytes.length || signed.messageBytes.some((byte, i) => byte !== expectedBytes[i])) {
+    const changes = describeMessageChanges(expectedBytes, signed.messageBytes);
+    throw new MemoStageError('PC_WALLET_MESSAGE', `A carteira alterou o conteúdo da transação. ${changes} Nenhum envio foi realizado.`, undefined);
+  }
   const sig = signed.signatures[address(draft.payer)];
   if (!sig || !await memoStage('PC_CRYPTO', 'Este navegador não conseguiu conferir a assinatura da Phantom. Atualize o navegador e a extensão Phantom. Nenhum envio foi realizado.', async () => verifySignature(await getPublicKeyFromAddress(address(draft.payer)), sig, signed.messageBytes))) throw new Error('A assinatura da carteira não corresponde ao registro preparado. Nenhum envio foi realizado.');
   return { signed, record: { hash: draft.hash, payer: draft.payer, signature: getSignatureFromTransaction(signed) } satisfies MemoRecord };
@@ -90,10 +124,24 @@ export function validateRecordedTransaction(value: unknown, expected: MemoRecord
   if (!value || typeof value !== 'object') return false;
   const tx = value as { meta?: { err?: unknown }; transaction?: { signatures?: string[]; message?: { header?: { numRequiredSignatures?: number }; accountKeys?: string[]; instructions?: { programIdIndex?: number; accounts?: number[]; data?: string }[] } } };
   const message = tx.transaction?.message;
-  if (tx.meta?.err !== null || tx.transaction?.signatures?.[0] !== expected.signature || message?.header?.numRequiredSignatures !== 1 || message?.accountKeys?.length !== 2 || message.accountKeys[0] !== expected.payer || message.accountKeys[1] !== MEMO_PROGRAM || message.instructions?.length !== 1) return false;
-  const ix = message.instructions[0];
-  if (ix.programIdIndex !== 1 || ix.accounts?.length !== 0 || typeof ix.data !== 'string') return false;
-  try { return new TextDecoder('utf-8', { fatal: true }).decode(getBase58Encoder().encode(ix.data)) === MEMO_PREFIX + expected.hash; }
+  if (tx.meta?.err !== null || tx.transaction?.signatures?.[0] !== expected.signature || message?.header?.numRequiredSignatures !== 1) return false;
+  const { accountKeys, instructions } = message;
+  if (!Array.isArray(accountKeys) || !Array.isArray(instructions) || accountKeys[0] !== expected.payer) return false;
+
+  const memoIndex = accountKeys.indexOf(MEMO_PROGRAM, 1);
+  const memo = instructions.at(-1);
+  if (memoIndex < 1 || memo?.programIdIndex !== memoIndex || memo.accounts?.length !== 0 || typeof memo.data !== 'string') return false;
+
+  if (instructions.length === 2) {
+    const budget = instructions[0];
+    const budgetIndex = accountKeys.indexOf(COMPUTE_BUDGET_PROGRAM, 1);
+    if (accountKeys.length !== 3 || budgetIndex < 1 || budget?.programIdIndex !== budgetIndex ||
+        budget.accounts?.length !== 0 || budget.data !== ZERO_PRIORITY_FEE_BASE58) return false;
+  } else if (instructions.length !== 1 || accountKeys.length !== 2) {
+    return false;
+  }
+
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(getBase58Encoder().encode(memo.data)) === MEMO_PREFIX + expected.hash; }
   catch { return false; }
 }
 export async function confirmMemo(record: MemoRecord, signal: AbortSignal, timeoutMs = 45000): Promise<'confirmed' | 'pending' | 'failed'> {
