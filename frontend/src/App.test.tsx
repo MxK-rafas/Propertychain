@@ -13,7 +13,7 @@ describe('Demonstração do PropertyChain', () => {
     openCadastro();
     render(<App />);
     expect(screen.getByRole('heading', { name: /Cadastre seu documento/ })).toBeVisible();
-    await next('Cadastrar documento');
+    await next('Continuar demonstração');
     expect(await screen.findByRole('heading', { name: /Validação pelo cartório/ })).toBeVisible();
     await next('Ver validação simulada');
     expect(await screen.findByRole('heading', { name: /Conheça a origem do documento/ })).toBeVisible();
@@ -38,7 +38,7 @@ describe('Demonstração do PropertyChain', () => {
     expect(screen.getByText(file.name)).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
     expect(screen.queryByText(/Rua das Palmeiras/)).not.toBeInTheDocument();
-    await next('Cadastrar documento');
+    await next('Continuar demonstração');
     await screen.findByRole('heading', { name: /Validação pelo cartório/ });
     await next('Ver validação simulada');
     await screen.findByRole('heading', { name: /Conheça a origem/ });

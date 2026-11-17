@@ -218,3 +218,7 @@ Conectar o repositório ao projeto Vercel, configurar build/variáveis públicas
 ## Estado após a entrega da etapa 2
 
 App React com quatro telas, seleção local de arquivo, scripts, seis testes e CI implementados. Operações continuam simuladas: não há carteira, hash ou transação real. O autor aprovou o plano e deve testar conforme frontend/README.md antes de avançar às etapas seguintes.
+
+## Progresso em 16/11/2026
+
+Etapa 2 aceita pelo autor e integrada no PR #45. Etapa 3 implementada para teste: SHA-256 real no navegador, Phantom (API oficial injetada), validação de endereço e getGenesisHash usando @solana/kit 8.6.0. Conexão/cálculo disponíveis no cadastro; comprador pode calcular sem carteira. A rede do app é conferida pelo RPC; a conexão não modifica ou identifica por si só a seleção de rede na interface Phantom. Nenhuma assinatura ou transação é solicitada nesta etapa. Carteira com aprovação humana e teste no dispositivo do autor ainda aguardam aceite. Referências do Solana AI Kit usadas em modo sem instalação: docs/SOLANA_AI_KIT.md. Etapas 4–6 continuam pendentes.
