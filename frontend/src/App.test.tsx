@@ -13,13 +13,13 @@ describe('Demonstração do PropertyChain', () => {
     openCadastro();
     render(<App />);
     expect(screen.getByRole('heading', { name: /Cadastre seu documento/ })).toBeVisible();
-    await next('Continuar demonstração');
+    window.location.hash = 'validacao';
     expect(await screen.findByRole('heading', { name: /Validação pelo cartório/ })).toBeVisible();
     await next('Ver validação simulada');
     expect(await screen.findByRole('heading', { name: /Conheça a origem do documento/ })).toBeVisible();
     await next('Verificar documento');
     expect(await screen.findByRole('heading', { name: /Exemplo de resultado/ })).toBeVisible();
-    expect(screen.getByText(/Nenhum registro foi consultado na Solana Devnet/)).toBeVisible();
+    expect(screen.getByText(/A consulta pública desta tela ainda é demonstrativa/)).toBeVisible();
     expect(screen.getAllByText('Maria Oliveira')[0]).toBeVisible();
     expect(screen.getByText('João Oliveira')).toBeVisible();
     await next('Fazer nova consulta');
@@ -38,7 +38,7 @@ describe('Demonstração do PropertyChain', () => {
     expect(screen.getByText(file.name)).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
     expect(screen.queryByText(/Rua das Palmeiras/)).not.toBeInTheDocument();
-    await next('Continuar demonstração');
+    window.location.hash = 'validacao';
     await screen.findByRole('heading', { name: /Validação pelo cartório/ });
     await next('Ver validação simulada');
     await screen.findByRole('heading', { name: /Conheça a origem/ });

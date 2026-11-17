@@ -9,3 +9,7 @@ Implementação desta etapa: Kit 8.6.0 (versão conferida no registry), endereç
 Aplicados: somente Devnet, conferência do genesis, zero chave/seed no projeto, nenhuma assinatura ou escrita neste bloco, estados claros de espera/recusa e invalidação após trocar conta/arquivo. A conexão ao provedor não é prova de rede selecionada na UI Phantom; o indicador do app se refere ao RPC validado.
 
 Documentação de conexão: [Phantom](https://docs.phantom.com/solana/establishing-a-connection); RPC/Kit: [Solana](https://solana.com/developers/cookbook/development/connect-environment). O uso destas referências não comprova teste real da carteira do autor; esse aceite é separado.
+
+## Etapa 4
+
+Mantido o modo sem instalação. Kit compila mensagem v0 curta com uma instrução Memo (sem transferências/lookup tables). A assinatura usa Wallet Standard `solana:signTransaction` da Phantom com cadeia solana:devnet. A versão v0 é escolhida para compatibilidade com a carteira existente; não há necessidade de mensagens grandes v1 neste recorte. O cliente verifica bytes e assinatura, simula antes da aprovação, impede envio duplicado e distingue resposta incerta de confirmação. Fontes: [template oficial Solana Kit + Wallet Standard](https://solana.com/developers/templates/typescript-kit-minimal), [Wallet Standard/Phantom](https://docs.phantom.com/development-powertools/solana-wallet-standard) e [transações Kit](https://www.solanakit.com/docs/advanced-guides/transactions).

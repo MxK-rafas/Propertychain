@@ -1,3 +1,5 @@
+> Progresso: o autor aprovou impressão digital e conexão Phantom; issues #22/#23 concluídas, PR #46 integrado. Etapa 4 (#20/#24/#3/#32) implementada em PR para teste. Consulta pública por terceiros continua pendente.
+
 > Progresso em 16/11/2026: etapa 2 testada/aceita e PR #45 integrado. Issues #13, #21, #26, #28 e #35 concluídas para a entrega de telas. Etapa 3 (#22/#23) implementada em PR e aguarda teste do autor; registro/consulta on-chain ainda pendentes.
 
 # Tarefas conciliadas com o MVP atual

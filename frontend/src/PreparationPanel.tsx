@@ -1,10 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import sample from '../../fixtures/documento-ficticio.json';
 import samplePdf from '../../fixtures/documento-ficticio.pdf?url';
 import { checkDevnet, getPhantom, sha256, validatePublicAddress } from './preparation';
+import { MemoRegistration } from './MemoRegistration';
+import { readPending } from './memo-record';
+import type { MemoRecord } from './memo-record';
 import type { PhantomProvider } from './preparation';
 
-export function PreparationPanel({ file, wallet = false }: { file: File | null; wallet?: boolean }) {
+export function PreparationPanel({ file, wallet = false, onRegistered, onBusy, onPendingHash }: { file: File | null; wallet?: boolean; onRegistered?: (record: MemoRecord) => void; onBusy?: (value: boolean) => void; onPendingHash?: (hash: string | null) => void }) {
+  const [registrationBusy, setRegistrationBusy] = useState(false);
+  const busyChanged = useCallback((value: boolean) => { setRegistrationBusy(value); onBusy?.(value); }, [onBusy]);
   const [digest, setDigest] = useState('');
   const [hashBusy, setHashBusy] = useState(false);
   const [hashError, setHashError] = useState('');
@@ -91,13 +96,13 @@ export function PreparationPanel({ file, wallet = false }: { file: File | null; 
   return <section className="preparation" aria-label="Preparação do documento">
     <h3>Impressão digital do arquivo</h3>
     <p>Um código calculado neste dispositivo. Ele identifica os bytes do arquivo; não comprova sua autenticidade ou propriedade.</p>
-    <button className="secondary-action" disabled={hashBusy} onClick={calculate}>{hashBusy ? 'Calculando…' : 'Calcular impressão digital'}</button>
+    <button className="secondary-action" disabled={hashBusy || registrationBusy || (wallet && !!readPending())} onClick={calculate}>{hashBusy ? 'Calculando…' : 'Calcular impressão digital'}</button>
     <div aria-live="polite">{digest && <><span className="field-label">SHA-256 calculado localmente</span><output className="digest">{digest}</output><p>O mesmo arquivo produz o mesmo código. Outra foto do mesmo papel normalmente produz um código diferente.</p></>}</div>
     {hashError && <p role="alert" className="error-message">{hashError}</p>}
-    {wallet && <div className="wallet-panel"><h3>Carteira de teste</h3><p>A conexão permite ver seu endereço público. Nesta etapa, não pedimos assinatura nem enviamos transações.</p>
-      {account ? <><p role="status">Carteira conectada · RPC Solana Devnet confirmado</p><output className="digest">{account}</output><p>Isso identifica a rede do app; não altera a rede selecionada na interface da Phantom.</p><button className="secondary-action" onClick={disconnect}>Desconectar Phantom</button></> : <button className="secondary-action" disabled={walletBusy} onClick={connect}>{walletBusy ? 'Conectando e conferindo a Devnet…' : 'Conectar Phantom de teste'}</button>}
+    {wallet && <div className="wallet-panel"><h3>Carteira de teste</h3><p>A conexão permite ver seu endereço público. O registro só será assinado após você conferir o resumo e aprovar na Phantom.</p>
+      {account ? <><p role="status">Carteira conectada · RPC Solana Devnet confirmado</p><output className="digest">{account}</output><p>Isso identifica a rede do app; não altera a rede selecionada na interface da Phantom.</p><button className="secondary-action" disabled={registrationBusy} onClick={disconnect}>Desconectar Phantom</button></> : <button className="secondary-action" disabled={walletBusy || registrationBusy} onClick={connect}>{walletBusy ? 'Conectando e conferindo a Devnet…' : 'Conectar Phantom de teste'}</button>}
       {walletError && <p role="alert" className="error-message">{walletError}</p>}
     </div>}
-    <p>Nenhum registro enviado. Cadastro e consulta na blockchain ainda são demonstrações.</p>
+    {wallet ? <MemoRegistration hash={digest} account={account} onRegistered={onRegistered} onBusy={busyChanged} onPendingHash={onPendingHash} /> : <p>O cálculo é local; esta consulta ainda não busca transações na blockchain.</p>}
   </section>;
 }

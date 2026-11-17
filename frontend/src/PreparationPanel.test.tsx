@@ -56,7 +56,7 @@ describe('Preparação sem transações', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Conectar Phantom de teste' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Conexão cancelada');
     expect(check).not.toHaveBeenCalled();
-    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(screen.queryByText('Carteira conectada · RPC Solana Devnet confirmado')).not.toBeInTheDocument();
   });
   it('conecta somente após checar Devnet e invalida troca de conta', async () => {
     const { p, handlers } = phantom();

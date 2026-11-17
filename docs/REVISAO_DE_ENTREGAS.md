@@ -42,3 +42,9 @@ Adicionada tela “Como deseja entrar?” antes do percurso. Proprietário vai p
 ## 16/11/2026 — aceite da etapa 2 e entrega da etapa 3
 
 O autor declarou que está tudo certo e autorizou continuar. PR #45 integrado com CI verde. Etapa 3 preparada em novo PR: SHA-256 local; conexão/desconexão Phantom; validação de endereço e genesis Devnet com Kit 8.6.0; tratamento de recusa, indisponibilidade e troca de conta. 23 testes locais e build passaram. Nenhuma assinatura/transação enviada. Leitura pública de getGenesisHash conferida. Testes de carteira são controlados; teste com extensão real pelo autor continua pendente. Não avançar à escrita Memo antes desse aceite.
+
+## Etapa 4 — escrita de hash na Devnet
+
+O autor testou cálculo/conexão e autorizou continuar; PR #46 integrado. Implementados preparo/saldo/taxa/simulação, assinatura em bytes Wallet Standard/Phantom, checagem de mensagem/assinatura, envio único, link/recibo antes de sucesso, confirmação e conferência do Memo. Envio incerto mantém recibo público na sessão e oferece só acompanhamento; não repete envio automaticamente.
+
+41 testes e TypeScript/build passaram. Chromium mobile percorreu o fluxo com chave efêmera, Wallet Standard e RPCs controlados, um envio interceptado e avanço após conferência. Isso não é evidência de transação real na Devnet. Não houve uso de carteira com fundos nem envio real pelo Codex. Teste/aceite do autor com link real do explorador pendente. Não iniciar etapa 5 antes desse teste.
