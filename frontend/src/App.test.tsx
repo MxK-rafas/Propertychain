@@ -19,7 +19,7 @@ describe('Demonstração do PropertyChain', () => {
     expect(await screen.findByRole('heading', { name: /Conheça a origem do documento/ })).toBeVisible();
     await next('Verificar documento');
     expect(await screen.findByRole('heading', { name: /Exemplo de resultado/ })).toBeVisible();
-    expect(screen.getByText(/A consulta pública desta tela ainda é demonstrativa/)).toBeVisible();
+    expect(screen.getByText(/Este é um exemplo de resultado/)).toBeVisible();
     expect(screen.getAllByText('Maria Oliveira')[0]).toBeVisible();
     expect(screen.getByText('João Oliveira')).toBeVisible();
     await next('Fazer nova consulta');

@@ -41,6 +41,12 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
     expect(await screen.findByText(outcome)).toBeVisible();
     expect(screen.getByText(record.hash)).toBeVisible();
+    expect(screen.getByText('Tipo de documento')).toBeVisible();
+    expect(screen.getByText('Não identificado pelo app.')).toBeVisible();
+    expect(screen.getByText('Validado por')).toBeVisible();
+    expect(screen.getByText(/Nenhum cartório analisou/)).toBeVisible();
+    expect(screen.getByText(/não comprova a autenticidade/)).toBeVisible();
+    expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Link desta consulta' }).getAttribute('href'))
       .toBe(window.location.origin + '/' + lookupFragment(tx));
     expect(lookupMemo).toHaveBeenCalledExactlyOnceWith(tx, expect.any(AbortSignal));
