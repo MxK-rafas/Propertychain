@@ -20,3 +20,7 @@ O pedido atual consolidou escopo, referência visual e documentação no reposit
 ## Progresso em 16/11/2026
 
 O autor testou e aprovou a entrada/percurso e autorizou continuar. PR #45 integrado após aceite e CI. Próximo bloco: etapa 3, SHA-256 local e conexão Phantom com conferência do RPC Devnet. Implementação desta etapa deve permanecer em PR até novo teste do autor; ainda não enviar transações ou avançar à etapa 4. Não afirmar que conexão no app altera a rede selecionada na interface da Phantom.
+
+## Progresso — etapa 4
+
+O autor confirmou cálculo e conexão reais e autorizou continuar. PR #46 integrado. Etapa 4 agora implementa preparação, revisão, assinatura Wallet Standard, envio único de Memo Devnet, comprovante público em sessionStorage, retomada somente leitura e conferência antes de avançar. Não executar uma transação real pelo autor ou pedir sua chave: o teste na Phantom e o aceite manual do novo PR ainda serão feitos por ele. Não iniciar consulta por terceiros ou publicação antes do teste desta etapa.

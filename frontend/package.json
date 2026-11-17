@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@solana/kit": "^8.6.0",
+    "@wallet-standard/app": "^1.1.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

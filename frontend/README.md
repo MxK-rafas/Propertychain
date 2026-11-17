@@ -1,54 +1,60 @@
-# PropertyChain — etapa 3: carteira e impressão digital
+# PropertyChain — etapa 4: registrar hash na Devnet
 
-O autor aprovou as telas/entrada da etapa 2. Esta versão acrescenta **cálculo SHA-256 real no dispositivo e conexão com Phantom**. Cadastro, cartório e consulta de transações continuam demonstrações. **Nenhuma transação ou assinatura é solicitada nesta etapa.**
+O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. Esta versão implementa o registro de um hash com Memo na Solana Devnet. **Cartório e consulta por terceiros continuam demonstrativos.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
 
-## Abrir
+## Abrir e preparar
 
-Com Node.js 22.12+ (preferencialmente 24 LTS), abra um terminal na pasta `frontend`:
+Na pasta `frontend`, com Node.js 22.12+ (preferencialmente 24 LTS):
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Abra o endereço mostrado, normalmente `http://localhost:5173/`, sem fragmento para escolher perfil. Para cálculo SHA-256, use localhost ou HTTPS: navegadores bloqueiam Web Crypto em endereços HTTP de rede local. A publicação HTTPS na Vercel será feita em outra etapa. Para encerrar o servidor, Ctrl+C.
+Abra o endereço inicial mostrado (normalmente `http://localhost:5173/`), sem fragmento, e escolha Proprietário. Use localhost ou HTTPS para Web Crypto. No celular, a Phantom precisa do seu navegador interno e de acesso HTTPS ao app; publicação Vercel é uma etapa posterior.
 
-## Testar — cálculo sem carteira
+Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. Para a taxa, obtenha **SOL de teste**, sem valor financeiro, no [faucet oficial](https://faucet.solana.com/). Não compre moedas. O app nunca pede frase-semente ou chave privada.
 
-1. Entre como Proprietário. No painel “Impressão digital do arquivo”, clique em “Calcular impressão digital”.
-2. O PDF fictício deve produzir o SHA-256 de `../fixtures/documento-ficticio.json`. O resultado identifica bytes; não é aprovação de cartório.
-3. Selecione um PDF/JPEG/PNG local. O código anterior deve sumir; calcule novamente. Os dados fictícios de Maria continuam ocultos para outro arquivo.
-4. Repita com uma cópia idêntica: o código deve ser igual. Altere o arquivo ou tire outra foto: o código pode mudar. Não há reconhecimento visual ou OCR.
-5. Entre como Comprador/verificador: também é possível calcular localmente, **sem conectar carteira**. Ainda não há busca ou comparação com registro on-chain.
+## Teste real de cadastro pelo autor
 
-Seu arquivo nunca é enviado ou salvo. Para o exemplo, o app baixa somente o PDF fictício público de seus próprios assets. Arquivos escolhidos são lidos em memória no dispositivo. Ao trocar arquivo, resultados antigos são invalidados; ao atualizar a página, a seleção é descartada.
+1. Use primeiro o PDF fictício. Você pode abrir o exemplo ou escolher um PDF/JPEG/PNG local; nenhum arquivo é enviado. Para arquivos próprios, dados de Maria/endereço/histórico são ocultados.
+2. Clique em **Calcular impressão digital** e depois **Conectar Phantom de teste**. O app confere o RPC Devnet por getGenesisHash; isso não altera a seleção de rede da interface da Phantom.
+3. Clique em **Preparar registro na Devnet**. O app busca o blockhash, monta o Memo com taxa de prioridade zero, estima a taxa total, confere o saldo e simula a transação no RPC antes de solicitar a assinatura.
+4. Confira o resumo: Solana Devnet, seu endereço público como pagador, o hash, a taxa estimada e a operação Memo sem transferências para terceiros. Se não quiser continuar, use Cancelar preparação.
+5. Clique em **Aprovar registro na Phantom**. Agora a Phantom solicita sua aprovação de uma transação Devnet v0. Confira a carteira/rede e aprove. O app valida a assinatura e rejeita alteração da mensagem pela carteira antes de enviar.
+6. O link **Acompanhar transação no explorador Devnet** aparece com a assinatura. Ele indica uma tentativa, ainda não sucesso. O app faz um único envio, com preflight; não reconstrói nem reenvia automaticamente.
+7. Aguarde a confirmação. O app exige status confirmado/finalizado sem erro e lê novamente a transação para conferir Memo, programa, pagador e hash. Somente então avança à tela do cartório, com **Ver transação no explorador Devnet** antes da mensagem de registro confirmado.
+8. Abra o explorador e confira Devnet, resultado sem erro e Memo `propertychain:v1:sha256:` seguido do hash calculado. A validação do cartório permanece simulada e não exige outra assinatura.
 
-## Testar — Phantom
+## Recusa, falha e resposta incerta
 
-1. Use a extensão Phantom oficial no computador ou o navegador interno da Phantom no celular. Use carteira exclusiva de testes. Nunca forneça frase-semente ou chave privada ao app/Codex.
-2. No perfil Proprietário, clique em “Conectar Phantom de teste”. Aprove somente a conexão. Não deverá aparecer pedido para assinar/enviar transação ou mensagem.
-3. O app confere um endereço público válido e se o servidor configurado pertence à Devnet (`getGenesisHash`). Só depois mostra “Carteira conectada · RPC Solana Devnet confirmado”.
-4. Essa indicação é a **rede do app/RPC**; não significa que o app alterou a seleção de rede na interface Phantom. Para os testes futuros, configure a Phantom para rede de testes também.
-5. Teste cancelar a conexão. O app deve explicar em português e permitir tentar novamente.
-6. Teste desconectar e trocar a conta na Phantom: o app deve retirar o estado pronto e exigir nova conexão/conferência.
-7. Sem Phantom, a mensagem deve explicar como abrir em um ambiente compatível. Compradores não precisam dela para calcular.
+- Se a Phantom fechar e aparecer um erro, informe a mensagem completa e diga se apareceu o link do explorador. Os códigos identificam falhas no retorno da carteira (`PC_WALLET`), alterações na mensagem (`PC_WALLET_MESSAGE`), verificação criptográfica no navegador (`PC_CRYPTO`), consulta do prazo após aprovação (`PC_LIFETIME`), armazenamento do comprovante (`PC_RECEIPT`) e consulta após tentativa de envio (`PC_CONFIRM`). Em caso de alteração, o app bloqueia o envio e informa os campos divergentes que conseguiu identificar.
+- Um erro genérico da versão anterior não permite concluir se houve envio. Se houver comprovante, use **Conferir registro existente**; não apague o armazenamento nem inicie uma segunda tentativa para investigar.
+- Cancele na Phantom: o app deve explicar em português, sem enviar ou avançar.
+- Sem saldo de teste: a preparação para antes de pedir assinatura. Solicite SOL Devnet no faucet, sem dinheiro real.
+- Se a preparação ficar antiga, ela expira; prepare de novo e aprove de novo, sem reconstrução automática.
+- Clique repetido durante processamento não inicia outro envio. Arquivo, navegação e controles de preparação ficam bloqueados enquanto necessário.
+- Se a rede demorar ou interromper a resposta após assinatura, mantenha o link e use **Conferir registro existente**. Essa ação só lê a tentativa anterior; não pede nova assinatura ou envio.
+- O app guarda **apenas hash, endereço público e assinatura** da tentativa em `sessionStorage` da aba, antes de enviar. Isso permite recuperar o acompanhamento após atualizar a página. Não há arquivo, imagem, nome de arquivo, bytes assinados ou segredo nesse comprovante. Ele não é compartilhado com outro aparelho e não é banco de dados do app.
+- Ao atualizar a página, seu arquivo local é descartado. Se houver tentativa pendente, o comprovante é recuperado e dados fictícios não são atribuídos a arquivo desconhecido. Consulte o registro existente antes de iniciar outro. Não apague o comprovante/feche a aba se ainda não sabe o resultado.
+- Uma falha confirmada pela rede não aparece como cadastro concluído. Um RPC que ainda não consegue informar o resultado não é prova de falha; o app mantém o acompanhamento e não cria transação substituta automaticamente.
 
-Não é necessário SOL para conectar e calcular; saldo de teste será necessário para registrar na etapa seguinte. O endpoint público pode falhar ou limitar requisições; nesse caso o app não anuncia a conexão pronta. A espera do RPC tem limite de 15 segundos, contado após aprovar a carteira.
+## O que o cadastro significa
 
-## O que continua simulado
+A blockchain recebe só o hash e os metadados públicos próprios da transação, incluindo a carteira e o horário. Isso não prova identidade, autenticidade jurídica, análise de cartório ou propriedade do imóvel. Não há token/NFT.
 
-“Continuar demonstração” percorre o cartório simulado, consulta e resultado. Nenhum desses passos grava ou verifica documentos na blockchain. O resultado simulado não prova integridade, autenticidade jurídica ou propriedade. Não mostrar um link de transação inventado.
+Arquivos iguais byte a byte têm o mesmo SHA-256; duas fotos do mesmo papel normalmente não. O app não faz OCR, comparação visual ou armazenamento de documentos. O comprador ainda vê a demonstração da consulta; a consulta pública em outro aparelho será a etapa 5.
 
 ## Configuração e verificações
 
-Valores públicos opcionais em `.env.local` na pasta frontend:
+Valores públicos opcionais em `frontend/.env.local`:
 
 ```text
 VITE_SOLANA_CLUSTER=devnet
 VITE_SOLANA_RPC_URL=https://api.devnet.solana.com
 ```
 
-Sem eles, esses são os padrões. Outro cluster/genesis é recusado. Não inserir segredos em `VITE_*` (esses valores entram no navegador). Não há chave privada de deploy. O endereço público da carteira é usado apenas no estado da página; o RPC de conferência recebe só a chamada getGenesisHash, sem arquivo, hash ou endereço da carteira como parâmetro.
+Outro cluster/genesis é recusado. Não colocar tokens secretos em VITE_*. Dependências: @solana/kit 8.6.0 e Wallet Standard; assinatura em bytes pelo recurso `solana:signTransaction` da Phantom. A transação v0 inclui o Memo e a instrução Compute Budget que define a taxa de prioridade como zero. A conferência também aceita registros anteriores com apenas o Memo. Se o recurso de assinatura estiver indisponível, atualize a Phantom e conecte novamente.
 
 ```bash
 npm test
@@ -56,8 +62,8 @@ npm run build
 npm run preview
 ```
 
-23 testes cobrem cálculo conhecido, PDF canônico, arquivo alterado, invalidação de leitura antiga, RPC Devnet, rede incompatível, cancelamento, desconexão/troca de conta e o percurso anterior. Os testes de carteira usam um provedor simulado e RPC controlado: não substituem seu teste com a extensão real. Uma leitura do endpoint Devnet público foi conferida separadamente, sem carteira e sem transação.
+46 testes passaram: percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
-O [Solana AI Kit](https://github.com/solanabr/ai-kit) foi consultado em modo sem instalação; ver [referências e decisões](../docs/SOLANA_AI_KIT.md). Dependência runtime `@solana/kit` 8.6.0, carregada sob demanda; Phantom usa a integração direta oficial em módulo isolado. Não há agentes autônomos ou carteira de servidor.
+O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 
-**Pausa para seu teste:** confirme cálculo e conexão/cancelamento com a Phantom antes de avançarmos para o registro Memo. Sem transação nesta entrega, não há link do explorador a apresentar.
+**Pausa para seu teste:** faça o registro com seu exemplo fictício e sua Phantom de teste, confira o explorador e informe o resultado. Só depois avançaremos à consulta por terceiros. Nenhum sucesso na Devnet deve ser anunciado sem o link e a confirmação real.

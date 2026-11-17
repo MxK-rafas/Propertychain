@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { webcrypto } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi, afterEach } from 'vitest';
