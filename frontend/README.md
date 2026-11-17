@@ -19,7 +19,7 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 1. Use primeiro o PDF fictício. Você pode abrir o exemplo ou escolher um PDF/JPEG/PNG local; nenhum arquivo é enviado. Para arquivos próprios, dados de Maria/endereço/histórico são ocultados.
 2. Clique em **Calcular impressão digital** e depois **Conectar Phantom de teste**. O app confere o RPC Devnet por getGenesisHash; isso não altera a seleção de rede da interface da Phantom.
-3. Clique em **Preparar registro na Devnet**. Esta ação ainda não assina nem envia: busca blockhash, estima taxa, confere saldo de teste e simula o Memo.
+3. Clique em **Preparar registro na Devnet**. Esta ação não assina nem publica a transação: busca blockhash, estima taxa, confere saldo de teste e envia somente o hash ao RPC para simular o Memo.
 4. Confira o resumo: Solana Devnet, seu endereço público como pagador, o hash, a taxa estimada e a operação Memo sem transferências para terceiros. Se não quiser continuar, use Cancelar preparação.
 5. Clique em **Aprovar registro na Phantom**. Agora a Phantom solicita sua aprovação de uma transação Devnet v0. Confira a carteira/rede e aprove. O app valida a assinatura e rejeita alteração da mensagem pela carteira antes de enviar.
 6. O link **Acompanhar transação no explorador Devnet** aparece com a assinatura. Ele indica uma tentativa, ainda não sucesso. O app faz um único envio, com preflight; não reconstrói nem reenvia automaticamente.

@@ -58,6 +58,7 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
   }
   return <section className="registration" aria-label="Registro na Solana Devnet">
     <h3>Registrar na rede de testes</h3>
+    <p>A preparação envia apenas o hash ao RPC para simular. A publicação na blockchain depende da sua aprovação na Phantom.</p>
     <p>Somente a impressão digital será publicada. O arquivo fica neste dispositivo. Não há transferência de SOL para terceiros; a carteira paga apenas a taxa da rede Devnet.</p>
     {!hash && !pending && <p>Calcule a impressão digital do arquivo para preparar o registro.</p>}
     {!account && !pending && <p>Conecte a Phantom de teste antes de preparar.</p>}
