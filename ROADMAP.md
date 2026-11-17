@@ -1,10 +1,8 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
-
 # Roadmap do PropertyChain
 
-O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. A etapa 2 de frontend foi implementada e aguarda o teste do autor. A integração Solana ainda não começou.
+O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. O [MVP publicado na Vercel](https://propertychain-theta.vercel.app/) foi testado no computador e no celular. O teste específico com foto real segue na [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6).
 
-## Agora — seis etapas com pausa para o autor testar
+## Entregas do MVP
 
 | Etapa | Entrega | Pronto quando |
 |---|---|---|
@@ -16,6 +14,8 @@ O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/
 | 6 | Publicação Vercel e teste final | HTTPS e consulta em dois aparelhos; nenhum documento real no código, build ou logs |
 
 Não avançar automaticamente entre etapas. Assinatura humana e confirmação da transação não fazem parte da meta de leitura de 1–5 segundos. Medir e informar esses tempos à parte.
+
+O autor validou o registro na Phantom e a consulta em outro aparelho com os três resultados esperados. As dez leituras do registro confirmado tiveram mediana de 0,45 s, máximo de 1,05 s e zero erros. [Registro de teste](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G) · [Guia do frontend](frontend/README.md)
 
 ## Depois
 

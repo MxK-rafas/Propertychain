@@ -1,6 +1,4 @@
-> Progresso: o autor aprovou impressão digital e conexão Phantom; issues #22/#23 concluídas, PR #46 integrado. Etapa 4 (#20/#24/#3/#32) implementada em PR para teste. Consulta pública por terceiros continua pendente.
-
-> Progresso em 16/11/2026: etapa 2 testada/aceita e PR #45 integrado. Issues #13, #21, #26, #28 e #35 concluídas para a entrega de telas. Etapa 3 (#22/#23) implementada em PR e aguarda teste do autor; registro/consulta on-chain ainda pendentes.
+> Progresso em 17/11/2026. Cadastro Memo, consulta sem carteira e publicação HTTPS validados. As evidências e os estados atuais estão nas issues do GitHub. O teste específico com foto real segue na [#6](https://github.com/MxK-rafas/Propertychain/issues/6).
 
 # Tarefas conciliadas com o MVP atual
 
