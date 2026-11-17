@@ -1,5 +1,7 @@
 # PropertyChain — registro e consulta na Devnet
 
+[Versão publicada na Vercel](https://propertychain-theta.vercel.app/) · [Consulta de teste sem carteira](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G)
+
 O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. Esta versão implementa o registro de um hash com Memo na Solana Devnet. **Cartório e consulta por terceiros continuam demonstrativos.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
 
 ## Abrir e preparar
@@ -77,4 +79,4 @@ npm run preview
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 
-**Pausa para seu teste:** faça o registro com seu exemplo fictício e sua Phantom de teste, confira o explorador e informe o resultado. Só depois avançaremos à consulta por terceiros. Nenhum sucesso na Devnet deve ser anunciado sem o link e a confirmação real.
+O autor confirmou a consulta HTTPS no celular sem arquivo, com a mesma cópia digital e com um arquivo diferente. O teste específico com foto real é acompanhado na [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6).

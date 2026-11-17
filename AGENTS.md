@@ -4,7 +4,7 @@ O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também
 
 - Antes do código, apresentar um plano simples e esperar aprovação. Trabalhar uma etapa por vez; parar para o autor testar antes de avançar.
 - Explicar o que mudou, como abrir e como testar, sem exigir conhecimento de programação. Explicar erros em português simples.
-- Stack atual: Solana Devnet + Phantom; hash SHA-256 local; Memo; consulta pública sem carteira; frontend React/TypeScript/Vite a implementar; publicação Vercel.
+- Stack atual: Solana Devnet + Phantom; hash SHA-256 local; Memo; consulta pública sem carteira; frontend React/TypeScript/Vite publicado na Vercel.
 - Use o Solana AI Kit e as bibliotecas atuais da Solana (@solana/kit e Wallet Phantom). Conferir a documentação atual e compatibilidade antes de instalar. Não introduzir carteira de servidor ou agentes autônomos.
 - `contracts/`, o ambiente Hardhat e ADRs EVM marcados como históricos NÃO são dependências do MVP Solana. Não implementar ethers, Sepolia, MetaMask, painel do validador ou atestação on-chain por seguir tarefas antigas.
 - `frontend/prototype/` é referência visual simulada, não app Solana funcional. Não marcar como entregue o frontend funcional apenas porque a referência abre.
@@ -15,12 +15,6 @@ O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também
 - Mostrar link da transação no explorador Devnet antes de anunciar sucesso; verificar confirmação, ausência de erro e Memo/hash esperado.
 - Não implementar itens de Depois/Um dia. Não marcar testes EVM como evidência de Solana.
 
-O pedido atual consolidou escopo, referência visual e documentação no repositório. O autor aprovou o plano do primeiro bloco. A etapa 2 (React, telas, arquivo local e testes) foi implementada, com operações ainda simuladas. Respeitar a pausa para o autor testar antes de avançar para Phantom/SHA-256.
+## Estado em 17/11/2026
 
-## Progresso em 16/11/2026
-
-O autor testou e aprovou a entrada/percurso e autorizou continuar. PR #45 integrado após aceite e CI. Próximo bloco: etapa 3, SHA-256 local e conexão Phantom com conferência do RPC Devnet. Implementação desta etapa deve permanecer em PR até novo teste do autor; ainda não enviar transações ou avançar à etapa 4. Não afirmar que conexão no app altera a rede selecionada na interface da Phantom.
-
-## Progresso — etapa 4
-
-O autor confirmou cálculo e conexão reais e autorizou continuar. PR #46 integrado. Etapa 4 agora implementa preparação, revisão, assinatura Wallet Standard, envio único de Memo Devnet, comprovante público em sessionStorage, retomada somente leitura e conferência antes de avançar. Não executar uma transação real pelo autor ou pedir sua chave: o teste na Phantom e o aceite manual do novo PR ainda serão feitos por ele. Não iniciar consulta por terceiros ou publicação antes do teste desta etapa.
+Os PRs #45–#49 foram integrados à main. O autor validou o SHA-256, a conexão Phantom e o registro real do Memo na Devnet. A consulta sem carteira foi validada no computador e no celular, com arquivo idêntico, diferente e sem arquivo. O [app está publicado por HTTPS](https://propertychain-theta.vercel.app/). O cartório e o histórico da demonstração são fictícios. A [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6) acompanha o teste específico com foto real.
