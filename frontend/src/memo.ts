@@ -120,30 +120,59 @@ export async function signAndSubmit(draft: MemoDraft, signal: AbortSignal, still
   return record;
 }
 
-export function validateRecordedTransaction(value: unknown, expected: MemoRecord): boolean {
-  if (!value || typeof value !== 'object') return false;
+function readRecordedMemo(value: unknown, txSignature: string): MemoRecord | null {
+  if (!value || typeof value !== 'object') return null;
   const tx = value as { meta?: { err?: unknown }; transaction?: { signatures?: string[]; message?: { header?: { numRequiredSignatures?: number }; accountKeys?: string[]; instructions?: { programIdIndex?: number; accounts?: number[]; data?: string }[] } } };
   const message = tx.transaction?.message;
-  if (tx.meta?.err !== null || tx.transaction?.signatures?.[0] !== expected.signature || message?.header?.numRequiredSignatures !== 1) return false;
+  if (tx.meta?.err !== null || tx.transaction?.signatures?.[0] !== txSignature || message?.header?.numRequiredSignatures !== 1) return null;
   const { accountKeys, instructions } = message;
-  if (!Array.isArray(accountKeys) || !Array.isArray(instructions) || accountKeys[0] !== expected.payer) return false;
+  if (!Array.isArray(accountKeys) || !Array.isArray(instructions) || typeof accountKeys[0] !== 'string') return null;
 
   const memoIndex = accountKeys.indexOf(MEMO_PROGRAM, 1);
   const memo = instructions.at(-1);
-  if (memoIndex < 1 || memo?.programIdIndex !== memoIndex || memo.accounts?.length !== 0 || typeof memo.data !== 'string') return false;
+  if (memoIndex < 1 || memo?.programIdIndex !== memoIndex || memo.accounts?.length !== 0 || typeof memo.data !== 'string') return null;
 
   if (instructions.length === 2) {
     const budget = instructions[0];
     const budgetIndex = accountKeys.indexOf(COMPUTE_BUDGET_PROGRAM, 1);
     if (accountKeys.length !== 3 || budgetIndex < 1 || budget?.programIdIndex !== budgetIndex ||
-        budget.accounts?.length !== 0 || budget.data !== ZERO_PRIORITY_FEE_BASE58) return false;
+        budget.accounts?.length !== 0 || budget.data !== ZERO_PRIORITY_FEE_BASE58) return null;
   } else if (instructions.length !== 1 || accountKeys.length !== 2) {
-    return false;
+    return null;
   }
 
-  try { return new TextDecoder('utf-8', { fatal: true }).decode(getBase58Encoder().encode(memo.data)) === MEMO_PREFIX + expected.hash; }
-  catch { return false; }
+  try {
+    const data = new TextDecoder('utf-8', { fatal: true }).decode(getBase58Encoder().encode(memo.data));
+    const hash = data.slice(MEMO_PREFIX.length);
+    if (!data.startsWith(MEMO_PREFIX) || !/^[a-f0-9]{64}$/.test(hash)) return null;
+    return { hash, payer: address(accountKeys[0]), signature: txSignature };
+  }
+  catch { return null; }
 }
+export function validateRecordedTransaction(value: unknown, expected: MemoRecord): boolean {
+  const record = readRecordedMemo(value, expected.signature);
+  return record?.payer === expected.payer && record.hash === expected.hash;
+}
+
+export type MemoLookup =
+  | { status: 'confirmed'; record: MemoRecord; elapsedMs: number }
+  | { status: 'missing' | 'invalid' | 'invalid-signature' };
+
+export async function lookupMemo(value: string, signal: AbortSignal): Promise<MemoLookup> {
+  let txSignature;
+  try { txSignature = signature(value); }
+  catch { return { status: 'invalid-signature' }; }
+  const started = performance.now();
+  const abortSignal = callSignal(signal);
+  await checkDevnet(abortSignal);
+  const tx = await rpc().getTransaction(txSignature, {
+    encoding: 'json', commitment: 'confirmed', maxSupportedTransactionVersion: 0,
+  }).send({ abortSignal });
+  if (!tx) return { status: 'missing' };
+  const record = readRecordedMemo(tx, value);
+  return record ? { status: 'confirmed', record, elapsedMs: performance.now() - started } : { status: 'invalid' };
+}
+
 export async function confirmMemo(record: MemoRecord, signal: AbortSignal, timeoutMs = 45000): Promise<'confirmed' | 'pending' | 'failed'> {
   await checkDevnet(callSignal(signal));
   const end = Date.now() + timeoutMs;

@@ -1,4 +1,4 @@
-# PropertyChain — etapa 4: registrar hash na Devnet
+# PropertyChain — registro e consulta na Devnet
 
 O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. Esta versão implementa o registro de um hash com Memo na Solana Devnet. **Cartório e consulta por terceiros continuam demonstrativos.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
 
@@ -26,6 +26,17 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 7. Aguarde a confirmação. O app exige status confirmado/finalizado sem erro e lê novamente a transação para conferir Memo, programa, pagador e hash. Somente então avança à tela do cartório, com **Ver transação no explorador Devnet** antes da mensagem de registro confirmado.
 8. Abra o explorador e confira Devnet, resultado sem erro e Memo `propertychain:v1:sha256:` seguido do hash calculado. A validação do cartório permanece simulada e não exige outra assinatura.
 
+## Consulta pública sem carteira
+
+Após confirmar um registro, abra **Abrir consulta pública** no comprovante e compartilhe o endereço da página. O link contém apenas a assinatura pública da transação no fragmento `#consulta?tx=…`. Um celular sem Phantom pode abrir a página se tiver acesso ao mesmo endereço do app. Para testar a comparação de arquivo fora de localhost, use HTTPS.
+
+1. Abra o link em uma nova aba ou em outro aparelho. Clique em **Verificar documento** sem selecionar arquivo e confirme que o resultado informa que o arquivo não foi comparado.
+2. Clique em **Fazer nova consulta**, selecione a mesma cópia digital e confira se o hash coincide.
+3. Repita com um arquivo diferente e confirme que aparece a divergência. A comparação lê o arquivo somente no aparelho.
+4. Para medir o desempenho, faça dez consultas consecutivas do mesmo registro confirmado, sem selecionar arquivo. Anote o **Tempo de consulta à Devnet** em cada resultado e registre mediana, máximo e erros. Esse tempo inclui a conferência de que o RPC está na Devnet e a leitura do Memo, sem carregamento da página, seleção de arquivo, hash local ou confirmação de uma transação nova.
+
+Em 17/11/2026, a função de leitura foi executada dez vezes contra o RPC público da Devnet para a [transação confirmada da etapa 4](https://explorer.solana.com/tx/2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G?cluster=devnet). As dez leituras conferiram o mesmo hash. Mediana de 0,45 s, máximo de 1,05 s e zero erros. Essa execução foi feita no ambiente de desenvolvimento e mede apenas a consulta RPC e a conferência do Memo.
+
 ## Recusa, falha e resposta incerta
 
 - Se a Phantom fechar e aparecer um erro, informe a mensagem completa e diga se apareceu o link do explorador. Os códigos identificam falhas no retorno da carteira (`PC_WALLET`), alterações na mensagem (`PC_WALLET_MESSAGE`), verificação criptográfica no navegador (`PC_CRYPTO`), consulta do prazo após aprovação (`PC_LIFETIME`), armazenamento do comprovante (`PC_RECEIPT`) e consulta após tentativa de envio (`PC_CONFIRM`). Em caso de alteração, o app bloqueia o envio e informa os campos divergentes que conseguiu identificar.
@@ -43,7 +54,7 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 A blockchain recebe só o hash e os metadados públicos próprios da transação, incluindo a carteira e o horário. Isso não prova identidade, autenticidade jurídica, análise de cartório ou propriedade do imóvel. Não há token/NFT.
 
-Arquivos iguais byte a byte têm o mesmo SHA-256; duas fotos do mesmo papel normalmente não. O app não faz OCR, comparação visual ou armazenamento de documentos. O comprador ainda vê a demonstração da consulta; a consulta pública em outro aparelho será a etapa 5.
+Arquivos iguais byte a byte têm o mesmo SHA-256; duas fotos do mesmo papel normalmente não. O app não faz OCR, comparação visual ou armazenamento de documentos. Um comprador com o link da transação pode consultar o registro e comparar seu arquivo no próprio aparelho.
 
 ## Configuração e verificações
 
@@ -62,7 +73,7 @@ npm run build
 npm run preview
 ```
 
-46 testes passaram: percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
+54 testes passaram: consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 

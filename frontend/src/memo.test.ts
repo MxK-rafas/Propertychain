@@ -5,7 +5,7 @@ import type { Blockhash } from '@solana/kit';
 const state = vi.hoisted(() => ({ calls: [] as { method: string; args: unknown[] }[], replies: {} as Record<string, unknown>, wallets: [] as any[] }));
 vi.mock('@wallet-standard/app', () => ({ getWallets: () => ({ get: () => state.wallets }) }));
 vi.mock('@solana/kit', async original => ({ ...await original<typeof import('@solana/kit')>(), createSolanaRpc: () => new Proxy({}, { get: (_target, method: string) => (...args: unknown[]) => ({ send: async () => { state.calls.push({ method, args }); const value = state.replies[method]; if (value instanceof Error) throw value; if (value === undefined) throw new Error(`RPC inesperado: ${method}`); return value; } }) }) }));
-import { buildMemo, prepareMemo, signAndSubmit, confirmMemo, validateSigned, validateRecordedTransaction, MEMO_PROGRAM, MEMO_PREFIX } from './memo';
+import { buildMemo, prepareMemo, signAndSubmit, confirmMemo, lookupMemo, validateSigned, validateRecordedTransaction, MEMO_PROGRAM, MEMO_PREFIX } from './memo';
 import { clearPending, readPending, savePending, PENDING_KEY } from './memo-record';
 import { DEVNET_GENESIS } from './preparation';
 const hash = 'a'.repeat(64);
@@ -137,6 +137,21 @@ describe('Registro Memo sem carteira ou rede reais nos testes', () => {
     await expect(confirmMemo(record, signal(), 0)).rejects.toThrow('não corresponde');
     state.replies.getSignatureStatuses = { value: [{ err: { InstructionError: [] }, confirmationStatus: 'confirmed' }] };
     expect(await confirmMemo(record, signal(), 0)).toBe('failed');
+  });
+  it('consulta somente por assinatura e lê o Memo de uma transação confirmada', async () => {
+    const record = { hash, payer: signer.address, signature: '1'.repeat(64) };
+    await expect(lookupMemo('assinatura-invalida', signal())).resolves.toEqual({ status: 'invalid-signature' });
+    expect(state.calls).toHaveLength(0);
+
+    state.replies.getTransaction = txResponse(record);
+    await expect(lookupMemo(record.signature, signal())).resolves.toMatchObject({ status: 'confirmed', record });
+    expect(state.calls.map(call => call.method)).toEqual(['getGenesisHash', 'getTransaction']);
+
+    const failed = txResponse(record);
+    state.replies.getTransaction = { ...failed, meta: { err: { InstructionError: [0, 'error'] } } };
+    await expect(lookupMemo(record.signature, signal())).resolves.toEqual({ status: 'invalid' });
+    state.replies.getTransaction = null;
+    await expect(lookupMemo(record.signature, signal())).resolves.toEqual({ status: 'missing' });
   });
   it('recusa programa errado e instruções extras', () => {
     const record = { hash, payer: signer.address, signature: '1'.repeat(64) };
