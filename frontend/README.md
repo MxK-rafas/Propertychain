@@ -28,6 +28,8 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 ## Recusa, falha e resposta incerta
 
+- Se a Phantom fechar e aparecer um erro, informe a mensagem completa e diga se apareceu o link do explorador. Erros agora distinguem retorno da carteira (`PC_WALLET`), verificação criptográfica no navegador (`PC_CRYPTO`), consulta do prazo após aprovação (`PC_LIFETIME`), armazenamento do comprovante (`PC_RECEIPT`) e consulta após tentativa de envio (`PC_CONFIRM`). Não exponha frase-semente ou chave privada. Uma alteração da mensagem pela carteira é recusada e explicada diretamente.
+- Um erro genérico da versão anterior não permite concluir se houve envio. Se houver comprovante, use **Conferir registro existente**; não apague o armazenamento nem inicie uma segunda tentativa para investigar.
 - Cancele na Phantom: o app deve explicar em português, sem enviar ou avançar.
 - Sem saldo de teste: a preparação para antes de pedir assinatura. Solicite SOL Devnet no faucet, sem dinheiro real.
 - Se a preparação ficar antiga, ela expira; prepare de novo e aprove de novo, sem reconstrução automática.
@@ -60,7 +62,7 @@ npm run build
 npm run preview
 ```
 
-41 testes passaram: percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
+46 testes passaram: percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 

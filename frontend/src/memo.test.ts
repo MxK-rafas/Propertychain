@@ -77,6 +77,23 @@ describe('Registro Memo sem carteira ou rede reais nos testes', () => {
     expect(readPending()).toBeNull();
     expect(state.calls.some(c => c.method === 'sendTransaction')).toBe(false);
   });
+  it('identifica falha da Devnet após aprovação sem persistir nem enviar', async () => {
+    const draft = await prepareMemo(hash, signer.address, signal());
+    approve.mockImplementation(async () => {
+      const signed = await signTransaction([signer.keyPair], draft.transaction);
+      state.replies.getBlockHeight = new Error('RPC indisponível');
+      return [{ signedTransaction: new Uint8Array(getTransactionEncoder().encode(signed)) }];
+    });
+    await expect(signAndSubmit(draft, signal(), () => true, vi.fn())).rejects.toMatchObject({ diagnostic: 'PC_LIFETIME' });
+    expect(readPending()).toBeNull();
+    expect(state.calls.some(c => c.method === 'sendTransaction')).toBe(false);
+  });
+  it('não envia se o navegador bloqueia armazenamento do comprovante', async () => {
+    const draft = await prepareMemo(hash, signer.address, signal());
+    vi.stubGlobal('sessionStorage', { getItem: () => null, setItem: () => { throw new DOMException('bloqueado', 'SecurityError'); } });
+    await expect(signAndSubmit(draft, signal(), () => true, vi.fn())).rejects.toMatchObject({ diagnostic: 'PC_RECEIPT' });
+    expect(state.calls.some(c => c.method === 'sendTransaction')).toBe(false);
+  });
   it('recusa wallet ausente, arquivo alterado e prazo vencido', async () => {
     const draft = await prepareMemo(hash, signer.address, signal());
     await expect(signAndSubmit(draft, signal(), () => false, vi.fn())).rejects.toThrow('mudou');

@@ -9,6 +9,7 @@ import { getWallets } from '@wallet-standard/app';
 import { checkDevnet, getPhantom } from './preparation';
 import { savePending } from './memo-record';
 import type { MemoRecord } from './memo-record';
+import { memoStage } from './memo-errors';
 
 export const MEMO_PROGRAM = 'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr';
 export const MEMO_PREFIX = 'propertychain:v1:sha256:';
@@ -47,7 +48,7 @@ export async function validateSigned(draft: MemoDraft, bytes: Uint8Array) {
   const signed = getTransactionDecoder().decode(bytes);
   if (signed.messageBytes.length !== draft.transaction.messageBytes.length || signed.messageBytes.some((byte, i) => byte !== draft.transaction.messageBytes[i])) throw new Error('A carteira alterou o conteúdo da transação. Nenhum envio foi realizado.');
   const sig = signed.signatures[address(draft.payer)];
-  if (!sig || !await verifySignature(await getPublicKeyFromAddress(address(draft.payer)), sig, signed.messageBytes)) throw new Error('A assinatura da carteira não corresponde ao registro preparado. Nenhum envio foi realizado.');
+  if (!sig || !await memoStage('PC_CRYPTO', 'Este navegador não conseguiu conferir a assinatura da Phantom. Atualize o navegador e a extensão Phantom. Nenhum envio foi realizado.', async () => verifySignature(await getPublicKeyFromAddress(address(draft.payer)), sig, signed.messageBytes))) throw new Error('A assinatura da carteira não corresponde ao registro preparado. Nenhum envio foi realizado.');
   return { signed, record: { hash: draft.hash, payer: draft.payer, signature: getSignatureFromTransaction(signed) } satisfies MemoRecord };
 }
 export async function signAndSubmit(draft: MemoDraft, signal: AbortSignal, stillCurrent: () => boolean, onSignature: (record: MemoRecord) => void): Promise<MemoRecord> {
@@ -66,14 +67,16 @@ export async function signAndSubmit(draft: MemoDraft, signal: AbortSignal, still
   } | undefined;
   if (!account || !feature?.supportedTransactionVersions.includes(0)) throw new Error('A Phantom não disponibilizou assinatura Wallet Standard para Devnet/v0. Atualize a extensão e conecte novamente.');
   assertCurrent();
-  const result = await feature.signTransaction({ account, chain: 'solana:devnet', transaction: new Uint8Array(getTransactionEncoder().encode(draft.transaction)) });
+  const result = await memoStage('PC_WALLET', 'A Phantom não devolveu uma transação assinada ao app. Confira a conexão e atualize a extensão Phantom. Nenhum envio foi realizado pelo app.', () => feature.signTransaction({ account, chain: 'solana:devnet', transaction: new Uint8Array(getTransactionEncoder().encode(draft.transaction)) }));
   assertCurrent();
   if (result.length !== 1) throw new Error('Resposta inesperada da carteira. Nenhum envio foi realizado.');
   const { signed, record } = await validateSigned(draft, result[0].signedTransaction);
-  if ((await rpc().getBlockHeight({ commitment: 'confirmed' }).send({ abortSignal: callSignal(signal) })) > draft.lastValidBlockHeight) throw new Error('A preparação expirou enquanto aguardava aprovação. Nenhum envio foi realizado. Prepare novamente.');
+  const height = await memoStage('PC_LIFETIME', 'A assinatura foi recebida, mas não foi possível consultar a Devnet para conferir o prazo da transação. Nenhum envio foi realizado. Confira sua internet e prepare novamente.', () => rpc().getBlockHeight({ commitment: 'confirmed' }).send({ abortSignal: callSignal(signal) }));
+  if (height > draft.lastValidBlockHeight) throw new Error('A preparação expirou enquanto aguardava aprovação. Nenhum envio foi realizado. Prepare novamente.');
   assertCurrent();
   // Persist receipt before broadcast so uncertain sends survive reload without automatic resubmission.
-  savePending(record); onSignature(record);
+  await memoStage('PC_RECEIPT', 'Não foi possível guardar o comprovante público nesta aba. Permita o armazenamento de sessão no navegador antes de tentar novamente. Nenhum envio foi realizado.', async () => savePending(record));
+  onSignature(record);
   try {
     const returned = await rpc().sendTransaction(getBase64EncodedWireTransaction(signed), { encoding: 'base64', skipPreflight: false, preflightCommitment: 'confirmed', maxRetries: 0n }).send({ abortSignal: callSignal(signal) });
     if (returned !== record.signature) throw new Error('Resposta de envio divergente.');

@@ -83,7 +83,7 @@ export function App() {
       <a className="studio-brand" href="#entrada"><span className="brand-mark"><Icon name="house" /></span>PropertyChain</a>
       <div className="guide-content"><span className="eyebrow">DEMONSTRAÇÃO INTERATIVA</span><h1>A história do imóvel, <br /><em>mais clara.</em></h1><p className="guide-intro">Do cadastro à consulta, um caminho simples para verificar a origem de um documento.</p>
         <nav className="steps" aria-label="Etapas"><a href="#entrada" className={step < 0 ? 'active' : ''} aria-current={step < 0 ? 'page' : undefined}><span className="step-number"><Icon name="house" /></span><span><strong>Escolher perfil</strong><small>Como deseja entrar?</small></span></a>{steps.map((item, index) => <a key={item.id} href={`#${item.id}`} className={step === index ? 'active' : ''} aria-current={step === index ? 'step' : undefined}><span className="step-number">0{index + 1}</span><span><strong>{item.name}</strong><small>{item.subtitle}</small></span><span className="step-current" aria-hidden="true">↗</span></a>)}</nav>
-        <div className="guide-note"><Icon name="info" /><p>Cadastro de hash na Devnet disponível. Cartório e consulta por terceiros ainda simulados.<br />Nenhuma transação é enviada.</p></div>
+        <div className="guide-note"><Icon name="info" /><p>Cadastro de hash na Devnet disponível após aprovação na Phantom. Cartório e consulta por terceiros ainda simulados.</p></div>
       </div><span className="guide-footer">PROPERTYCHAIN <span>•</span> ETAPA 4 · REGISTRO NA DEVNET</span>
     </aside>
     <div className="preview-area"><div className="preview-label"><span className="live-dot" />VISUALIZAÇÃO DO APP<span className="preview-mobile">CELULAR</span></div>

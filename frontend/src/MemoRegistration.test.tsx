@@ -5,6 +5,7 @@ import { MemoRegistration } from './MemoRegistration';
 import { readPending, savePending } from './memo-record';
 import type { MemoRecord } from './memo-record';
 import type { MemoDraft } from './memo';
+import { MemoStageError } from './memo-errors';
 const service = vi.hoisted(() => ({ prepareMemo: vi.fn(), signAndSubmit: vi.fn(), confirmMemo: vi.fn() }));
 vi.mock('./memo', () => service);
 const record: MemoRecord = { hash: 'a'.repeat(64), payer: '1'.repeat(32), signature: '1'.repeat(64) };
@@ -20,6 +21,38 @@ async function prepare() {
   await screen.findByRole('button', { name: 'Aprovar registro na Phantom' });
 }
 describe('Interface de registro e recuperação', () => {
+  it('mostra a causa quando a carteira altera a transação e não avança', async () => {
+    service.signAndSubmit.mockRejectedValue(new Error('A carteira alterou o conteúdo da transação. Nenhum envio foi realizado.'));
+    const completed = vi.fn();
+    render(<MemoRegistration hash={record.hash} account={record.payer} onRegistered={completed} />);
+    await prepare();
+    await userEvent.click(screen.getByRole('button', { name: 'Aprovar registro na Phantom' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('A carteira alterou');
+    expect(service.confirmMemo).not.toHaveBeenCalled();
+    expect(completed).not.toHaveBeenCalled();
+  });
+  it('mostra diagnóstico seguro após aprovação sem expor resposta interna', async () => {
+    service.signAndSubmit.mockRejectedValue(new MemoStageError('PC_LIFETIME', 'A assinatura foi recebida, mas não foi possível consultar a Devnet. Nenhum envio foi realizado.', new Error('payload interno que não deve aparecer')));
+    render(<MemoRegistration hash={record.hash} account={record.payer} />);
+    await prepare();
+    await userEvent.click(screen.getByRole('button', { name: 'Aprovar registro na Phantom' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('PC_LIFETIME');
+    expect(screen.getByRole('alert')).not.toHaveTextContent('payload interno');
+  });
+  it('falha de consulta preserva link e permite apenas reconferir sem outra assinatura', async () => {
+    service.confirmMemo.mockRejectedValue(new Error('RPC indisponível'));
+    const completed = vi.fn();
+    render(<MemoRegistration hash={record.hash} account={record.payer} onRegistered={completed} />);
+    await prepare();
+    await userEvent.click(screen.getByRole('button', { name: 'Aprovar registro na Phantom' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('PC_CONFIRM');
+    expect(screen.getByRole('link', { name: /Acompanhar transação/ })).toBeVisible();
+    expect(readPending()).toEqual(record);
+    await userEvent.click(screen.getByRole('button', { name: 'Conferir registro existente' }));
+    await waitFor(() => expect(service.confirmMemo).toHaveBeenCalledTimes(2));
+    expect(service.signAndSubmit).toHaveBeenCalledOnce();
+    expect(completed).not.toHaveBeenCalled();
+  });
   it('exige hash e carteira antes de preparar', () => {
     render(<MemoRegistration hash="" account="" />);
     expect(screen.getByRole('button', { name: 'Preparar registro na Devnet' })).toBeDisabled();

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { MemoDraft } from './memo';
 import { clearPending, explorerUrl, formatTestSol, readPending } from './memo-record';
 import type { MemoRecord } from './memo-record';
+import { MemoStageError } from './memo-errors';
 
 export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendingHash }: {
   hash: string; account: string; onRegistered?: (record: MemoRecord) => void;
@@ -23,6 +24,7 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
     if (running.current) return;
     running.current = true; setBusy(true); setError('');
     const abort = new AbortController(); controller.current = abort;
+    let operation: 'prepare' | 'sign' | 'confirm' = pending ? 'confirm' : draft ? 'sign' : 'prepare';
     try {
       const service = await import('./memo');
       if (!pending && !draft) {
@@ -38,6 +40,7 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
         record = await service.signAndSubmit(draft, abort.signal, () => current.current.hash === draft.hash && current.current.account === draft.payer, value => { setPending(value); setDraft(null); });
       }
       if (!record) return;
+      operation = 'confirm';
       setPhase('Aguardando confirmação do registro na Devnet…');
       const status = await service.confirmMemo(record, abort.signal);
       abort.signal.throwIfAborted();
@@ -51,8 +54,13 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
     } catch (e) {
       if (abort.signal.aborted) return;
       const rejected = (e as { code?: number })?.code === 4001;
-      const known = e instanceof Error && /^(Calcule|Configure|Use um|O servidor|A preparação|Saldo insuficiente|A simulação|A Phantom|A assinatura|A conta|Resposta inesperada|A transação encontrada|Comprovante)/.test(e.message);
-      setError(rejected ? 'Assinatura cancelada na Phantom. Nenhum envio foi realizado.' : known ? (e as Error).message : 'Não foi possível concluir esta operação. Se houver um link de transação, consulte o registro existente antes de tentar outro envio.');
+      const known = e instanceof Error && /^(Calcule|Configure|Use um|O servidor|A preparação|Saldo insuficiente|A simulação|A Phantom|A assinatura|A carteira|A conta|Resposta inesperada|A transação encontrada|Comprovante)/.test(e.message);
+      const fallback = operation === 'confirm'
+        ? 'Não foi possível consultar a confirmação na Devnet. A tentativa de envio já foi iniciada; isso não comprova sucesso. Use o link e o botão “Conferir registro existente”, sem enviar outro registro. [PC_CONFIRM]'
+        : operation === 'sign'
+          ? 'Não foi possível concluir a conferência da assinatura após a solicitação à Phantom. Nenhum envio foi realizado pelo app. Confira sua conexão e atualize o navegador e a extensão Phantom. [PC_SIGN]'
+          : 'Não foi possível preparar o registro na Devnet. Confira sua internet e tente novamente. Nenhuma assinatura ou envio foi solicitado. [PC_PREPARE]';
+      setError(rejected ? 'Assinatura cancelada na Phantom. Nenhum envio foi realizado.' : e instanceof MemoStageError ? `${e.message} [${e.diagnostic}]` : known ? (e as Error).message : fallback);
       setPhase(''); setDraft(null);
     } finally { running.current = false; setBusy(false); }
   }
