@@ -47,13 +47,40 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     expect(screen.getByText(/Nenhum cartório analisou/)).toBeVisible();
     expect(screen.getByText(/não comprova a autenticidade/)).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Link desta consulta' }).getAttribute('href'))
-      .toBe(window.location.origin + '/' + lookupFragment(tx));
+    expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
     expect(lookupMemo).toHaveBeenCalledExactlyOnceWith(tx, expect.any(AbortSignal));
 
     await userEvent.click(screen.getByRole('button', { name: 'Fazer nova consulta' }));
-    expect(screen.getByRole('heading', { name: 'Verificar documento' })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: 'Verificar documento' })).toBeVisible();
+    expect(window.location.hash).toBe(lookupFragment(tx));
     expect(screen.getByLabelText(/Escolher arquivo para comparar/)).toHaveValue('');
+  });
+
+  it.each([true, false])('oferece o link da consulta com clipboard disponível: %s', async clipboardAvailable => {
+    const user = userEvent.setup();
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText');
+    if (!clipboardAvailable) writeText.mockRejectedValueOnce(new Error('clipboard indisponível'));
+    vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
+    openLink();
+    const url = window.location.origin + '/' + lookupFragment(tx);
+
+    await user.click(screen.getByRole('button', { name: 'Verificar documento' }));
+    await user.click(await screen.findByRole('button', { name: 'Copiar link da consulta' }));
+    expect(writeText).toHaveBeenCalledWith(url);
+    if (clipboardAvailable) {
+      expect(await screen.findByText('Link copiado.')).toBeVisible();
+    } else {
+      expect(await screen.findByLabelText('Copie o endereço abaixo')).toHaveValue(url);
+    }
+    writeText.mockRestore();
+  });
+
+  it('reabre na consulta se o resultado ainda não existir nesta aba', async () => {
+    window.history.replaceState(null, '', '/' + lookupFragment(tx, 'resultado'));
+    render(<App />);
+    await screen.findByRole('heading', { name: 'Verificar documento' });
+    await vi.waitFor(() => expect(window.location.hash).toBe(lookupFragment(tx)));
+    expect(lookupMemo).not.toHaveBeenCalled();
   });
 
   it.each([

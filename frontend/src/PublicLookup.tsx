@@ -4,19 +4,20 @@ import { explorerUrl } from './memo-record';
 import type { MemoLookup } from './memo';
 import { sha256 } from './preparation';
 
-export function lookupFragment(signature: string) {
-  return `#consulta?${new URLSearchParams({ tx: signature })}`;
+export function lookupFragment(signature: string, page: 'consulta' | 'resultado' = 'consulta') {
+  return `#${page}?${new URLSearchParams({ tx: signature })}`;
 }
 
 type Result = Extract<MemoLookup, { status: 'confirmed' }> & {
   comparison: 'none' | 'match' | 'different';
 };
 
-export function PublicLookup({ signature }: { signature: string }) {
+export function PublicLookup({ signature, showResult }: { signature: string; showResult: boolean }) {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'manual'>('idle');
   const active = useRef<AbortController | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
@@ -25,7 +26,19 @@ export function PublicLookup({ signature }: { signature: string }) {
   shareLink.hash = lookupFragment(signature);
 
   useEffect(() => () => active.current?.abort(), []);
-  useEffect(() => { heading.current?.focus(); }, [result]);
+  useEffect(() => {
+    if (showResult && !result) window.location.replace(lookupFragment(signature));
+  }, [result, showResult, signature]);
+  useEffect(() => { heading.current?.focus(); }, [showResult]);
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(shareLink.href);
+      setCopyStatus('copied');
+    } catch {
+      setCopyStatus('manual');
+    }
+  }
 
   async function verify(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -51,7 +64,9 @@ export function PublicLookup({ signature }: { signature: string }) {
       failure = 'Não foi possível ler o arquivo neste aparelho. Selecione o arquivo novamente ou faça a consulta sem ele.';
       const hash = file ? await sha256(await file.arrayBuffer()) : null;
       if (request.signal.aborted) return;
+      setCopyStatus('idle');
       setResult({ ...found, comparison: hash === null ? 'none' : hash === found.record.hash ? 'match' : 'different' });
+      window.location.hash = lookupFragment(signature, 'resultado');
     } catch {
       if (!request.signal.aborted) setError(failure);
     } finally {
@@ -65,8 +80,8 @@ export function PublicLookup({ signature }: { signature: string }) {
       <header className="app-header"><strong>PropertyChain</strong></header>
       <div className="screen-scroll">
         <section className="screen-enter">
-          <h1 className="screen-title" ref={heading} tabIndex={-1}>{result ? 'Resultado da verificação' : 'Verificar documento'}</h1>
-          {result ? <>
+          <h1 className="screen-title" ref={heading} tabIndex={-1}>{showResult && result ? 'Resultado da verificação' : 'Verificar documento'}</h1>
+          {showResult && result ? <>
             <p role="status">Registro confirmado na Devnet.</p>
             <dl className="facts">
               <div><dt>Comparação do arquivo</dt><dd>{{
@@ -78,13 +93,21 @@ export function PublicLookup({ signature }: { signature: string }) {
               <div><dt>Tempo de consulta à Devnet</dt><dd>{(result.elapsedMs / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} s</dd></div>
             </dl>
             <p><a className="text-link" href={explorerUrl(signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a></p>
-            <p><a className="text-link" href={shareLink.href}>Link desta consulta</a></p>
+            <button className="text-button" onClick={copyLink}>Copiar link da consulta</button>
+            {copyStatus === 'copied' && <p role="status">Link copiado.</p>}
+            {copyStatus === 'manual' && <div className="file-controls">
+              <label htmlFor="consultation-link">Copie o endereço abaixo</label>
+              <textarea id="consultation-link" readOnly value={shareLink.href} onFocus={event => event.target.select()} />
+            </div>}
             <dl className="facts">
               <div><dt>Tipo de documento</dt><dd>Não identificado pelo app.</dd></div>
               <div><dt>Validado por</dt><dd>Nenhum cartório analisou este documento. O cartório e o histórico exibidos na demonstração são fictícios.</dd></div>
             </dl>
             <p>O registro do hash não comprova a autenticidade do documento, a identidade do titular ou a propriedade do imóvel.</p>
-            <button className="primary" onClick={() => { setFile(null); setResult(null); }}>Fazer nova consulta</button>
+            <button className="primary" onClick={() => {
+              setFile(null);
+              window.location.hash = lookupFragment(signature);
+            }}>Fazer nova consulta</button>
           </> : <form onSubmit={verify}>
             <p className="screen-description">Consulte o registro na Solana Devnet sem conectar carteira. Se tiver uma cópia do arquivo, você pode compará-la neste aparelho.</p>
             <div className="file-controls">
