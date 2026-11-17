@@ -10,7 +10,7 @@ import samplePdf from '../../fixtures/documento-ficticio.pdf?url';
 const steps = [
   { id: 'cadastro', name: 'Cadastrar documento', subtitle: 'O ponto de partida', action: 'Continuar demonstração' },
   { id: 'validacao', name: 'Validação pelo cartório', subtitle: 'Uma etapa de confiança', action: 'Ver validação simulada' },
-  { id: 'consulta', name: 'Verificar documento', subtitle: 'A consulta de quem precisa saber', action: 'Verificar documento' },
+  { id: 'consulta', name: 'Verificar documento', subtitle: 'A consulta de quem precisa saber', action: 'Ver resultado de exemplo' },
   { id: 'resultado', name: 'Resultado da verificação', subtitle: 'Registro e comparação do arquivo', action: 'Fazer nova consulta' },
 ];
 function currentStep(route: string) {
@@ -34,7 +34,11 @@ function Note({ children }: { children: React.ReactNode }) {
 export function App() {
   const [route, setRoute] = useState(() => window.location.hash);
   const step = currentStep(route);
-  const publicSignature = route.startsWith('#consulta?') ? new URLSearchParams(route.slice('#consulta?'.length)).get('tx') ?? '' : null;
+  const [fragment, params] = route.split('?', 2);
+  const publicResult = fragment === '#resultado';
+  const publicSignature = params !== undefined && (fragment === '#consulta' || publicResult)
+    ? new URLSearchParams(params).get('tx') ?? ''
+    : null;
   const [registrationBusy, setRegistrationBusy] = useState(false);
   const [pendingHash, setPendingHash] = useState<string | null>(() => readPending()?.hash || null);
   const [receipt, setReceipt] = useState<MemoRecord | null>(null);
@@ -52,10 +56,10 @@ export function App() {
     return () => window.removeEventListener('hashchange', change);
   }, []);
   useEffect(() => {
-    document.title = `${publicSignature !== null ? 'Verificar documento' : step < 0 ? 'Escolher perfil' : steps[step].name} · PropertyChain`;
+    document.title = `${publicSignature !== null ? steps[publicResult ? 3 : 2].name : step < 0 ? 'Escolher perfil' : steps[step].name} · PropertyChain`;
     if (scroll.current) scroll.current.scrollTop = 0;
     if (routeChanged.current) heading.current?.focus({ preventScroll: true });
-  }, [step, publicSignature]);
+  }, [step, publicSignature, publicResult]);
   const navigate = (index: number) => { window.location.hash = index < 0 ? 'entrada' : steps[index].id; };
   const enter = () => navigate(profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0);
   function chooseFile(event: ChangeEvent<HTMLInputElement>) {
@@ -81,7 +85,7 @@ export function App() {
   const facts = isExample && <dl className="facts"><div><dt>Imóvel fictício</dt><dd>{sample.endereco}</dd></div><div><dt>Titular apresentado na demonstração</dt><dd>{sample.titular}</dd></div></dl>;
   const compact = <div className="compact-doc"><span className="doc-icon"><Icon name="doc" /></span><div><strong className="file-name">{fileName}</strong><small>{file ? 'Arquivo local · conteúdo não analisado' : `${sample.endereco} · Exemplo fictício`}</small></div></div>;
   const title = (children: React.ReactNode) => <h2 className="screen-title" ref={heading} tabIndex={-1}>{children}</h2>;
-  if (publicSignature !== null) return <PublicLookup key={publicSignature} signature={publicSignature} />;
+  if (publicSignature !== null) return <PublicLookup key={publicSignature} signature={publicSignature} showResult={publicResult} />;
   return <div className="studio" onClickCapture={event => { if (registrationBusy && (event.target as HTMLElement).closest('a[href^="#"]')) event.preventDefault(); }}>
     <aside className="guide" aria-label="Navegação da demonstração">
       <a className="studio-brand" href="#entrada"><span className="brand-mark"><Icon name="house" /></span>PropertyChain</a>
@@ -121,7 +125,7 @@ export function App() {
               <Note>{file ? 'A impressão digital é calculada neste dispositivo. O conteúdo do arquivo não é analisado nem enviado.' : 'Você pode usar o exemplo ou escolher um arquivo do seu dispositivo, sem enviá-lo a um servidor.'}</Note>
             </>}
             {step === 1 && <><span className="role">ETAPA DO CARTÓRIO</span>{title(<>Validação pelo <br />cartório.</>)}<p className="screen-description">No serviço, esta etapa será realizada pelo cartório. Aqui, a validação institucional é apenas simulada.</p>{compact}{receipt && <div className="registration-receipt"><a className="text-link" href={explorerUrl(receipt.signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a><p role="status">Registro confirmado na Devnet: o hash gravado foi conferido.</p><output className="digest">{receipt.hash}</output><p><a className="text-link" href={lookupFragment(receipt.signature)}>Abrir consulta pública</a></p></div>}<span className="status-chip pending">Aguardando validação · simulação</span><div className="validation-card"><div className="validation-symbol"><Icon name="shield" /></div><h3>Uma etapa de confiança</h3><p>Aqui, vamos demonstrar o resultado dessa validação. Depois, você verá a consulta como comprador ou corretor.</p><span className="field-label">Entidade apresentada na demonstração</span><strong>Cartório de exemplo — simulação</strong></div><Note>Nenhum cartório real analisou este documento. A confirmação do registro do hash não equivale à validação do cartório.</Note></>}
-            {step === 2 && <><div className="success-notice"><Icon name="info" />Validação pelo cartório apenas simulada.</div><span className="role">COMPRADOR OU CORRETOR</span>{title(<>Conheça a origem <br />do documento.</>)}<p className="screen-description">Veja como será apresentada a consulta. Nesta etapa, não há acesso à blockchain.</p><span className="selection-label">Documento selecionado para a demonstração</span><div className="selected-doc"><div className="selected-doc-top"><Icon name="doc" /><strong className="file-name">{fileName}</strong></div><span className="status-chip">Consulta demonstrativa</span>{facts}</div><PreparationPanel file={file} /><div className="consult-list"><p>O que será apresentado</p><ul><li><Icon name="check" />Exemplo de resultado da consulta</li><li><Icon name="check" />Tipo de documento e cartório simulado</li>{isExample && <li><Icon name="check" />Titular e histórico inteiramente fictícios</li>}</ul></div><Note>Esta demonstração não confirma autenticidade, correspondência do arquivo ou propriedade.</Note></>}
+            {step === 2 && <><div className="success-notice"><Icon name="info" />Validação pelo cartório apenas simulada.</div><span className="role">COMPRADOR OU CORRETOR</span>{title(<>Conheça a origem <br />do documento.</>)}<p className="screen-description">Esta tela usa um exemplo. Para verificar na Devnet, abra o link do registro que o proprietário compartilhou.</p><span className="selection-label">Documento selecionado para a demonstração</span><div className="selected-doc"><div className="selected-doc-top"><Icon name="doc" /><strong className="file-name">{fileName}</strong></div><span className="status-chip">Consulta demonstrativa</span>{facts}</div><PreparationPanel file={file} /><div className="consult-list"><p>O que será apresentado</p><ul><li><Icon name="check" />Exemplo de resultado da consulta</li><li><Icon name="check" />Tipo de documento e cartório simulado</li>{isExample && <li><Icon name="check" />Titular e histórico inteiramente fictícios</li>}</ul></div><Note>Esta demonstração não confirma autenticidade, correspondência do arquivo ou propriedade.</Note></>}
             {step === 3 && <><div className="result-heading"><span className="result-symbol"><Icon name="info" /></span><div><span className="role">RESULTADO SIMULADO</span>{title(<>Exemplo de <br />resultado.</>)}</div></div><p className="screen-description">Este é um exemplo de resultado. Para consultar na Devnet, abra o link de um registro confirmado.</p><span className="status-chip">Arquivo não comparado · simulação</span><div className="result-card">{!isExample ? <><h3>ARQUIVO LOCAL</h3><p className="local-file-name">{fileName}</p><p className="property-address">Conteúdo não analisado. Titular e imóvel não identificados pelo app.</p></> : <><h3>TITULAR APRESENTADO NA DEMONSTRAÇÃO</h3><p className="owner">{sample.titular}</p><p className="property-address">{sample.endereco}<br />Imóvel fictício</p></>}
               <div className="result-origin"><Icon name="doc" /><div><span>Tipo de documento</span><strong>{!isExample ? 'Não identificado pelo app' : sample.tipo}</strong></div></div><div className="result-origin"><Icon name="shield" /><div><span>Validado por</span><strong>Cartório de exemplo — simulação</strong><small>Nenhum cartório real analisou este documento.</small></div></div></div>
               {isExample && <section className="history" aria-label="Histórico fictício"><h3>HISTÓRICO FICTÍCIO</h3><ol className="timeline">{[...sample.historico].reverse().map(item => <li key={item.ano}><i className="timeline-point" aria-hidden="true" /><div><strong>{item.titular}</strong><span>{item.ano} · {item.descricao}</span></div></li>)}</ol></section>}

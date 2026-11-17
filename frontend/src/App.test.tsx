@@ -17,7 +17,7 @@ describe('Demonstração do PropertyChain', () => {
     expect(await screen.findByRole('heading', { name: /Validação pelo cartório/ })).toBeVisible();
     await next('Ver validação simulada');
     expect(await screen.findByRole('heading', { name: /Conheça a origem do documento/ })).toBeVisible();
-    await next('Verificar documento');
+    await next('Ver resultado de exemplo');
     expect(await screen.findByRole('heading', { name: /Exemplo de resultado/ })).toBeVisible();
     expect(screen.getByText(/Este é um exemplo de resultado/)).toBeVisible();
     expect(screen.getAllByText('Maria Oliveira')[0]).toBeVisible();
@@ -43,7 +43,7 @@ describe('Demonstração do PropertyChain', () => {
     await next('Ver validação simulada');
     await screen.findByRole('heading', { name: /Conheça a origem/ });
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
-    await next('Verificar documento');
+    await next('Ver resultado de exemplo');
     await screen.findByRole('heading', { name: /Exemplo de resultado/ });
     expect(screen.getByText('Não identificado pelo app')).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
