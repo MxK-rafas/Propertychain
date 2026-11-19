@@ -35,6 +35,5 @@
 .preparation{background:#edf3e7;border:1px solid #dce5d2;border-radius:13px;padding:16px;margin:22px 0}.preparation h3{font-size:16px;margin:0 0 9px}.preparation p{font-size:13px;line-height:1.65;color:#526249}.secondary-action{font:inherit;font-size:14px;color:#214c3d;background:white;border:1px solid #839e70;border-radius:9px;padding:12px;cursor:pointer;margin:4px 0 12px;min-height:44px}.secondary-action:disabled{opacity:.6;cursor:wait}.digest{display:block;font-size:12px;overflow-wrap:anywhere;line-height:1.7;margin:8px 0;padding:10px;background:white;border-radius:8px}.wallet-panel{border-top:1px solid #d5dfcb;margin-top:16px;padding-top:16px}@media(max-width:700px){.preparation p,.secondary-action{font-size:15px}}
 
 .registration{border-top:1px solid #cbd9c1;padding-top:18px;margin-top:18px}.registration .primary{margin-top:14px}.registration-receipt{border:1px solid #839e70;border-radius:12px;padding:14px;background:#edf3e7;margin:18px 0;font-size:14px;line-height:1.6}.back-button:disabled,.text-button:disabled{opacity:.5;cursor:wait}
-.public-lookup { min-height: 100svh; }
-.public-lookup .screen-scroll { line-height: 1.5; }
-.public-lookup .primary { margin-top: 16px; }
+.public-lookup-content { line-height: 1.5; }
+.public-lookup-content .primary { margin-top: 16px; }
