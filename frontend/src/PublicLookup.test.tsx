@@ -48,11 +48,14 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     expect(screen.getByText(/não comprova a autenticidade/)).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
     expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
+    expect(screen.getByText('ETAPA 4 DE 4')).toBeVisible();
+    expect(screen.getByRole('link', { name: /Resultado da verificação/ })).toHaveAttribute('aria-current', 'step');
     expect(lookupMemo).toHaveBeenCalledExactlyOnceWith(tx, expect.any(AbortSignal));
 
     await userEvent.click(screen.getByRole('button', { name: 'Fazer nova consulta' }));
     expect(await screen.findByRole('heading', { name: 'Verificar documento' })).toBeVisible();
     expect(window.location.hash).toBe(lookupFragment(tx));
+    expect(screen.getByText('ETAPA 3 DE 4')).toBeVisible();
     expect(screen.getByLabelText(/Escolher arquivo para comparar/)).toHaveValue('');
   });
 
@@ -81,6 +84,33 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     await screen.findByRole('heading', { name: 'Verificar documento' });
     await vi.waitFor(() => expect(window.location.hash).toBe(lookupFragment(tx)));
     expect(lookupMemo).not.toHaveBeenCalled();
+  });
+
+  it('mantém resultado e assinatura ao voltar pelas etapas, sem consultar de novo', async () => {
+    vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
+    openLink();
+    await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
+    await screen.findByRole('heading', { name: 'Resultado da verificação' });
+    await userEvent.click(screen.getByRole('button', { name: 'Voltar à tela anterior' }));
+    expect(await screen.findByRole('heading', { name: 'Verificar documento' })).toBeVisible();
+    expect(window.location.hash).toBe(lookupFragment(tx));
+    await userEvent.click(screen.getByRole('link', { name: /Resultado da verificação/ }));
+    expect(await screen.findByRole('heading', { name: 'Resultado da verificação' })).toBeVisible();
+    expect(screen.getByText(record.hash)).toBeVisible();
+    expect(lookupMemo).toHaveBeenCalledOnce();
+  });
+
+  it('não apresenta resultado anterior como comparação de outro arquivo', async () => {
+    vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
+    openLink();
+    await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
+    await screen.findByRole('heading', { name: 'Resultado da verificação' });
+    await userEvent.click(screen.getByRole('button', { name: 'Voltar à tela anterior' }));
+    await userEvent.upload(await screen.findByLabelText(/Escolher arquivo para comparar/), new File(['novo'], 'novo.pdf', { type: 'application/pdf' }));
+    await userEvent.click(screen.getByRole('link', { name: /Resultado da verificação/ }));
+    await vi.waitFor(() => expect(window.location.hash).toBe(lookupFragment(tx)));
+    expect(screen.queryByRole('heading', { name: 'Resultado da verificação' })).not.toBeInTheDocument();
+    expect(lookupMemo).toHaveBeenCalledOnce();
   });
 
   it.each([

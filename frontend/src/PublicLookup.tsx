@@ -75,11 +75,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
     }
   }
 
-  return <div className="preview-area public-lookup">
-    <main className="phone" aria-label="Consulta pública PropertyChain">
-      <header className="app-header"><strong>PropertyChain</strong></header>
-      <div className="screen-scroll">
-        <section className="screen-enter">
+  return <section className="screen-enter public-lookup-content" aria-label="Consulta pública PropertyChain">
           <h1 className="screen-title" ref={heading} tabIndex={-1}>{showResult && result ? 'Resultado da verificação' : 'Verificar documento'}</h1>
           {showResult && result ? <>
             <p role="status">Registro confirmado na Devnet.</p>
@@ -106,6 +102,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
             <p>O registro do hash não comprova a autenticidade do documento, a identidade do titular ou a propriedade do imóvel.</p>
             <button className="primary" onClick={() => {
               setFile(null);
+              setResult(null);
               window.location.hash = lookupFragment(signature);
             }}>Fazer nova consulta</button>
           </> : <form onSubmit={verify}>
@@ -114,10 +111,12 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
               <label className="file-label" htmlFor="lookup-file">Escolher arquivo para comparar (opcional)</label>
               <input id="lookup-file" ref={fileInput} className="file-input" type="file" disabled={busy} onChange={event => {
                 setFile(event.target.files?.[0] ?? null);
+                setResult(null);
                 setError('');
               }} />
               {file && <button className="text-button" type="button" disabled={busy} onClick={() => {
                 setFile(null);
+                setResult(null);
                 if (fileInput.current) fileInput.current.value = '';
               }}>Remover arquivo</button>}
               <span className="file-help">O arquivo fica neste aparelho.</span>
@@ -125,8 +124,5 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
             {error && <p className="error-message" role="alert">{error}</p>}
             <button className="primary" disabled={busy}>{busy ? 'Consultando…' : 'Verificar documento'}</button>
           </form>}
-        </section>
-      </div>
-    </main>
-  </div>;
+  </section>;
 }

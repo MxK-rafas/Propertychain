@@ -33,8 +33,8 @@ function Note({ children }: { children: React.ReactNode }) {
 }
 export function App() {
   const [route, setRoute] = useState(() => window.location.hash);
-  const step = currentStep(route);
   const [fragment, params] = route.split('?', 2);
+  const step = currentStep(fragment);
   const publicResult = fragment === '#resultado';
   const publicSignature = params !== undefined && (fragment === '#consulta' || publicResult)
     ? new URLSearchParams(params).get('tx') ?? ''
@@ -85,12 +85,11 @@ export function App() {
   const facts = isExample && <dl className="facts"><div><dt>Imóvel fictício</dt><dd>{sample.endereco}</dd></div><div><dt>Titular apresentado na demonstração</dt><dd>{sample.titular}</dd></div></dl>;
   const compact = <div className="compact-doc"><span className="doc-icon"><Icon name="doc" /></span><div><strong className="file-name">{fileName}</strong><small>{file ? 'Arquivo local · conteúdo não analisado' : `${sample.endereco} · Exemplo fictício`}</small></div></div>;
   const title = (children: React.ReactNode) => <h2 className="screen-title" ref={heading} tabIndex={-1}>{children}</h2>;
-  if (publicSignature !== null) return <PublicLookup key={publicSignature} signature={publicSignature} showResult={publicResult} />;
   return <div className="studio" onClickCapture={event => { if (registrationBusy && (event.target as HTMLElement).closest('a[href^="#"]')) event.preventDefault(); }}>
     <aside className="guide" aria-label="Navegação da demonstração">
       <a className="studio-brand" href="#entrada"><span className="brand-mark"><Icon name="house" /></span>PropertyChain</a>
       <div className="guide-content"><span className="eyebrow">DEMONSTRAÇÃO INTERATIVA</span><h1>A história do imóvel, <br /><em>mais clara.</em></h1><p className="guide-intro">Do cadastro à consulta, um caminho simples para verificar a origem de um documento.</p>
-        <nav className="steps" aria-label="Etapas"><a href="#entrada" className={step < 0 ? 'active' : ''} aria-current={step < 0 ? 'page' : undefined}><span className="step-number"><Icon name="house" /></span><span><strong>Escolher perfil</strong><small>Como deseja entrar?</small></span></a>{steps.map((item, index) => <a key={item.id} href={`#${item.id}`} className={step === index ? 'active' : ''} aria-current={step === index ? 'step' : undefined}><span className="step-number">0{index + 1}</span><span><strong>{item.name}</strong><small>{item.subtitle}</small></span><span className="step-current" aria-hidden="true">↗</span></a>)}</nav>
+        <nav className="steps" aria-label="Etapas"><a href="#entrada" className={step < 0 ? 'active' : ''} aria-current={step < 0 ? 'page' : undefined}><span className="step-number"><Icon name="house" /></span><span><strong>Escolher perfil</strong><small>Como deseja entrar?</small></span></a>{steps.map((item, index) => <a key={item.id} href={publicSignature !== null && (index === 2 || index === 3) ? lookupFragment(publicSignature, index === 3 ? 'resultado' : 'consulta') : `#${item.id}`} className={step === index ? 'active' : ''} aria-current={step === index ? 'step' : undefined}><span className="step-number">0{index + 1}</span><span><strong>{item.name}</strong><small>{item.subtitle}</small></span><span className="step-current" aria-hidden="true">↗</span></a>)}</nav>
         <div className="guide-note"><Icon name="info" /><p>Cadastro de hash na Devnet disponível após aprovação na Phantom. Cartório simulado. Registros confirmados podem ser consultados por link.</p></div>
       </div><span className="guide-footer">PROPERTYCHAIN <span>•</span> REGISTRO E CONSULTA NA DEVNET</span>
     </aside>
@@ -99,8 +98,8 @@ export function App() {
         <header className="app-header"><span className="app-logo"><Icon name="house" /></span><span>Documentos<br /><strong>do imóvel</strong></span><span className="prototype-tag">DEMONSTRAÇÃO</span></header>
         <div className="demo-banner"><span className="demo-dot" />Cartório simulado</div>
         <div className="screen-scroll" ref={scroll}>
-          <div className="screen-top">{step >= 0 && <button className="back-button" disabled={registrationBusy} aria-label="Voltar à tela anterior" onClick={() => navigate(step === (profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0) ? -1 : step - 1)}><Icon name="back" /></button>}<span>{step < 0 ? 'BOAS-VINDAS' : `ETAPA ${step + 1} DE 4`}</span><div className="progress-bars" aria-hidden="true">{steps.map((item, index) => <i key={item.id} className={index <= step ? 'done' : ''} />)}</div></div>
-          <section key={step} className="screen-enter">
+          <div className="screen-top">{step >= 0 && <button className="back-button" disabled={registrationBusy} aria-label="Voltar à tela anterior" onClick={() => { if (publicSignature !== null) window.location.hash = publicResult ? lookupFragment(publicSignature) : '#entrada'; else navigate(step === (profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0) ? -1 : step - 1); }}><Icon name="back" /></button>}<span>{step < 0 ? 'BOAS-VINDAS' : `ETAPA ${step + 1} DE 4`}</span><div className="progress-bars" aria-hidden="true">{steps.map((item, index) => <i key={item.id} className={index <= step ? 'done' : ''} />)}</div></div>
+          {publicSignature !== null ? <PublicLookup key={publicSignature} signature={publicSignature} showResult={publicResult} /> : <section key={step} className="screen-enter">
             {step < 0 && <>
               <span className="role">BEM-VINDO AO PROPERTYCHAIN</span>{title(<>Como deseja <br />entrar?</>)}
               <p className="screen-description">Escolha um perfil para conhecer seu caminho no aplicativo.</p>
@@ -131,9 +130,9 @@ export function App() {
               {isExample && <section className="history" aria-label="Histórico fictício"><h3>HISTÓRICO FICTÍCIO</h3><ol className="timeline">{[...sample.historico].reverse().map(item => <li key={item.ano}><i className="timeline-point" aria-hidden="true" /><div><strong>{item.titular}</strong><span>{item.ano} · {item.descricao}</span></div></li>)}</ol></section>}
               <Note>O cartório e o histórico do exemplo são fictícios. O registro de um hash na Devnet não comprova a autenticidade do documento ou a propriedade do imóvel.</Note>
             </>}
-          </section>
+          </section>}
         </div>
-        <footer className="app-footer">{step >= 0 && <button className="text-button switch-profile" disabled={registrationBusy} onClick={() => navigate(-1)}>Trocar perfil</button>}{step !== 0 && <button className="primary" onClick={() => step < 0 ? enter() : step === 1 && receipt ? window.location.hash = lookupFragment(receipt.signature) : navigate(step === 3 ? 2 : step + 1)}><span>{step < 0 ? 'Entrar na demonstração' : steps[step].action}</span><Icon name="arrow" /></button>}<p>Solana Devnet · cartório simulado · arquivo somente local.</p><div className="home-indicator" aria-hidden="true" /></footer>
+        <footer className="app-footer">{step >= 0 && <button className="text-button switch-profile" disabled={registrationBusy} onClick={() => navigate(-1)}>Trocar perfil</button>}{publicSignature === null && step !== 0 && <button className="primary" onClick={() => step < 0 ? enter() : step === 1 && receipt ? window.location.hash = lookupFragment(receipt.signature) : navigate(step === 3 ? 2 : step + 1)}><span>{step < 0 ? 'Entrar na demonstração' : steps[step].action}</span><Icon name="arrow" /></button>}<p>Solana Devnet · cartório simulado · arquivo somente local.</p><div className="home-indicator" aria-hidden="true" /></footer>
       </main><p className="preview-caption">Toque no botão verde para percorrer a demonstração.</p>
     </div>
   </div>;
