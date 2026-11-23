@@ -38,3 +38,17 @@ Se ultrapassar cinco segundos, registrar a medição e a causa observada. O app 
 ## Publicação
 
 Build Vercel com somente assets fictícios, HTTPS, abertura direta do link em dois aparelhos, legibilidade no celular e uma ação principal por tela. Só marcar etapa concluída com evidência real e aceite do autor.
+
+
+## Evolução #56 — relatório de verificação em PDF
+
+- Após uma consulta confirmada, baixar o PDF nos três casos: sem arquivo, arquivo idêntico e arquivo diferente. Comparar o texto, hash, transação e links com o resultado da tela.
+- Conferir que a data/hora corresponde à consulta no relógio do aparelho, expressa em UTC, e não é apresentada como horário certificado da transação.
+- Abrir os links no PDF e conferir domínio oficial e explorador Devnet. O arquivo deve explicar rede de testes, ausência de valor legal e cartório simulado.
+- Conferir que o PDF não contém nome/conteúdo/imagem do documento original, titular inventado ou anexos. A geração não faz nova consulta RPC, upload ou transação.
+- Antes de verificar e em consultas com erro/inexistentes/inválidas, não deve aparecer relatório de sucesso.
+- Usar Abrir PDF se o navegador não iniciar o download automático; testar também Baixar PDF novamente. Conferir no computador e na Phantom real.
+- Ao fazer nova consulta ou trocar o arquivo, o relatório antigo não fica disponível como se pertencesse à nova comparação. Falha ao gerar permite tentar de novo sem apagar o resultado da consulta.
+- A publicação oficial deve abrir em uma sessão anônima, sem login Vercel e sem carteira para consulta. Não usar URL protegida de preview para os testadores.
+
+Somente encerrar a issue #56 após o teste e aceite do autor. O MVP original permanece aceito na #6.

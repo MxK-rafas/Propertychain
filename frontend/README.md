@@ -43,6 +43,18 @@ Também é possível abrir diretamente um link recebido. O app aceita links de c
 
 Em 17/11/2026, a função de leitura foi executada dez vezes contra o RPC público da Devnet para a [transação confirmada da etapa 4](https://explorer.solana.com/tx/2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G?cluster=devnet). As dez leituras conferiram o mesmo hash. Mediana de 0,45 s, máximo de 1,05 s e zero erros. Essa execução foi feita no ambiente de desenvolvimento e mede apenas a consulta RPC e a conferência do Memo.
 
+## Relatório PDF — evolução #56
+
+O autor aprovou esta evolução após concluir o MVP. Faça uma consulta confirmada e clique em **Baixar relatório em PDF**, na tela de resultado. O arquivo é gerado neste aparelho; a primeira solicitação carrega a biblioteca de PDF do próprio app. Não envia documento, nome de arquivo ou conteúdo a outro serviço, não exige carteira e não envia nova transação.
+
+O PDF informa hash registrado, identificação da transação, comparação (arquivo igual, diferente ou não comparado), data/hora da consulta em UTC segundo o relógio do aparelho e os links oficiais da consulta e do explorador. Não é uma certidão, comprovação de propriedade ou validação de cartório. Abrir o PDF não faz uma consulta nova à Devnet.
+
+Se o download não aparecer, use **Abrir PDF**; **Baixar PDF novamente** mantém o mesmo relatório enquanto essa consulta estiver aberta. Ao iniciar nova consulta, trocar o arquivo ou sair do resultado, o relatório preparado é descartado. Não há histórico de relatórios armazenado no app.
+
+Teste do autor: abra/baixe o PDF no computador e na Phantom real, repita com os três resultados de arquivo e confira se texto/hash/links correspondem à tela. A [issue #56](https://github.com/MxK-rafas/Propertychain/issues/56) permanece aberta até esse aceite. Os testes em Chromium em tamanho de celular não substituem o teste na Phantom.
+
+Implementação: [pdf-lib 1.17.1](https://pdf-lib.js.org/docs/api/classes/pdfdocument), carregado sob demanda. Usa fontes padrão do PDF, sem buscar fontes externas ou anexar arquivos ao PDF.
+
 ## Recusa, falha e resposta incerta
 
 - Se a Phantom fechar e aparecer um erro, informe a mensagem completa e diga se apareceu o link do explorador. Os códigos identificam falhas no retorno da carteira (`PC_WALLET`), alterações na mensagem (`PC_WALLET_MESSAGE`), verificação criptográfica no navegador (`PC_CRYPTO`), consulta do prazo após aprovação (`PC_LIFETIME`), armazenamento do comprovante (`PC_RECEIPT`) e consulta após tentativa de envio (`PC_CONFIRM`). Em caso de alteração, o app bloqueia o envio e informa os campos divergentes que conseguiu identificar.
@@ -79,7 +91,7 @@ npm run build
 npm run preview
 ```
 
-77 testes passaram: consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
+90 testes passaram (incluindo geração e download do relatório PDF): consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 

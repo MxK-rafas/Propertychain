@@ -40,6 +40,10 @@ O autor definiu meta de **1–5 segundos para consultar uma transação já conf
 
 O [link do protótipo deste chat](https://documento-imovel-demo-rafael.equaltoucan4.chatgpt.site) mostra a referência aprovada, não uma integração Solana pronta.
 
+## Evolução autorizada após o MVP
+
+[Relatório de verificação em PDF — issue #56](https://github.com/MxK-rafas/Propertychain/issues/56): aprovado para implementação pelo autor. Geração local na tela de resultado, com hash, transação, comparação, data/hora da consulta e links públicos; sem anexar o documento original ou enviar nova transação. Disponível para teste, com aceite e download/abertura na Phantom real ainda pendentes. [Como testar](frontend/README.md#relatório-pdf--evolução-56).
+
 ## Modelo fictício e documentos reais
 
 O exemplo usa Maria Oliveira, João Oliveira, Rua das Palmeiras, 120 e Cartório de exemplo. Todos são dados de demonstração. O app calcula o SHA-256 da foto localmente. Ao aprovar o registro, o usuário publica o hash e os metadados da transação na Devnet. O conteúdo e o nome do arquivo ficam no aparelho. Os campos fictícios do exemplo são ocultados ao selecionar um arquivo próprio.

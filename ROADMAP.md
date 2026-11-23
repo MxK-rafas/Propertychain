@@ -17,9 +17,11 @@ Não avançar automaticamente entre etapas. Assinatura humana e confirmação da
 
 O autor validou o registro na Phantom e a consulta em outro aparelho com os três resultados esperados. As dez leituras do registro confirmado tiveram mediana de 0,45 s, máximo de 1,05 s e zero erros. [Registro de teste](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G) · [Guia do frontend](frontend/README.md)
 
-## Depois
+## Evolução autorizada após o MVP
 
-- Relatórios de verificação.
+- [#56 — relatório de verificação em PDF](https://github.com/MxK-rafas/Propertychain/issues/56): escopo aprovado pelo autor em 23/11/2026; geração local após consulta confirmada, sem incluir o arquivo original ou enviar nova transação. Implementação para teste; aceite final e abertura/download na Phantom real ainda pendentes.
+
+## Depois
 - Taxa por documento/consulta e planos mensais.
 - Piloto com cartórios parceiros.
 - Armazenamento seguro para documentos reais e preparação jurídica/LGPD para essa operação.
