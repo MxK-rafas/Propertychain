@@ -1,3 +1,5 @@
+> **Estado atual — 23/11/2026:** Em 23/11/2026, o autor aprovou também o teste local com foto de documento real, concluindo o aceite do MVP no escopo da spec. O aceite foi informado pelo autor; a foto não foi enviada ao Codex nem anexada ao repositório. Isso não constitui análise da autenticidade jurídica do documento ou aprovação por cartório real. [Aceite final — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). Os registros de etapas pendentes abaixo documentam estados anteriores e não representam a situação atual.
+
 > **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
 
 # Revisão atual de entregas — consolidação para Solana

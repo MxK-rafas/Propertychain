@@ -1,3 +1,5 @@
+> **Estado atual — 23/11/2026:** Em 23/11/2026, o autor aprovou também o teste local com foto de documento real, concluindo o aceite do MVP no escopo da spec. O aceite foi informado pelo autor; a foto não foi enviada ao Codex nem anexada ao repositório. Isso não constitui análise da autenticidade jurídica do documento ou aprovação por cartório real. [Aceite final — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). Os registros de etapas pendentes abaixo documentam estados anteriores e não representam a situação atual.
+
 # PropertyChain — especificação do MVP
 
 Decisões consolidadas com o autor em 12/11/2026. Esta é a fonte de verdade para a implementação atual. O Lean Canvas e a ficha preservam as hipóteses de negócio; documentos e contratos da fase EVM são históricos quando conflitarem com esta spec. Não tratar planejamento como funcionalidade entregue.

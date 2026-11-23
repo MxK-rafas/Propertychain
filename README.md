@@ -23,6 +23,8 @@ O autor definiu meta de **1–5 segundos para consultar uma transação já conf
 
 ## Estado real da entrega
 
+**MVP concluído no escopo aprovado em 23/11/2026**, após o aceite do autor para o teste com foto real na [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). O cartório permanece simulado; o aceite não é validação jurídica do documento.
+
 | Item | Estado |
 |---|---|
 | Spec, arquitetura, instruções para IA e backlog atual | Consolidados neste repositório |
@@ -33,7 +35,7 @@ O autor definiu meta de **1–5 segundos para consultar uma transação já conf
 | Registro Memo Devnet | Assinado pelo autor na Phantom. [PR #47](https://github.com/MxK-rafas/Propertychain/pull/47) · [Transação finalizada](https://explorer.solana.com/tx/2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G?cluster=devnet) |
 | Consulta pública por terceiros | Validada no computador e no celular, sem arquivo, com a mesma cópia e com arquivo diferente. [PR #48](https://github.com/MxK-rafas/Propertychain/pull/48) |
 | Publicação na Vercel | [Aplicativo HTTPS](https://propertychain-theta.vercel.app/), validado em dois aparelhos |
-| Foto real para teste | Teste específico pendente. [Issue #6](https://github.com/MxK-rafas/Propertychain/issues/6) |
+| Foto real para teste | Teste aprovado pelo autor em 23/11/2026. [Issue #6](https://github.com/MxK-rafas/Propertychain/issues/6) |
 | Solidity/Hardhat | Código legado preservado em `contracts/`; não é dependência do novo MVP |
 
 O [link do protótipo deste chat](https://documento-imovel-demo-rafael.equaltoucan4.chatgpt.site) mostra a referência aprovada, não uma integração Solana pronta.

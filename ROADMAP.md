@@ -1,6 +1,6 @@
 # Roadmap do PropertyChain
 
-O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. O [MVP publicado na Vercel](https://propertychain-theta.vercel.app/) foi testado no computador e no celular. O teste específico com foto real segue na [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6).
+O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. O [MVP publicado na Vercel](https://propertychain-theta.vercel.app/) foi testado no computador e no celular. O teste com foto real foi aprovado pelo autor em 23/11/2026, concluindo as seis etapas do MVP no escopo aprovado. [Aceite final — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6).
 
 ## Entregas do MVP
 
