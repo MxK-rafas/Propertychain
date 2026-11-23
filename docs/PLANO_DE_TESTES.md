@@ -15,6 +15,8 @@ Phantom ausente, conexão recusada, assinatura cancelada, falta de SOL de teste,
 
 ## Consulta
 
+Abrir a página inicial tanto no computador quanto no celular, escolher Comprador / verificador e consultar pela mesma tela, colando link/código e selecionando arquivo opcional. Conferir que o arquivo e a comparação não se perdem ao avançar para a etapa 4. Repetir com link temporário antigo, código da transação e link do explorador Devnet. Não deve haver navegação para o deploy temporário nem solicitação de carteira. O compartilhamento deve usar sempre o domínio oficial.
+
 Ao abrir um link público, a navegação deve marcar **Etapa 3 de 4**. Após verificar um registro confirmado, deve avançar para **Resultado da verificação**, marcar **Etapa 4 de 4** e manter a assinatura no endereço. Conferir os três casos: sem arquivo, cópia idêntica e arquivo diferente. A comparação escolhida deve aparecer no resultado. **Fazer nova consulta** retorna à etapa 3 e limpa o arquivo selecionado. Se voltar e trocar/remover o arquivo, o resultado anterior não pode ser reapresentado como uma nova comparação sem verificar novamente. Erros de consulta permanecem na etapa 3.
 
 Abrir link em outro celular sem Phantom; consultar a mesma assinatura. Exemplo fixo pode ser comparado automaticamente; para outro documento, distinguir registro encontrado de arquivo não comparado. Comparar uma cópia exata e uma alterada. Testar assinatura ausente/inválida, transação inexistente, falha/pendente, programa errado, Memo incompatível e conteúdo conflitante. Consulta não solicita assinatura nem taxa.

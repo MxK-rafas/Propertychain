@@ -3,16 +3,16 @@ import type { FormEvent } from 'react';
 import { explorerUrl } from './memo-record';
 import type { MemoLookup } from './memo';
 import { sha256 } from './preparation';
+import { lookupFragment, publicLookupUrl, transactionFromReference } from './consultation-link';
 
-export function lookupFragment(signature: string, page: 'consulta' | 'resultado' = 'consulta') {
-  return `#${page}?${new URLSearchParams({ tx: signature })}`;
-}
+export { lookupFragment } from './consultation-link';
 
 type Result = Extract<MemoLookup, { status: 'confirmed' }> & {
   comparison: 'none' | 'match' | 'different';
 };
 
 export function PublicLookup({ signature, showResult }: { signature: string; showResult: boolean }) {
+  const [reference, setReference] = useState(signature);
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState('');
@@ -21,19 +21,28 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
   const active = useRef<AbortController | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
-  const shareLink = new URL(window.location.href);
-  shareLink.search = '';
-  shareLink.hash = lookupFragment(signature);
+  const previousSignature = useRef(signature);
+  const shareLink = publicLookupUrl(result?.record.signature ?? signature);
+  const resultForRoute = result?.record.signature === signature ? result : null;
 
   useEffect(() => () => active.current?.abort(), []);
   useEffect(() => {
-    if (showResult && !result) window.location.replace(lookupFragment(signature));
-  }, [result, showResult, signature]);
+    if (previousSignature.current === signature) return;
+    previousSignature.current = signature;
+    setReference(signature);
+    if (result?.record.signature === signature) return;
+    active.current?.abort(); active.current = null;
+    setBusy(false); setFile(null); setResult(null); setError(''); setCopyStatus('idle');
+    if (fileInput.current) fileInput.current.value = '';
+  }, [signature, result]);
+  useEffect(() => {
+    if (showResult && !resultForRoute) window.location.replace(signature ? lookupFragment(signature) : '#consulta');
+  }, [resultForRoute, showResult, signature]);
   useEffect(() => { heading.current?.focus(); }, [showResult]);
 
   async function copyLink() {
     try {
-      await navigator.clipboard.writeText(shareLink.href);
+      await navigator.clipboard.writeText(shareLink);
       setCopyStatus('copied');
     } catch {
       setCopyStatus('manual');
@@ -44,6 +53,11 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
     event.preventDefault();
     if (active.current) return;
     setError('');
+    const selectedSignature = transactionFromReference(reference);
+    if (!selectedSignature) {
+      setError('Cole o link completo do registro ou um código de transação válido da Devnet. Não use o hash SHA-256 do arquivo.');
+      return;
+    }
     const request = new AbortController();
     active.current = request;
     setBusy(true);
@@ -51,7 +65,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
     try {
       const { lookupMemo } = await import('./memo');
       request.signal.throwIfAborted();
-      const found = await lookupMemo(signature, request.signal);
+      const found = await lookupMemo(selectedSignature, request.signal);
       request.signal.throwIfAborted();
       if (found.status !== 'confirmed') {
         setError({
@@ -66,34 +80,36 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
       if (request.signal.aborted) return;
       setCopyStatus('idle');
       setResult({ ...found, comparison: hash === null ? 'none' : hash === found.record.hash ? 'match' : 'different' });
-      window.location.hash = lookupFragment(signature, 'resultado');
+      window.location.hash = lookupFragment(selectedSignature, 'resultado');
     } catch {
       if (!request.signal.aborted) setError(failure);
     } finally {
-      active.current = null;
-      if (!request.signal.aborted) setBusy(false);
+      if (active.current === request) {
+        active.current = null;
+        if (!request.signal.aborted) setBusy(false);
+      }
     }
   }
 
   return <section className="screen-enter public-lookup-content" aria-label="Consulta pública PropertyChain">
-          <h1 className="screen-title" ref={heading} tabIndex={-1}>{showResult && result ? 'Resultado da verificação' : 'Verificar documento'}</h1>
-          {showResult && result ? <>
+          <h1 className="screen-title" ref={heading} tabIndex={-1}>{showResult && resultForRoute ? 'Resultado da verificação' : 'Verificar documento'}</h1>
+          {showResult && resultForRoute ? <>
             <p role="status">Registro confirmado na Devnet.</p>
             <dl className="facts">
               <div><dt>Comparação do arquivo</dt><dd>{{
               none: 'Arquivo não comparado. Nenhum arquivo foi selecionado.',
               match: 'A impressão digital do arquivo coincide com a do registro.',
               different: 'A impressão digital do arquivo é diferente da que consta no registro.',
-              }[result.comparison]}</dd></div>
-              <div><dt>SHA-256 registrado</dt><dd className="digest">{result.record.hash}</dd></div>
-              <div><dt>Tempo de consulta à Devnet</dt><dd>{(result.elapsedMs / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} s</dd></div>
+              }[resultForRoute.comparison]}</dd></div>
+              <div><dt>SHA-256 registrado</dt><dd className="digest">{resultForRoute.record.hash}</dd></div>
+              <div><dt>Tempo de consulta à Devnet</dt><dd>{(resultForRoute.elapsedMs / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} s</dd></div>
             </dl>
             <p><a className="text-link" href={explorerUrl(signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a></p>
             <button className="text-button" onClick={copyLink}>Copiar link da consulta</button>
             {copyStatus === 'copied' && <p role="status">Link copiado.</p>}
             {copyStatus === 'manual' && <div className="file-controls">
               <label htmlFor="consultation-link">Copie o endereço abaixo</label>
-              <textarea id="consultation-link" readOnly value={shareLink.href} onFocus={event => event.target.select()} />
+              <textarea id="consultation-link" className="reference-input" readOnly value={shareLink} onFocus={event => event.target.select()} />
             </div>}
             <dl className="facts">
               <div><dt>Tipo de documento</dt><dd>Não identificado pelo app.</dd></div>
@@ -107,6 +123,13 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
             }}>Fazer nova consulta</button>
           </> : <form onSubmit={verify}>
             <p className="screen-description">Consulte o registro na Solana Devnet sem conectar carteira. Se tiver uma cópia do arquivo, você pode compará-la neste aparelho.</p>
+            <div className="reference-controls">
+              <label htmlFor="lookup-reference">Link do registro ou código da transação</label>
+              <textarea id="lookup-reference" className="reference-input" rows={3} value={reference} disabled={busy} spellCheck={false} autoCapitalize="none" autoCorrect="off" aria-describedby="reference-help" onChange={event => {
+                setReference(event.target.value); setResult(null); setError('');
+              }} />
+              <p id="reference-help" className="file-help">Cole o link compartilhado pelo proprietário. Nenhuma carteira é necessária para consultar.</p>
+            </div>
             <div className="file-controls">
               <label className="file-label" htmlFor="lookup-file">Escolher arquivo para comparar (opcional)</label>
               <input id="lookup-file" ref={fileInput} className="file-input" type="file" disabled={busy} onChange={event => {

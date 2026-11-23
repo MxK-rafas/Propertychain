@@ -10,7 +10,7 @@ import samplePdf from '../../fixtures/documento-ficticio.pdf?url';
 const steps = [
   { id: 'cadastro', name: 'Cadastrar documento', subtitle: 'O ponto de partida', action: 'Continuar demonstração' },
   { id: 'validacao', name: 'Validação pelo cartório', subtitle: 'Uma etapa de confiança', action: 'Ver validação simulada' },
-  { id: 'consulta', name: 'Verificar documento', subtitle: 'A consulta de quem precisa saber', action: 'Ver resultado de exemplo' },
+  { id: 'consulta', name: 'Verificar documento', subtitle: 'A consulta de quem precisa saber', action: 'Verificar documento' },
   { id: 'resultado', name: 'Resultado da verificação', subtitle: 'Registro e comparação do arquivo', action: 'Fazer nova consulta' },
 ];
 function currentStep(route: string) {
@@ -36,8 +36,8 @@ export function App() {
   const [fragment, params] = route.split('?', 2);
   const step = currentStep(fragment);
   const publicResult = fragment === '#resultado';
-  const publicSignature = params !== undefined && (fragment === '#consulta' || publicResult)
-    ? new URLSearchParams(params).get('tx') ?? ''
+  const publicSignature = fragment === '#consulta' || publicResult
+    ? new URLSearchParams(params ?? '').get('tx') ?? ''
     : null;
   const [registrationBusy, setRegistrationBusy] = useState(false);
   const [pendingHash, setPendingHash] = useState<string | null>(() => readPending()?.hash || null);
@@ -99,7 +99,7 @@ export function App() {
         <div className="demo-banner"><span className="demo-dot" />Cartório simulado</div>
         <div className="screen-scroll" ref={scroll}>
           <div className="screen-top">{step >= 0 && <button className="back-button" disabled={registrationBusy} aria-label="Voltar à tela anterior" onClick={() => { if (publicSignature !== null) window.location.hash = publicResult ? lookupFragment(publicSignature) : '#entrada'; else navigate(step === (profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0) ? -1 : step - 1); }}><Icon name="back" /></button>}<span>{step < 0 ? 'BOAS-VINDAS' : `ETAPA ${step + 1} DE 4`}</span><div className="progress-bars" aria-hidden="true">{steps.map((item, index) => <i key={item.id} className={index <= step ? 'done' : ''} />)}</div></div>
-          {publicSignature !== null ? <PublicLookup key={publicSignature} signature={publicSignature} showResult={publicResult} /> : <section key={step} className="screen-enter">
+          {publicSignature !== null ? <PublicLookup signature={publicSignature} showResult={publicResult} /> : <section key={step} className="screen-enter">
             {step < 0 && <>
               <span className="role">BEM-VINDO AO PROPERTYCHAIN</span>{title(<>Como deseja <br />entrar?</>)}
               <p className="screen-description">Escolha um perfil para conhecer seu caminho no aplicativo.</p>
@@ -124,12 +124,6 @@ export function App() {
               <Note>{file ? 'A impressão digital é calculada neste dispositivo. O conteúdo do arquivo não é analisado nem enviado.' : 'Você pode usar o exemplo ou escolher um arquivo do seu dispositivo, sem enviá-lo a um servidor.'}</Note>
             </>}
             {step === 1 && <><span className="role">ETAPA DO CARTÓRIO</span>{title(<>Validação pelo <br />cartório.</>)}<p className="screen-description">No serviço, esta etapa será realizada pelo cartório. Aqui, a validação institucional é apenas simulada.</p>{compact}{receipt && <div className="registration-receipt"><a className="text-link" href={explorerUrl(receipt.signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a><p role="status">Registro confirmado na Devnet: o hash gravado foi conferido.</p><output className="digest">{receipt.hash}</output><p><a className="text-link" href={lookupFragment(receipt.signature)}>Abrir consulta pública</a></p></div>}<span className="status-chip pending">Aguardando validação · simulação</span><div className="validation-card"><div className="validation-symbol"><Icon name="shield" /></div><h3>Uma etapa de confiança</h3><p>Aqui, vamos demonstrar o resultado dessa validação. Depois, você verá a consulta como comprador ou corretor.</p><span className="field-label">Entidade apresentada na demonstração</span><strong>Cartório de exemplo — simulação</strong></div><Note>Nenhum cartório real analisou este documento. A confirmação do registro do hash não equivale à validação do cartório.</Note></>}
-            {step === 2 && <><div className="success-notice"><Icon name="info" />Validação pelo cartório apenas simulada.</div><span className="role">COMPRADOR OU CORRETOR</span>{title(<>Conheça a origem <br />do documento.</>)}<p className="screen-description">Esta tela usa um exemplo. Para verificar na Devnet, abra o link do registro que o proprietário compartilhou.</p><span className="selection-label">Documento selecionado para a demonstração</span><div className="selected-doc"><div className="selected-doc-top"><Icon name="doc" /><strong className="file-name">{fileName}</strong></div><span className="status-chip">Consulta demonstrativa</span>{facts}</div><PreparationPanel file={file} /><div className="consult-list"><p>O que será apresentado</p><ul><li><Icon name="check" />Exemplo de resultado da consulta</li><li><Icon name="check" />Tipo de documento e cartório simulado</li>{isExample && <li><Icon name="check" />Titular e histórico inteiramente fictícios</li>}</ul></div><Note>Esta demonstração não confirma autenticidade, correspondência do arquivo ou propriedade.</Note></>}
-            {step === 3 && <><div className="result-heading"><span className="result-symbol"><Icon name="info" /></span><div><span className="role">RESULTADO SIMULADO</span>{title(<>Exemplo de <br />resultado.</>)}</div></div><p className="screen-description">Este é um exemplo de resultado. Para consultar na Devnet, abra o link de um registro confirmado.</p><span className="status-chip">Arquivo não comparado · simulação</span><div className="result-card">{!isExample ? <><h3>ARQUIVO LOCAL</h3><p className="local-file-name">{fileName}</p><p className="property-address">Conteúdo não analisado. Titular e imóvel não identificados pelo app.</p></> : <><h3>TITULAR APRESENTADO NA DEMONSTRAÇÃO</h3><p className="owner">{sample.titular}</p><p className="property-address">{sample.endereco}<br />Imóvel fictício</p></>}
-              <div className="result-origin"><Icon name="doc" /><div><span>Tipo de documento</span><strong>{!isExample ? 'Não identificado pelo app' : sample.tipo}</strong></div></div><div className="result-origin"><Icon name="shield" /><div><span>Validado por</span><strong>Cartório de exemplo — simulação</strong><small>Nenhum cartório real analisou este documento.</small></div></div></div>
-              {isExample && <section className="history" aria-label="Histórico fictício"><h3>HISTÓRICO FICTÍCIO</h3><ol className="timeline">{[...sample.historico].reverse().map(item => <li key={item.ano}><i className="timeline-point" aria-hidden="true" /><div><strong>{item.titular}</strong><span>{item.ano} · {item.descricao}</span></div></li>)}</ol></section>}
-              <Note>O cartório e o histórico do exemplo são fictícios. O registro de um hash na Devnet não comprova a autenticidade do documento ou a propriedade do imóvel.</Note>
-            </>}
           </section>}
         </div>
         <footer className="app-footer">{step >= 0 && <button className="text-button switch-profile" disabled={registrationBusy} onClick={() => navigate(-1)}>Trocar perfil</button>}{publicSignature === null && step !== 0 && <button className="primary" onClick={() => step < 0 ? enter() : step === 1 && receipt ? window.location.hash = lookupFragment(receipt.signature) : navigate(step === 3 ? 2 : step + 1)}><span>{step < 0 ? 'Entrar na demonstração' : steps[step].action}</span><Icon name="arrow" /></button>}<p>Solana Devnet · cartório simulado · arquivo somente local.</p><div className="home-indicator" aria-hidden="true" /></footer>

@@ -9,23 +9,21 @@ async function next(label: string) {
   await userEvent.click(screen.getByRole('button', { name: label }));
 }
 describe('Demonstração do PropertyChain', () => {
-  it('percorre as quatro telas, volta e repete a consulta sem alegar sucesso real', async () => {
+  it('vai do cadastro e cartório à consulta real, sem inventar resultado', async () => {
     openCadastro();
     render(<App />);
     expect(screen.getByRole('heading', { name: /Cadastre seu documento/ })).toBeVisible();
     window.location.hash = 'validacao';
-    expect(await screen.findByRole('heading', { name: /Validação pelo cartório/ })).toBeVisible();
+    await screen.findByRole('heading', { name: /Validação pelo cartório/ });
     await next('Ver validação simulada');
-    expect(await screen.findByRole('heading', { name: /Conheça a origem do documento/ })).toBeVisible();
-    await next('Ver resultado de exemplo');
-    expect(await screen.findByRole('heading', { name: /Exemplo de resultado/ })).toBeVisible();
-    expect(screen.getByText(/Este é um exemplo de resultado/)).toBeVisible();
-    expect(screen.getAllByText('Maria Oliveira')[0]).toBeVisible();
-    expect(screen.getByText('João Oliveira')).toBeVisible();
-    await next('Fazer nova consulta');
-    expect(await screen.findByRole('heading', { name: /Conheça a origem/ })).toBeVisible();
-    await next('Voltar à tela anterior');
-    expect(await screen.findByRole('heading', { name: /Validação pelo cartório/ })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: 'Verificar documento' })).toBeVisible();
+    expect(screen.getByLabelText('Link do registro ou código da transação')).toHaveValue('');
+    expect(screen.getByText('ETAPA 3 DE 4')).toBeVisible();
+    await next('Verificar documento');
+    expect(await screen.findByRole('alert')).toHaveTextContent('Cole o link completo');
+    expect(screen.queryByRole('heading', { name: 'Resultado da verificação' })).not.toBeInTheDocument();
+    await next('Trocar perfil');
+    expect(await screen.findByRole('heading', { name: /Como deseja entrar/ })).toBeVisible();
   });
 
   it('mantém arquivo local sem rede e remove dados fictícios em todo o percurso', async () => {
@@ -41,12 +39,9 @@ describe('Demonstração do PropertyChain', () => {
     window.location.hash = 'validacao';
     await screen.findByRole('heading', { name: /Validação pelo cartório/ });
     await next('Ver validação simulada');
-    await screen.findByRole('heading', { name: /Conheça a origem/ });
+    await screen.findByRole('heading', { name: 'Verificar documento' });
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
-    await next('Ver resultado de exemplo');
-    await screen.findByRole('heading', { name: /Exemplo de resultado/ });
-    expect(screen.getByText('Não identificado pelo app')).toBeVisible();
-    expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Link do registro ou código da transação')).toHaveValue('');
     expect(screen.queryByText('João Oliveira')).not.toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Histórico fictício' })).not.toBeInTheDocument();
     expect(screen.queryByText(/Rua das Palmeiras/)).not.toBeInTheDocument();
@@ -81,7 +76,7 @@ describe('Demonstração do PropertyChain', () => {
   it('suporta rota direta, alteração de hash e rota desconhecida', async () => {
     window.history.replaceState(null, '', '/#consulta');
     render(<App />);
-    expect(screen.getByRole('heading', { name: /Conheça a origem/ })).toBeVisible();
+    expect(screen.getByRole('heading', { name: 'Verificar documento' })).toBeVisible();
     window.location.hash = 'rota-inexistente';
     await waitFor(() => expect(screen.getByRole('heading', { name: /Como deseja entrar/ })).toBeVisible());
   });
@@ -102,7 +97,7 @@ describe('Demonstração do PropertyChain', () => {
 describe('Entrada demonstrativa por perfil', () => {
   it.each([
     ['Proprietário', /Cadastre seu documento/],
-    ['Comprador \/ verificador', /Conheça a origem do documento/],
+    ['Comprador \/ verificador', /^Verificar documento$/],
     ['Cartório', /Validação pelo cartório/],
   ])('abre o caminho de %s sem autenticação', async (profile, destination) => {
     render(<App />);

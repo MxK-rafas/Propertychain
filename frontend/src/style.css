@@ -37,3 +37,4 @@
 .registration{border-top:1px solid #cbd9c1;padding-top:18px;margin-top:18px}.registration .primary{margin-top:14px}.registration-receipt{border:1px solid #839e70;border-radius:12px;padding:14px;background:#edf3e7;margin:18px 0;font-size:14px;line-height:1.6}.back-button:disabled,.text-button:disabled{opacity:.5;cursor:wait}
 .public-lookup-content { line-height: 1.5; }
 .public-lookup-content .primary { margin-top: 16px; }
+.reference-controls{margin-top:20px}.reference-controls label{display:block;font-size:15px;font-weight:600;margin-bottom:9px}.reference-input{display:block;width:100%;max-width:100%;min-height:84px;resize:vertical;border:1px solid #9caf8e;border-radius:9px;padding:12px;background:white;color:var(--ink);font:inherit;font-size:16px;line-height:1.5;overflow-wrap:anywhere}.reference-input:focus-visible{outline:3px solid #8aab72;outline-offset:3px}.reference-controls .file-help{line-height:1.6}

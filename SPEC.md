@@ -28,6 +28,8 @@ Acrescentada por pedido do autor após testar o app. Ao abrir a URL sem rota ou 
 
 A escolha apenas organiza a apresentação; não autentica usuários nem concede permissões. Não criar contas, senhas, painel ou integração de carteiras nesta mudança. Preservar os links diretos das quatro etapas. Oferecer “Trocar perfil”; voltar da primeira tela de cada caminho retorna à entrada.
 
+Atualização solicitada em 23/11/2026: computador e celular usam o mesmo percurso real desde a página inicial. Entrar como comprador/verificador não abre uma consulta simulada; apresenta o campo para informar o registro na própria tela 3.
+
 ### 1. Cadastrar documento
 
 **Objetivo:** registrar a impressão digital do arquivo escolhido.
@@ -62,6 +64,7 @@ Cancelamento, falta de saldo de teste ou falha mantêm a pessoa na tela com expl
 - Título: “Conheça a origem do documento.”
 - Aviso: “Validação pelo cartório simulada.”
 - Identificar o registro recebido pelo link. O link deve abrir diretamente nesta tela em outro celular, sem exigir as telas anteriores.
+- Ao entrar sem um link de registro, permitir colar na própria tela o link recebido ou o código da transação. Um único botão “Verificar documento” consulta o registro e compara o arquivo opcional, sem uma etapa intermediária. Links temporários anteriores do PropertyChain podem ser usados como referência, sem visitar sua origem. Links do explorador devem ser da Devnet.
 - No exemplo fictício, usar o mesmo PDF e seus dados fixos.
 - Para outro arquivo, permitir selecionar localmente uma cópia digital idêntica, como controle secundário. Sem arquivo, explicar que só será consultado o registro na rede, sem comparação com a foto.
 - Não buscar um imóvel por endereço, matrícula ou nome. Não exigir Phantom para leitura.
@@ -105,6 +108,7 @@ Manter React + TypeScript + Vite como proposta do frontend, substituindo a antig
 - Calcular SHA-256 no navegador, sobre os bytes originais. Não comprimir, recortar ou normalizar a imagem antes do cálculo.
 - O programa Memo esperado deve ser explicitamente verificado, não apenas uma ocorrência de texto nos logs. Conferir `meta.err == null` e confirmação `confirmed` ou `finalized`.
 - A identificação pública é a assinatura da transação. Gerar um link com essa assinatura e a rota de consulta; não depender de localStorage de outro dispositivo.
+- Compartilhar sempre pelo endereço público oficial `https://propertychain-theta.vercel.app/`, independentemente do domínio temporário em que o app foi aberto. Endereços de preview da Vercel podem exigir login e não devem ser gerados para terceiros. A consulta e os controles são os mesmos no celular e no computador.
 - O hash esperado vem do arquivo local; o hash registrado vem da instrução Memo. Parâmetros do link não são prova de autenticidade. Validar formato e comprimento antes de consultar.
 - Se houver várias instruções conflitantes ou um Memo fora do padrão, não aceitar silenciosamente.
 - O fato de alguém registrar um arquivo não prova que essa pessoa é proprietária ou um cartório autorizado.
