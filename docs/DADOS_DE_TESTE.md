@@ -10,7 +10,7 @@ Não alterar/reimprimir o PDF e continuar usando seu hash anterior. Qualquer alt
 
 ## Foto real fornecida pelo autor
 
-A foto ainda não foi fornecida. Na implementação, permitir selecionar JPEG/PNG ou PDF localmente. Não subir a imagem, não extrair texto com OCR, não persistir em servidor e não adicionar ao repositório, build Vercel, Actions, capturas ou logs. `private-test-files/` e `testes-privados/` são pastas ignoradas para apoiar testes locais.
+O autor aprovou o teste local com foto real em 23/11/2026. O arquivo não foi fornecido ao Codex nem anexado ao repositório; o aceite está registrado na [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). A seleção de JPEG/PNG ou PDF ocorre localmente no aplicativo. Não subir a imagem, não extrair texto com OCR, não persistir em servidor e não adicionar ao repositório, build Vercel, Actions, capturas ou logs. `private-test-files/` e `testes-privados/` são pastas ignoradas para apoiar testes locais.
 
 Ao trocar a fixture por outro arquivo, ocultar titular/endereço/histórico fictícios. Para esse arquivo, tipo/proprietário não são identificados pelo app. A validação de cartório permanece simulada e não prova análise institucional da foto.
 

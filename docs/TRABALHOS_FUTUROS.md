@@ -14,7 +14,7 @@ O MVP foi publicado na Vercel e validado na Solana Devnet. O proprietário regis
 - **Testar navegação e compartilhamento como parte do fluxo inicial.** A versão anterior mostrava o resultado no endereço da consulta e oferecia um link para a página já aberta. A correção criou uma rota para o resultado e um botão que confirma a cópia. Na próxima rodada, vale testar também a abertura do link copiado em outra aba ou aparelho. [PR #51](https://github.com/MxK-rafas/Propertychain/pull/51)
 - **Manter latência técnica e tempo de uso em medições separadas.** Os números atuais descrevem leituras de um único registro confirmado. Um piloto pode medir carregamento, seleção de arquivo e leitura em redes e aparelhos diferentes. [Medições atuais](../frontend/README.md)
 
-O teste específico com foto real continua pendente e depende de o autor ter um arquivo disponível. O teste é feito no aparelho, com a foto fora do repositório e dos serviços de publicação. [Issue #6](https://github.com/MxK-rafas/Propertychain/issues/6)
+O autor aprovou o teste específico com foto real em 23/11/2026. O aceite conclui o MVP no escopo aprovado; a foto permanece fora do repositório e dos serviços de publicação. Trata-se de aceite manual do teste, sem análise jurídica ou validação institucional do conteúdo. [Issue #6](https://github.com/MxK-rafas/Propertychain/issues/6)
 
 ## Depois
 

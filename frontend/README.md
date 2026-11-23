@@ -83,4 +83,4 @@ npm run preview
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 
-O autor confirmou a consulta HTTPS no celular sem arquivo, com a mesma cópia digital e com um arquivo diferente. O teste específico com foto real é acompanhado na [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6).
+O autor confirmou a consulta HTTPS no celular sem arquivo, com a mesma cópia digital e com um arquivo diferente. O teste específico com foto real foi aprovado pelo autor em 23/11/2026, concluindo o aceite do MVP. [Registro do aceite — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). Nenhuma foto real foi recebida ou publicada pelo Codex.
