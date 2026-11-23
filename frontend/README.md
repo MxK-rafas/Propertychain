@@ -2,7 +2,7 @@
 
 [Versão publicada na Vercel](https://propertychain-theta.vercel.app/) · [Consulta de teste sem carteira](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G)
 
-O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. Esta versão implementa o registro de um hash com Memo na Solana Devnet. **Cartório e consulta por terceiros continuam demonstrativos.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
+O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. Esta versão implementa o registro de um hash com Memo na Solana Devnet. **A consulta lê registros reais da Devnet; o cartório e o histórico do exemplo são simulados.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
 
 ## Abrir e preparar
 
@@ -13,7 +13,7 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço inicial mostrado (normalmente `http://localhost:5173/`), sem fragmento, e escolha Proprietário. Use localhost ou HTTPS para Web Crypto. No celular, a Phantom precisa do seu navegador interno e de acesso HTTPS ao app; publicação Vercel é uma etapa posterior.
+Abra o endereço inicial mostrado (normalmente `http://localhost:5173/`), sem fragmento, e escolha Proprietário. Use localhost ou HTTPS para Web Crypto. No celular, o cadastro com carteira usa o navegador interno da Phantom e HTTPS. A consulta não exige carteira e funciona também no navegador comum. O app está publicado na Vercel.
 
 Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. Para a taxa, obtenha **SOL de teste**, sem valor financeiro, no [faucet oficial](https://faucet.solana.com/). Não compre moedas. O app nunca pede frase-semente ou chave privada.
 
@@ -30,7 +30,11 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 ## Consulta pública sem carteira
 
-Após confirmar um registro, abra **Abrir consulta pública** no comprovante e compartilhe o endereço da página. O link contém apenas a assinatura pública da transação no fragmento `#consulta?tx=…`. Um celular sem Phantom pode abrir a página se tiver acesso ao mesmo endereço do app. Para testar a comparação de arquivo fora de localhost, use HTTPS.
+A página inicial é a mesma no computador e no celular: escolha **Comprador / verificador**, entre e cole o **link do registro ou código da transação**. Se quiser comparar uma cópia digital, selecione o arquivo nessa mesma tela e clique em **Verificar documento**. O app consulta a Devnet e avança à etapa 4 com resultado e explorador; não há segunda aprovação na carteira.
+
+Também é possível abrir diretamente um link recebido. O app aceita links de consulta/resultado do domínio oficial, links temporários anteriores do PropertyChain na Vercel e links do explorador Solana com `cluster=devnet`. O endereço colado é lido apenas para extrair a identificação pública; o app não visita esse endereço. Consultas usam sempre o RPC Devnet configurado. Entradas vazias, incompletas ou de outra origem/rede recebem uma explicação antes da consulta.
+
+**Copiar link da consulta** gera sempre um endereço em `https://propertychain-theta.vercel.app/`, mesmo se o app estiver aberto em um deploy temporário ou localhost. Não use o endereço temporário da Vercel para compartilhar com testadores. O link contém apenas a identificação pública da transação em `#consulta?tx=…`; não contém nome ou conteúdo de arquivo.
 
 1. Abra o link em uma nova aba ou em outro aparelho. Clique em **Verificar documento** sem selecionar arquivo e confirme que o resultado informa que o arquivo não foi comparado.
 2. Clique em **Fazer nova consulta**, selecione a mesma cópia digital e confira se o hash coincide.
@@ -75,7 +79,7 @@ npm run build
 npm run preview
 ```
 
-54 testes passaram: consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
+77 testes passaram: consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 

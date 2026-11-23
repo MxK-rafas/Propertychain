@@ -5,6 +5,7 @@ import { webcrypto } from 'node:crypto';
 import { App } from './App';
 import { lookupMemo } from './memo';
 import { lookupFragment } from './PublicLookup';
+import { publicLookupUrl } from './consultation-link';
 
 vi.mock('./memo', () => ({ lookupMemo: vi.fn() }));
 
@@ -23,6 +24,36 @@ function openLink(signature = tx) {
 }
 
 describe('Consulta pública aberta por assinatura, sem carteira', () => {
+  it('consulta desde a página inicial com link temporário colado e arquivo, preservando a comparação', async () => {
+    vi.stubGlobal('crypto', webcrypto);
+    vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
+    render(<App />);
+    await userEvent.click(screen.getByRole('radio', { name: /Comprador/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar na demonstração' }));
+    const input = await screen.findByLabelText('Link do registro ou código da transação');
+    await userEvent.type(input, `https://propertychain-9g0563usr-rafael-vinicius.vercel.app/${lookupFragment(tx)}`);
+    const file = new File(['abc'], 'arquivo.pdf', { type: 'application/pdf' });
+    Object.defineProperty(file, 'arrayBuffer', { value: async () => new TextEncoder().encode('abc').buffer });
+    await userEvent.upload(screen.getByLabelText(/Escolher arquivo para comparar/), file);
+    await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
+    expect(await screen.findByRole('heading', { name: 'Resultado da verificação' })).toBeVisible();
+    expect(screen.getByText(/impressão digital do arquivo coincide/)).toBeVisible();
+    expect(screen.getByText('ETAPA 4 DE 4')).toBeVisible();
+    expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
+    expect(lookupMemo).toHaveBeenCalledExactlyOnceWith(tx, expect.any(AbortSignal));
+    expect(screen.getByRole('link', { name: /Ver transação no explorador/ })).toHaveAttribute('href', `https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+  });
+
+  it('explica referência inválida na entrada sem consultar a rede', async () => {
+    window.history.replaceState(null, '', '/#consulta');
+    render(<App />);
+    await userEvent.type(screen.getByLabelText('Link do registro ou código da transação'), 'link incompleto');
+    await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Cole o link completo');
+    expect(lookupMemo).not.toHaveBeenCalled();
+    expect(window.location.hash).toBe('#consulta');
+  });
+
   it.each([
     [null, /Arquivo não comparado/],
     ['abc', /impressão digital do arquivo coincide/],
@@ -65,7 +96,7 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     if (!clipboardAvailable) writeText.mockRejectedValueOnce(new Error('clipboard indisponível'));
     vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
     openLink();
-    const url = window.location.origin + '/' + lookupFragment(tx);
+    const url = publicLookupUrl(tx);
 
     await user.click(screen.getByRole('button', { name: 'Verificar documento' }));
     await user.click(await screen.findByRole('button', { name: 'Copiar link da consulta' }));
