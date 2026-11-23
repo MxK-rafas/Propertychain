@@ -15,6 +15,10 @@ O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também
 - Mostrar link da transação no explorador Devnet antes de anunciar sucesso; verificar confirmação, ausência de erro e Memo/hash esperado.
 - Não implementar itens de Depois/Um dia. Não marcar testes EVM como evidência de Solana.
 
+## Evolução autorizada — relatório de verificação (#56)
+
+Em 23/11/2026, o autor aprovou a proposta da issue #56: gerar relatório PDF local a partir de uma consulta confirmada, com hash, transação, comparação, data/hora da consulta no aparelho e links oficiais. Sem arquivo original, backend ou nova transação. Esta é a única antecipação autorizada de Depois nesta etapa. Conferir download/abertura no computador e celular; o teste na Phantom real e o aceite final desta evolução continuam a cargo do autor. Não fechar a #56 antes desse retorno.
+
 ## Conclusão em 23/11/2026
 
 Em 23/11/2026, o autor aprovou também o teste local com foto de documento real, concluindo o aceite do MVP no escopo da spec. O aceite foi informado pelo autor; a foto não foi enviada ao Codex nem anexada ao repositório. Isso não constitui análise da autenticidade jurídica do documento ou aprovação por cartório real. Os fluxos de cadastro, consulta por terceiros e uso na Phantom foram aceitos; PRs #53 e #54 corrigiram navegação e consulta desde a entrada. Itens de Depois/Um dia continuam fora do escopo e exigem nova decisão do autor antes de implementar.

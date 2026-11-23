@@ -1,20 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { explorerUrl } from './memo-record';
-import type { MemoLookup } from './memo';
 import { sha256 } from './preparation';
 import { lookupFragment, publicLookupUrl, transactionFromReference } from './consultation-link';
+import { ReportDownload } from './ReportDownload';
+import { comparisonText } from './verification-result';
+import type { VerificationResult } from './verification-result';
 
 export { lookupFragment } from './consultation-link';
-
-type Result = Extract<MemoLookup, { status: 'confirmed' }> & {
-  comparison: 'none' | 'match' | 'different';
-};
 
 export function PublicLookup({ signature, showResult }: { signature: string; showResult: boolean }) {
   const [reference, setReference] = useState(signature);
   const [file, setFile] = useState<File | null>(null);
-  const [result, setResult] = useState<Result | null>(null);
+  const [result, setResult] = useState<VerificationResult | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'manual'>('idle');
@@ -79,7 +77,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
       const hash = file ? await sha256(await file.arrayBuffer()) : null;
       if (request.signal.aborted) return;
       setCopyStatus('idle');
-      setResult({ ...found, comparison: hash === null ? 'none' : hash === found.record.hash ? 'match' : 'different' });
+      setResult({ ...found, comparison: hash === null ? 'none' : hash === found.record.hash ? 'match' : 'different', checkedAt: new Date().toISOString() });
       window.location.hash = lookupFragment(selectedSignature, 'resultado');
     } catch {
       if (!request.signal.aborted) setError(failure);
@@ -96,11 +94,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
           {showResult && resultForRoute ? <>
             <p role="status">Registro confirmado na Devnet.</p>
             <dl className="facts">
-              <div><dt>Comparação do arquivo</dt><dd>{{
-              none: 'Arquivo não comparado. Nenhum arquivo foi selecionado.',
-              match: 'A impressão digital do arquivo coincide com a do registro.',
-              different: 'A impressão digital do arquivo é diferente da que consta no registro.',
-              }[resultForRoute.comparison]}</dd></div>
+              <div><dt>Comparação do arquivo</dt><dd>{comparisonText[resultForRoute.comparison]}</dd></div>
               <div><dt>SHA-256 registrado</dt><dd className="digest">{resultForRoute.record.hash}</dd></div>
               <div><dt>Tempo de consulta à Devnet</dt><dd>{(resultForRoute.elapsedMs / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} s</dd></div>
             </dl>
@@ -116,6 +110,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
               <div><dt>Validado por</dt><dd>Nenhum cartório analisou este documento. O cartório e o histórico exibidos na demonstração são fictícios.</dd></div>
             </dl>
             <p>O registro do hash não comprova a autenticidade do documento, a identidade do titular ou a propriedade do imóvel.</p>
+            <ReportDownload key={`${resultForRoute.record.signature}:${resultForRoute.checkedAt}`} result={resultForRoute} />
             <button className="primary" onClick={() => {
               setFile(null);
               setResult(null);

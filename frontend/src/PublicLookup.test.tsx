@@ -39,6 +39,7 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     expect(await screen.findByRole('heading', { name: 'Resultado da verificação' })).toBeVisible();
     expect(screen.getByText(/impressão digital do arquivo coincide/)).toBeVisible();
     expect(screen.getByText('ETAPA 4 DE 4')).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Baixar relatório em PDF' })).toBeVisible();
     expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
     expect(lookupMemo).toHaveBeenCalledExactlyOnceWith(tx, expect.any(AbortSignal));
     expect(screen.getByRole('link', { name: /Ver transação no explorador/ })).toHaveAttribute('href', `https://explorer.solana.com/tx/${tx}?cluster=devnet`);
@@ -141,6 +142,7 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     await userEvent.click(screen.getByRole('link', { name: /Resultado da verificação/ }));
     await vi.waitFor(() => expect(window.location.hash).toBe(lookupFragment(tx)));
     expect(screen.queryByRole('heading', { name: 'Resultado da verificação' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Baixar relatório em PDF' })).not.toBeInTheDocument();
     expect(lookupMemo).toHaveBeenCalledOnce();
   });
 
@@ -154,5 +156,6 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
     expect(await screen.findByRole('alert')).toHaveTextContent(message);
     expect(screen.queryByRole('heading', { name: 'Resultado da verificação' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Baixar relatório em PDF' })).not.toBeInTheDocument();
   });
 });
