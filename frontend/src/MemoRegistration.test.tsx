@@ -17,7 +17,7 @@ beforeEach(() => {
   service.confirmMemo.mockResolvedValue('pending');
 });
 async function prepare() {
-  await userEvent.click(screen.getByRole('button', { name: 'Preparar registro na Devnet' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Revisar registro' }));
   await screen.findByRole('button', { name: 'Aprovar registro na Phantom' });
 }
 describe('Interface de registro e recuperação', () => {
@@ -55,7 +55,7 @@ describe('Interface de registro e recuperação', () => {
   });
   it('exige hash e carteira antes de preparar', () => {
     render(<MemoRegistration hash="" account="" />);
-    expect(screen.getByRole('button', { name: 'Preparar registro na Devnet' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Revisar registro' })).toBeDisabled();
   });
   it('mostra revisão sem assinatura e link antes de concluir', async () => {
     let finish!: (value: string) => void;
@@ -107,7 +107,7 @@ describe('Interface de registro e recuperação', () => {
     let resolve!: (value: MemoDraft) => void;
     service.prepareMemo.mockImplementation(() => new Promise(r => { resolve = r; }));
     const { rerender } = render(<MemoRegistration hash={record.hash} account={record.payer} />);
-    await userEvent.dblClick(screen.getByRole('button', { name: 'Preparar registro na Devnet' }));
+    await userEvent.dblClick(screen.getByRole('button', { name: 'Revisar registro' }));
     expect(service.prepareMemo).toHaveBeenCalledOnce();
     rerender(<MemoRegistration hash="" account={record.payer} />);
     await act(async () => resolve(draft));

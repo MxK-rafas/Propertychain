@@ -17,11 +17,19 @@ Abra o endereço inicial mostrado (normalmente `http://localhost:5173/`), sem fr
 
 Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. Para a taxa, obtenha **SOL de teste**, sem valor financeiro, no [faucet oficial](https://faucet.solana.com/). Não compre moedas. O app nunca pede frase-semente ou chave privada.
 
+## Experimentar antes de instalar carteira
+
+Na página inicial, mantenha **Experimentar com um exemplo** e clique no botão de mesmo nome. O guia tem quatro passos: conhecer o PDF, comparar a cópia original, testar uma cópia alterada e consultar sem arquivo. Leia a explicação e use o botão principal em cada passo. Nenhuma carteira ou pagamento é solicitado; cada comparação lê um registro real da Devnet. Erro de rede ou registro indisponível não vira sucesso: tente novamente ou consulte outro registro.
+
+O resultado destaca **Mesmo arquivo**, **Arquivo diferente** ou **Arquivo não comparado**. **Ver comprovante público** abre o explorador; os códigos e o tempo ficam em **Ver detalhes do registro**. Você pode baixar o relatório sem carteira. Ao concluir, a entrada permite escolher seu perfil.
+
+Antes de conectar no cadastro, leia **Por que o cadastro precisa da Phantom?** e **Ainda não tenho a Phantom**. A consulta e o exemplo dispensam instalação. A ajuda sobre blockchain explica o código público, o arquivo no aparelho e os limites da rede de testes. [Feedback e critérios da evolução #61](../docs/FEEDBACKS_E_EXEMPLO_GUIADO.md).
+
 ## Teste real de cadastro pelo autor
 
 1. Use primeiro o PDF fictício. Você pode abrir o exemplo ou escolher um PDF/JPEG/PNG local; nenhum arquivo é enviado. Para arquivos próprios, dados de Maria/endereço/histórico são ocultados.
-2. Clique em **Calcular impressão digital** e depois **Conectar Phantom de teste**. O app confere o RPC Devnet por getGenesisHash; isso não altera a seleção de rede da interface da Phantom.
-3. Clique em **Preparar registro na Devnet**. O app busca o blockhash, monta o Memo com taxa de prioridade zero, estima a taxa total, confere o saldo e simula a transação no RPC antes de solicitar a assinatura.
+2. Clique em **Calcular código do arquivo** e depois **Conectar Phantom de teste**. O app confere o RPC Devnet por getGenesisHash; isso não altera a seleção de rede da interface da Phantom.
+3. Clique em **Revisar registro**. O app busca o blockhash, monta o Memo com taxa de prioridade zero, estima a taxa total, confere o saldo e simula a transação no RPC antes de solicitar a assinatura.
 4. Confira o resumo: Solana Devnet, seu endereço público como pagador, o hash, a taxa estimada e a operação Memo sem transferências para terceiros. Se não quiser continuar, use Cancelar preparação.
 5. Clique em **Aprovar registro na Phantom**. Agora a Phantom solicita sua aprovação de uma transação Devnet v0. Confira a carteira/rede e aprove. O app valida a assinatura e rejeita alteração da mensagem pela carteira antes de enviar.
 6. O link **Acompanhar transação no explorador Devnet** aparece com a assinatura. Ele indica uma tentativa, ainda não sucesso. O app faz um único envio, com preflight; não reconstrói nem reenvia automaticamente.
@@ -30,7 +38,7 @@ Use uma carteira exclusiva de testes. Ative a visualização Devnet na Phantom. 
 
 ## Consulta pública sem carteira
 
-A página inicial é a mesma no computador e no celular: escolha **Comprador / verificador**, entre e cole o **link do registro ou código da transação**. Se quiser comparar uma cópia digital, selecione o arquivo nessa mesma tela e clique em **Verificar documento**. O app consulta a Devnet e avança à etapa 4 com resultado e explorador; não há segunda aprovação na carteira.
+A página inicial é a mesma no computador e no celular: escolha **Comprador / verificador**, entre e cole o **Cole o link do registro** (também aceita o código da transação). Se quiser comparar uma cópia digital, selecione o arquivo nessa mesma tela e clique em **Verificar documento**. O app consulta a Devnet e avança à etapa 4 com resultado e explorador; não há segunda aprovação na carteira.
 
 Também é possível abrir diretamente um link recebido. O app aceita links de consulta/resultado do domínio oficial, links temporários anteriores do PropertyChain na Vercel e links do explorador Solana com `cluster=devnet`. O endereço colado é lido apenas para extrair a identificação pública; o app não visita esse endereço. Consultas usam sempre o RPC Devnet configurado. Entradas vazias, incompletas ou de outra origem/rede recebem uma explicação antes da consulta.
 
@@ -39,7 +47,7 @@ Também é possível abrir diretamente um link recebido. O app aceita links de c
 1. Abra o link em uma nova aba ou em outro aparelho. Clique em **Verificar documento** sem selecionar arquivo e confirme que o resultado informa que o arquivo não foi comparado.
 2. Clique em **Fazer nova consulta**, selecione a mesma cópia digital e confira se o hash coincide.
 3. Repita com um arquivo diferente e confirme que aparece a divergência. A comparação lê o arquivo somente no aparelho.
-4. Para medir o desempenho, faça dez consultas consecutivas do mesmo registro confirmado, sem selecionar arquivo. Anote o **Tempo de consulta à Devnet** em cada resultado e registre mediana, máximo e erros. Esse tempo inclui a conferência de que o RPC está na Devnet e a leitura do Memo, sem carregamento da página, seleção de arquivo, hash local ou confirmação de uma transação nova.
+4. Para medir o desempenho, faça dez consultas consecutivas do mesmo registro confirmado, sem selecionar arquivo. Abra **Ver detalhes do registro** e anote o **Tempo para consultar a rede de testes** em cada resultado e registre mediana, máximo e erros. Esse tempo inclui a conferência de que o RPC está na Devnet e a leitura do Memo, sem carregamento da página, seleção de arquivo, hash local ou confirmação de uma transação nova.
 
 Em 17/11/2026, a função de leitura foi executada dez vezes contra o RPC público da Devnet para a [transação confirmada da etapa 4](https://explorer.solana.com/tx/2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G?cluster=devnet). As dez leituras conferiram o mesmo hash. Mediana de 0,45 s, máximo de 1,05 s e zero erros. Essa execução foi feita no ambiente de desenvolvimento e mede apenas a consulta RPC e a conferência do Memo.
 
@@ -91,7 +99,7 @@ npm run build
 npm run preview
 ```
 
-91 testes passaram (incluindo geração e download do relatório PDF): consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
+99 testes em dez arquivos passaram (incluindo exemplo guiado com hash real das fixtures, falhas/retentativa/cancelamento, ajuda sem segredos e geração/download do relatório PDF): consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 

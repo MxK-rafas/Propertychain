@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { explorerUrl } from './memo-record';
 import { sha256 } from './preparation';
-import { lookupFragment, publicLookupUrl, transactionFromReference } from './consultation-link';
-import { ReportDownload } from './ReportDownload';
-import { comparisonText } from './verification-result';
+import { lookupFragment, transactionFromReference } from './consultation-link';
+import { VerificationOutcome } from './VerificationOutcome';
+import { NetworkHelp } from './NetworkHelp';
 import type { VerificationResult } from './verification-result';
 
 export { lookupFragment } from './consultation-link';
@@ -15,12 +14,10 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
   const [result, setResult] = useState<VerificationResult | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'manual'>('idle');
   const active = useRef<AbortController | null>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const previousSignature = useRef(signature);
-  const shareLink = publicLookupUrl(result?.record.signature ?? signature);
   const resultForRoute = result?.record.signature === signature ? result : null;
 
   useEffect(() => () => active.current?.abort(), []);
@@ -30,7 +27,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
     setReference(signature);
     if (result?.record.signature === signature) return;
     active.current?.abort(); active.current = null;
-    setBusy(false); setFile(null); setResult(null); setError(''); setCopyStatus('idle');
+    setBusy(false); setFile(null); setResult(null); setError('');
     if (fileInput.current) fileInput.current.value = '';
   }, [signature, result]);
   useEffect(() => {
@@ -38,22 +35,13 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
   }, [resultForRoute, showResult, signature]);
   useEffect(() => { heading.current?.focus(); }, [showResult]);
 
-  async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(shareLink);
-      setCopyStatus('copied');
-    } catch {
-      setCopyStatus('manual');
-    }
-  }
-
   async function verify(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (active.current) return;
     setError('');
     const selectedSignature = transactionFromReference(reference);
     if (!selectedSignature) {
-      setError('Cole o link completo do registro ou um código de transação válido da Devnet. Não use o hash SHA-256 do arquivo.');
+      setError('Cole o link completo que você recebeu, ou um código de transação válido. O código do arquivo não é um link de registro.');
       return;
     }
     const request = new AbortController();
@@ -76,7 +64,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
       failure = 'Não foi possível ler o arquivo neste aparelho. Selecione o arquivo novamente ou faça a consulta sem ele.';
       const hash = file ? await sha256(await file.arrayBuffer()) : null;
       if (request.signal.aborted) return;
-      setCopyStatus('idle');
+
       setResult({ ...found, comparison: hash === null ? 'none' : hash === found.record.hash ? 'match' : 'different', checkedAt: new Date().toISOString() });
       window.location.hash = lookupFragment(selectedSignature, 'resultado');
     } catch {
@@ -91,39 +79,16 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
 
   return <section className="screen-enter public-lookup-content" aria-label="Consulta pública PropertyChain">
           <h1 className="screen-title" ref={heading} tabIndex={-1}>{showResult && resultForRoute ? 'Resultado da verificação' : 'Verificar documento'}</h1>
-          {showResult && resultForRoute ? <>
-            <p role="status">Registro confirmado na Devnet.</p>
-            <dl className="facts">
-              <div><dt>Comparação do arquivo</dt><dd>{comparisonText[resultForRoute.comparison]}</dd></div>
-              <div><dt>SHA-256 registrado</dt><dd className="digest">{resultForRoute.record.hash}</dd></div>
-              <div><dt>Tempo de consulta à Devnet</dt><dd>{(resultForRoute.elapsedMs / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} s</dd></div>
-            </dl>
-            <p><a className="text-link" href={explorerUrl(signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a></p>
-            <button className="text-button" onClick={copyLink}>Copiar link da consulta</button>
-            {copyStatus === 'copied' && <p role="status">Link copiado.</p>}
-            {copyStatus === 'manual' && <div className="file-controls">
-              <label htmlFor="consultation-link">Copie o endereço abaixo</label>
-              <textarea id="consultation-link" className="reference-input" readOnly value={shareLink} onFocus={event => event.target.select()} />
-            </div>}
-            <dl className="facts">
-              <div><dt>Tipo de documento</dt><dd>Não identificado pelo app.</dd></div>
-              <div><dt>Validado por</dt><dd>Nenhum cartório analisou este documento. O cartório e o histórico exibidos na demonstração são fictícios.</dd></div>
-            </dl>
-            <p>O registro do hash não comprova a autenticidade do documento, a identidade do titular ou a propriedade do imóvel.</p>
-            <ReportDownload key={`${resultForRoute.record.signature}:${resultForRoute.checkedAt}`} result={resultForRoute} />
-            <button className="primary" onClick={() => {
-              setFile(null);
-              setResult(null);
-              window.location.hash = lookupFragment(signature);
-            }}>Fazer nova consulta</button>
-          </> : <form onSubmit={verify}>
-            <p className="screen-description">Consulte o registro na Solana Devnet sem conectar carteira. Se tiver uma cópia do arquivo, você pode compará-la neste aparelho.</p>
+          {showResult && resultForRoute ? <VerificationOutcome result={resultForRoute} actionLabel="Fazer nova consulta" onAction={() => {
+            setFile(null); setResult(null); window.location.hash = lookupFragment(signature);
+          }} /> : <form onSubmit={verify}>
+            <p className="screen-description">Cole o link de um registro e escolha sua cópia, se quiser comparar. Você não precisa de carteira para consultar.</p>
             <div className="reference-controls">
-              <label htmlFor="lookup-reference">Link do registro ou código da transação</label>
+              <label htmlFor="lookup-reference">Cole o link do registro</label>
               <textarea id="lookup-reference" className="reference-input" rows={3} value={reference} disabled={busy} spellCheck={false} autoCapitalize="none" autoCorrect="off" aria-describedby="reference-help" onChange={event => {
                 setReference(event.target.value); setResult(null); setError('');
               }} />
-              <p id="reference-help" className="file-help">Cole o link compartilhado pelo proprietário. Nenhuma carteira é necessária para consultar.</p>
+              <p id="reference-help" className="file-help">Use o link enviado por quem registrou o arquivo. Você também pode informar o código da transação.</p>
             </div>
             <div className="file-controls">
               <label className="file-label" htmlFor="lookup-file">Escolher arquivo para comparar (opcional)</label>
@@ -139,6 +104,7 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
               }}>Remover arquivo</button>}
               <span className="file-help">O arquivo fica neste aparelho.</span>
             </div>
+            <NetworkHelp />
             {error && <p className="error-message" role="alert">{error}</p>}
             <button className="primary" disabled={busy}>{busy ? 'Consultando…' : 'Verificar documento'}</button>
           </form>}

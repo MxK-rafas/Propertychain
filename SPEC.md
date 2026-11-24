@@ -1,6 +1,6 @@
 # PropertyChain — especificação atual
 
-Revisão de 24/11/2026, baseada no código da main `843d6936fc067cd653dd70aa0db31d44bc89a032` e nos aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
+Atualizada em 24/11/2026 com a evolução de feedbacks [#61](https://github.com/MxK-rafas/Propertychain/issues/61), sobre a main `bf0752fd9d5b2439b4bc40d5d193d45d2941df34`, e os aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
 
 ## Contexto
 
@@ -14,11 +14,13 @@ Registro de hash, consulta e comparação são reais na rede de testes. Cartóri
 
 ## O que o app faz (tela por tela)
 
-Manter entrada por perfil e quatro etapas. Cada etapa tem um objetivo e uma ação principal; escolher arquivo, calcular hash, conectar carteira, voltar, compartilhar e baixar PDF são controles de apoio. Computador e celular usam as mesmas rotas e ações. A navegação lateral é ocultada no layout estreito; o indicador de etapa e o botão de voltar continuam no celular.
+Manter entrada com exemplo guiado e três perfis. O percurso de cadastro/consulta tem quatro etapas; o exemplo tem quatro passos próprios, sem carteira. Cada etapa tem um objetivo e uma ação principal; escolher arquivo, calcular hash, conectar carteira, voltar, compartilhar e baixar PDF são controles de apoio. Computador e celular usam as mesmas rotas e ações. A navegação lateral é ocultada no layout estreito; o indicador de etapa e o botão de voltar continuam no celular.
 
-### Entrada — Como deseja entrar?
+### Entrada — O arquivo é o mesmo?
 
-Três opções de perfil, sem login ou autorização real. **Botão principal: Entrar na demonstração.**
+Explicar primeiro o benefício: conferir se o arquivo recebido é o mesmo que foi registrado antes. Sem login ou autorização real. Quatro opções, com **Experimentar com um exemplo** selecionada por padrão. O botão principal tem esse mesmo texto no exemplo e **Continuar com o perfil escolhido** nos demais perfis.
+
+- Experimentar com um exemplo abre `#exemplo`, sem carteira ou instalação.
 
 - Proprietário abre `#cadastro`.
 - Comprador / verificador abre a consulta real em `#consulta`, sem carteira.
@@ -26,17 +28,34 @@ Três opções de perfil, sem login ou autorização real. **Botão principal: E
 
 URL inicial ou rota desconhecida mostra a entrada. Trocar perfil retorna à entrada. Nenhum perfil concede permissões jurídicas ou de validador.
 
+### Exemplo guiado — `#exemplo`
+
+**Objetivo:** entender a comparação antes de instalar uma carteira. Não publica registro novo, não pede assinatura nem recupera documentos privados. Usa o PDF fictício e a transação pública de exemplo especificados em [dados de teste](docs/DADOS_DE_TESTE.md).
+
+| Passo | O que aparece | Botão principal e destino |
+|---|---|---|
+| 1. Conheça o arquivo de exemplo | PDF fictício, explicação do percurso e ajuda sobre blockchain | Verificar o exemplo → passo 2 |
+| 2. Vamos conferir a cópia original | Cálculo local e leitura real do registro; Mesmo arquivo | Testar uma cópia alterada → passo 3 |
+| 3. Agora, uma cópia alterada | Cópia com uma quebra de linha acrescentada somente em memória; novo hash e leitura real; Arquivo diferente | Consultar sem arquivo → passo 4 |
+| 4. E se eu não tiver o arquivo? | Leitura real sem hash local; Arquivo não comparado | Concluir exemplo → entrada |
+
+Explicar o que acontece em cada passo e mostrar atividade durante a espera. Conferir o hash do PDF antes da comparação e o hash do registro após a leitura. Cada consulta usa a Devnet; nunca substituir erro, reset ou registro ausente por sucesso pré-programado. Oferecer tentar novamente ou consultar outro registro. Clique repetido não duplica leitura; sair cancela/descarta respostas atrasadas. O PDF e o registro original não são alterados. Os três resultados usam a mesma apresentação e relatório da consulta pública, com uma única ação principal. Recomeçar exemplo é secundário.
+
 ### 1. Cadastre seu documento — `#cadastro`
 
 **Objetivo:** preparar e registrar o hash do arquivo.
 
 Usar por padrão o [PDF fictício](fixtures/documento-ficticio.pdf), com os dados de exemplo do [JSON](fixtures/documento-ficticio.json). Permitir escolher PDF, JPEG ou PNG local, recusando arquivo vazio ou tipo incompatível. O arquivo não é enviado. Ao escolher outro arquivo, ocultar os dados de Maria/endereço do exemplo; não há OCR nem extração de titular.
 
+Antes da conexão, explicar **Por que o cadastro precisa da Phantom?**: carteira digital para autorizar o registro, aprovação explícita e taxa em SOL de teste sem valor financeiro. Consulta e exemplo dispensam carteira. **Ainda não tenho a Phantom** oferece orientações para instalação pelo site oficial, rede Devnet, navegador interno no celular e créditos gratuitos de teste, além de voltar ao exemplo. Nunca pedir informações de recuperação.
+
+A ajuda **O que é blockchain e por que ela aparece aqui?** explica código público, arquivo no aparelho, endereço público da carteira, limites jurídicos e possível indisponibilidade/reset da rede de testes. Está no exemplo, no cadastro e no formulário de consulta.
+
 O cadastro entregue tem controles explícitos, nesta ordem de uso:
 
-1. **Calcular impressão digital:** SHA-256 dos bytes originais, localmente. Se usar a fixture, conferir o hash com o JSON.
+1. **Calcular código do arquivo:** SHA-256 dos bytes originais, localmente. Se usar a fixture, conferir o hash com o JSON.
 2. **Conectar Phantom de teste:** obter endereço público e conferir que o RPC do app é Devnet. Isso não muda nem comprova a seleção de rede na interface da Phantom.
-3. **Preparar registro na Devnet:** ação principal inicial. Conferir rede, blockhash, saldo, taxa e simular a transação. A simulação envia apenas o hash ao RPC; não publica o registro.
+3. **Revisar registro:** ação principal inicial. Conferir rede, blockhash, saldo, taxa e simular a transação. A simulação envia apenas o hash ao RPC; não publica o registro.
 4. Mostrar resumo de rede, pagador, hash e taxa. A ação principal passa a **Aprovar registro na Phantom**. A carteira solicita assinatura; o app verifica mensagem e assinatura antes do envio.
 5. Guardar comprovante público da tentativa, mostrar link do explorador e enviar uma única vez. Aguardar confirmação e conferir programa, pagador e hash. Somente então avançar à etapa 2.
 
@@ -58,7 +77,7 @@ O comprovante de sucesso e o arquivo ficam em memória da sessão do app; a tela
 
 **Objetivo:** consultar um registro como terceiro, sem carteira.
 
-Título atual: **Verificar documento**. Oferecer o campo **Link do registro ou código da transação** e um arquivo local opcional para comparação. Um link recebido preenche a identificação; a página inicial permite informar essa referência na própria tela, sem abrir uma consulta simulada.
+Título atual: **Verificar documento**. Oferecer o campo **Cole o link do registro** e um arquivo local opcional para comparação. Um link recebido preenche a identificação; a página inicial permite informar essa referência na própria tela, sem abrir uma consulta simulada.
 
 Aceitar código da transação, links de consulta/resultado no domínio oficial ou em deploys antigos do PropertyChain na Vercel e links do explorador Solana com `cluster=devnet`. Interpretar a referência localmente, sem visitar a origem colada. Assinatura inválida ou referência incompleta não é confirmação de registro.
 
@@ -73,9 +92,9 @@ Sem arquivo, consultar somente o registro. A consulta não faz busca por nome, m
 Exibir separadamente:
 
 - Registro confirmado na Devnet, somente após leitura válida.
-- Arquivo correspondente, diferente ou não comparado, sem equiparar divergência a fraude.
-- SHA-256 registrado e tempo da consulta RPC/conferência do Memo.
-- Link do explorador Devnet e **Copiar link da consulta**, sempre em `https://propertychain-theta.vercel.app/`. Se o clipboard falhar, mostrar o endereço para copiar manualmente.
+- **Mesmo arquivo**, **Arquivo diferente** ou **Arquivo não comparado**, com frase curta explicando a comparação, sem equiparar divergência a fraude.
+- **Ver detalhes do registro**, fechado inicialmente: código registrado (SHA-256), código da transação, tempo para consultar a rede de testes e tipo do documento.
+- **Ver comprovante público** abre o explorador Devnet; **Copiar link da consulta**, sempre em `https://propertychain-theta.vercel.app/`. Se o clipboard falhar, mostrar o endereço para copiar manualmente.
 - Tipo: **Não identificado pelo app**. Nenhum cartório real analisou o documento; cartório/histórico da demonstração são fictícios.
 - **Baixar relatório em PDF**, controle secundário da evolução aceita na #56.
 
@@ -139,7 +158,7 @@ O relatório PDF saiu de Depois mediante aprovação e está entregue. Continuam
 
 Plano antes do código, uma etapa por vez e pausa para teste do autor, conforme [AGENTS.md](AGENTS.md). Explicar erros e testes em linguagem simples. Atualizar os documentos ativos, mantendo decisões anteriores em histórico. Não enviar mensagens a terceiros ou usar documentos reais em apresentações públicas sem instrução específica.
 
-A preparação do pitch foi solicitada para quinta-feira, 26/11/2026, e está na [issue #7](https://github.com/MxK-rafas/Propertychain/issues/7). O autor priorizou esta revisão antes de continuar o material; não declarar slides ou ensaio como concluídos. Feedback de amigos ainda será trazido pelo autor.
+A preparação do pitch foi solicitada para quinta-feira, 26/11/2026, e está na [issue #7](https://github.com/MxK-rafas/Propertychain/issues/7). O autor priorizou esta revisão antes de continuar o material; não declarar slides ou ensaio como concluídos. O autor relatou que muitos amigos travaram na carteira por desconhecer a tecnologia. A evolução #61 foi explicitamente autorizada: exemplo guiado, ajuda Phantom/blockchain e linguagem simples. A contagem de participantes e a melhora após a entrega ainda não foram medidas; o aceite desta evolução é separado dos aceites do MVP/PDF.
 
 ## Etapas e aceite
 

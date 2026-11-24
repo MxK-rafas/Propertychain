@@ -17,13 +17,13 @@ Atualizado em 24/11/2026. A fonte operacional é [SPEC.md](SPEC.md), alinhada co
 
 As seis etapas originais e seus critérios Pronto quando estão na spec. A medição registrada de dez leituras de um registro confirmado teve mediana de 0,45 s, máximo de 1,05 s e zero erros; não representa o tempo completo de uso, hash, assinatura ou confirmação. Ver [guia](frontend/README.md).
 
-## Prioridade atual — preparar a apresentação
+## Prioridade atual — feedbacks e preparação da apresentação
 
 - Revisar estrutura, spec e roadmap antes do pitch, conforme solicitado pelo autor em 24/11/2026. [Revisão #59](https://github.com/MxK-rafas/Propertychain/issues/59).
 - Preparar pitch, roteiro de demonstração e perguntas/respostas na [#7](https://github.com/MxK-rafas/Propertychain/issues/7), para quinta-feira, **26/11/2026**. Solicitação autorizada; material e ensaio ainda não concluídos nesta revisão.
-- O autor enviará o app a amigos e trará feedback. Ainda não há resultados dessa rodada registrados; correções e prioridades serão definidas a partir dos relatos.
+- O autor relatou que muitos testadores travaram na carteira, por não ter ou não conhecer Phantom/blockchain. Autorizou a evolução [#61](https://github.com/MxK-rafas/Propertychain/issues/61): exemplo guiado sem carteira, explicação passo a passo, ajuda e linguagem simplificada. Implementação e verificações técnicas documentadas no [registro da evolução](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md); issue aberta até o teste/aceite do autor. Sem contagem de participantes nem nova taxa de conclusão medida.
 
-A preparação do pitch é material de apresentação, sem nova funcionalidade ou alteração do aceite do MVP. Não iniciar novas funcionalidades enquanto esses feedbacks/prioridades não forem definidos pelo autor.
+A preparação do pitch é material de apresentação, sem nova funcionalidade ou alteração do aceite do MVP. Após o teste desta evolução, retomar o pitch. Outros itens de Depois/Um dia continuam sem autorização.
 
 ## Depois — sem implementação autorizada
 

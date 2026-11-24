@@ -7,7 +7,7 @@ Atualizado em 24/11/2026. Workflow: [.github/workflows/ci.yml](../.github/workfl
 | Frontend (telas e arquivo local) | `frontend` | `npm ci`, `npm test` e `npm run build`, incluindo TypeScript |
 | Contratos legados (EVM) | `contracts` | Instalação, compilação, testes, cobertura mínima de 90% por contrato, recompilação e teste local de deploy/seed |
 
-O nome do job frontend é histórico, mas sua suíte atual tem **91 testes em nove arquivos**: perfis/rotas, SHA-256, Phantom controlada, preparação/assinatura/envio e conferência, referências de consulta, comparação e relatório PDF. A contagem foi reproduzida nesta revisão, não é uma quantidade fixa no workflow.
+O nome do job frontend é histórico, mas sua suíte atual tem **99 testes em dez arquivos**: perfis/rotas, SHA-256, Phantom controlada, preparação/assinatura/envio e conferência, referências de consulta, comparação, relatório PDF e exemplo guiado (integridade da fixture, leitura real via serviço mockado, três comparações, erros/retentativa/cancelamento e ajuda Phantom). A contagem foi reproduzida nesta revisão, não é uma quantidade fixa no workflow.
 
 Os testes de assinatura usam chaves efêmeras e mocks de carteira/RPC. Não pedem fundos, segredos ou carteira real. Fixtures são fictícias. A suíte não substitui o teste do autor na Phantom real, os registros públicos de demonstração ou a confirmação de publicação.
 

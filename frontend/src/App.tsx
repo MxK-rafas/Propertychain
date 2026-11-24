@@ -4,6 +4,7 @@ import { explorerUrl, readPending } from './memo-record';
 import type { MemoRecord } from './memo-record';
 import { lookupFragment, PublicLookup } from './PublicLookup';
 import { PreparationPanel } from './PreparationPanel';
+import { ExampleGuide } from './ExampleGuide';
 import sample from '../../fixtures/documento-ficticio.json';
 import samplePdf from '../../fixtures/documento-ficticio.pdf?url';
 
@@ -34,7 +35,8 @@ function Note({ children }: { children: React.ReactNode }) {
 export function App() {
   const [route, setRoute] = useState(() => window.location.hash);
   const [fragment, params] = route.split('?', 2);
-  const step = currentStep(fragment);
+  const exampleMode = fragment === '#exemplo';
+  const step = exampleMode ? 2 : currentStep(fragment);
   const publicResult = fragment === '#resultado';
   const publicSignature = fragment === '#consulta' || publicResult
     ? new URLSearchParams(params ?? '').get('tx') ?? ''
@@ -43,7 +45,7 @@ export function App() {
   const [pendingHash, setPendingHash] = useState<string | null>(() => readPending()?.hash || null);
   const [receipt, setReceipt] = useState<MemoRecord | null>(null);
   const registered = useCallback((record: MemoRecord) => { setReceipt(record); window.location.hash = 'validacao'; }, []);
-  const [profile, setProfile] = useState('proprietario');
+  const [profile, setProfile] = useState('exemplo');
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState('');
   const heading = useRef<HTMLHeadingElement>(null);
@@ -56,12 +58,12 @@ export function App() {
     return () => window.removeEventListener('hashchange', change);
   }, []);
   useEffect(() => {
-    document.title = `${publicSignature !== null ? steps[publicResult ? 3 : 2].name : step < 0 ? 'Escolher perfil' : steps[step].name} · PropertyChain`;
+    document.title = `${exampleMode ? 'Exemplo guiado' : publicSignature !== null ? steps[publicResult ? 3 : 2].name : step < 0 ? 'Escolher perfil' : steps[step].name} · PropertyChain`;
     if (scroll.current) scroll.current.scrollTop = 0;
     if (routeChanged.current) heading.current?.focus({ preventScroll: true });
-  }, [step, publicSignature, publicResult]);
+  }, [step, publicSignature, publicResult, exampleMode]);
   const navigate = (index: number) => { window.location.hash = index < 0 ? 'entrada' : steps[index].id; };
-  const enter = () => navigate(profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0);
+  const enter = () => profile === 'exemplo' ? window.location.hash = 'exemplo' : navigate(profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0);
   function chooseFile(event: ChangeEvent<HTMLInputElement>) {
     const selected = event.target.files?.[0];
     if (!selected) return;
@@ -88,9 +90,9 @@ export function App() {
   return <div className="studio" onClickCapture={event => { if (registrationBusy && (event.target as HTMLElement).closest('a[href^="#"]')) event.preventDefault(); }}>
     <aside className="guide" aria-label="Navegação da demonstração">
       <a className="studio-brand" href="#entrada"><span className="brand-mark"><Icon name="house" /></span>PropertyChain</a>
-      <div className="guide-content"><span className="eyebrow">DEMONSTRAÇÃO INTERATIVA</span><h1>A história do imóvel, <br /><em>mais clara.</em></h1><p className="guide-intro">Do cadastro à consulta, um caminho simples para verificar a origem de um documento.</p>
-        <nav className="steps" aria-label="Etapas"><a href="#entrada" className={step < 0 ? 'active' : ''} aria-current={step < 0 ? 'page' : undefined}><span className="step-number"><Icon name="house" /></span><span><strong>Escolher perfil</strong><small>Como deseja entrar?</small></span></a>{steps.map((item, index) => <a key={item.id} href={publicSignature !== null && (index === 2 || index === 3) ? lookupFragment(publicSignature, index === 3 ? 'resultado' : 'consulta') : `#${item.id}`} className={step === index ? 'active' : ''} aria-current={step === index ? 'step' : undefined}><span className="step-number">0{index + 1}</span><span><strong>{item.name}</strong><small>{item.subtitle}</small></span><span className="step-current" aria-hidden="true">↗</span></a>)}</nav>
-        <div className="guide-note"><Icon name="info" /><p>Cadastro de hash na Devnet disponível após aprovação na Phantom. Cartório simulado. Registros confirmados podem ser consultados por link.</p></div>
+      <div className="guide-content"><span className="eyebrow">DEMONSTRAÇÃO INTERATIVA</span><h1>Confira a cópia.<br /><em>Entenda o registro.</em></h1><p className="guide-intro">Compare o arquivo recebido com uma cópia registrada antes. Seu documento fica no seu aparelho.</p>
+        <nav className="steps" aria-label="Etapas"><a href="#entrada" className={step < 0 ? 'active' : ''} aria-current={step < 0 ? 'page' : undefined}><span className="step-number"><Icon name="house" /></span><span><strong>Escolher perfil</strong><small>Como deseja entrar?</small></span></a><a href="#exemplo" className={exampleMode ? 'active' : ''} aria-current={exampleMode ? 'page' : undefined}><span className="step-number"><Icon name="check" /></span><span><strong>Experimentar com um exemplo</strong><small>Sem carteira ou instalação</small></span></a>{steps.map((item, index) => <a key={item.id} href={publicSignature !== null && (index === 2 || index === 3) ? lookupFragment(publicSignature, index === 3 ? 'resultado' : 'consulta') : `#${item.id}`} className={!exampleMode && step === index ? 'active' : ''} aria-current={!exampleMode && step === index ? 'step' : undefined}><span className="step-number">0{index + 1}</span><span><strong>{item.name}</strong><small>{item.subtitle}</small></span><span className="step-current" aria-hidden="true">↗</span></a>)}</nav>
+        <div className="guide-note"><Icon name="info" /><p>Experimente e consulte sem carteira. Para cadastrar, a Phantom autoriza o registro. Cartório simulado.</p></div>
       </div><span className="guide-footer">PROPERTYCHAIN <span>•</span> REGISTRO E CONSULTA NA DEVNET</span>
     </aside>
     <div className="preview-area"><div className="preview-label"><span className="live-dot" />VISUALIZAÇÃO DO APP<span className="preview-mobile">CELULAR</span></div>
@@ -98,35 +100,36 @@ export function App() {
         <header className="app-header"><span className="app-logo"><Icon name="house" /></span><span>Documentos<br /><strong>do imóvel</strong></span><span className="prototype-tag">DEMONSTRAÇÃO</span></header>
         <div className="demo-banner"><span className="demo-dot" />Cartório simulado</div>
         <div className="screen-scroll" ref={scroll}>
-          <div className="screen-top">{step >= 0 && <button className="back-button" disabled={registrationBusy} aria-label="Voltar à tela anterior" onClick={() => { if (publicSignature !== null) window.location.hash = publicResult ? lookupFragment(publicSignature) : '#entrada'; else navigate(step === (profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0) ? -1 : step - 1); }}><Icon name="back" /></button>}<span>{step < 0 ? 'BOAS-VINDAS' : `ETAPA ${step + 1} DE 4`}</span><div className="progress-bars" aria-hidden="true">{steps.map((item, index) => <i key={item.id} className={index <= step ? 'done' : ''} />)}</div></div>
-          {publicSignature !== null ? <PublicLookup signature={publicSignature} showResult={publicResult} /> : <section key={step} className="screen-enter">
+          <div className="screen-top">{step >= 0 && <button className="back-button" disabled={registrationBusy} aria-label="Voltar à tela anterior" onClick={() => { if (exampleMode) navigate(-1); else if (publicSignature !== null) window.location.hash = publicResult ? lookupFragment(publicSignature) : '#entrada'; else navigate(step === (profile === 'verificador' ? 2 : profile === 'cartorio' ? 1 : 0) ? -1 : step - 1); }}><Icon name="back" /></button>}<span>{exampleMode ? 'EXEMPLO GUIADO' : step < 0 ? 'BOAS-VINDAS' : `ETAPA ${step + 1} DE 4`}</span><div className="progress-bars" aria-hidden="true" hidden={exampleMode}>{steps.map((item, index) => <i key={item.id} className={index <= step ? 'done' : ''} />)}</div></div>
+          {exampleMode ? <ExampleGuide /> : publicSignature !== null ? <PublicLookup signature={publicSignature} showResult={publicResult} /> : <section key={step} className="screen-enter">
             {step < 0 && <>
-              <span className="role">BEM-VINDO AO PROPERTYCHAIN</span>{title(<>Como deseja <br />entrar?</>)}
-              <p className="screen-description">Escolha um perfil para conhecer seu caminho no aplicativo.</p>
+              <span className="role">BEM-VINDO AO PROPERTYCHAIN</span>{title(<>O arquivo é <br />o mesmo?</>)}
+              <p className="screen-description">Confira se o arquivo recebido é o mesmo que foi registrado antes. Comece com um exemplo sem carteira.</p>
               <fieldset className="profile-options"><legend className="sr-only">Perfil de entrada</legend>
                 {[
+                  { id: 'exemplo', name: 'Experimentar com um exemplo', description: 'Quero conhecer o app sem instalar carteira.', icon: 'check' as const },
                   { id: 'proprietario', name: 'Proprietário', description: 'Quero cadastrar um documento.', icon: 'house' as const },
                   { id: 'verificador', name: 'Comprador / verificador', description: 'Quero consultar um documento.', icon: 'doc' as const },
                   { id: 'cartorio', name: 'Cartório', description: 'Quero conhecer a validação simulada.', icon: 'shield' as const },
                 ].map(item => <label className="profile-option" key={item.id}><input type="radio" name="profile" value={item.id} checked={profile === item.id} onChange={() => setProfile(item.id)} /><Icon name={item.icon} /><span><strong>{item.name}</strong><small>{item.description}</small></span></label>)}
               </fieldset>
-              <Note>Entrada demonstrativa, sem conta ou senha. Os perfis organizam a apresentação; não concedem permissões reais.</Note>
+              <Note>Não há conta ou senha. O exemplo e a consulta não exigem carteira. O perfil Cartório serve apenas para mostrar uma etapa simulada.</Note>
             </>}
 
             {step === 0 && <>
               <span className="role">PROPRIETÁRIO OU HERDEIRO</span>{title(<>Cadastre seu <br />documento.</>)}
-              <p className="screen-description">{file ? 'Seu arquivo será lido apenas neste dispositivo. Somente sua impressão digital será registrada na Devnet após sua aprovação.' : 'Vamos usar um documento fictício para você conhecer o caminho do cadastro à verificação.'}</p>
+              <p className="screen-description">{file ? 'Vamos registrar somente um código deste arquivo na rede de testes. Você continua responsável por guardar sua cópia.' : 'Você pode usar este PDF fictício ou escolher seu arquivo. O cadastro registra um código; não guarda o documento.'}</p>
               {!isExample ? compact : <div className="document-card"><div className="document-preview"><div className="paper"><Icon name="house" className="paper-house" /><div className="paper-line" /><div className="paper-line" /><div className="paper-line short" /><span className="paper-stamp"><Icon name="house" /></span></div><span className="sample-label">DOCUMENTO DE EXEMPLO</span></div><div className="document-info"><div className="document-name"><Icon name="doc" />{sample.tipo}</div><a className="text-link" href={samplePdf} target="_blank" rel="noreferrer">Abrir PDF fictício</a></div></div>}
               <div className="file-controls"><label className="file-label" htmlFor="document-file">{file ? 'Trocar arquivo local' : 'Escolher foto ou PDF local'}</label><input ref={input} id="document-file" disabled={registrationBusy || !!pendingHash} className="file-input" type="file" accept="application/pdf,image/jpeg,image/png" onChange={chooseFile} /><span className="file-help">PDF, JPEG ou PNG · sem envio</span>{file && <button className="text-button" disabled={registrationBusy || !!pendingHash} onClick={() => { setReceipt(null); setFile(null); setError(''); if (input.current) input.current.value = ''; }}>Usar exemplo fictício</button>}</div>
               {error && <p className="error-message" role="alert">{error}</p>}
               {facts}
               <PreparationPanel file={file} wallet onRegistered={registered} onBusy={setRegistrationBusy} onPendingHash={setPendingHash} />
-              <Note>{file ? 'A impressão digital é calculada neste dispositivo. O conteúdo do arquivo não é analisado nem enviado.' : 'Você pode usar o exemplo ou escolher um arquivo do seu dispositivo, sem enviá-lo a um servidor.'}</Note>
+              <Note>{file ? 'O código do arquivo é calculado neste aparelho. O conteúdo do arquivo não é analisado nem enviado.' : 'Você pode usar o exemplo ou escolher um arquivo do seu dispositivo, sem enviá-lo a um servidor.'}</Note>
             </>}
-            {step === 1 && <><span className="role">ETAPA DO CARTÓRIO</span>{title(<>Validação pelo <br />cartório.</>)}<p className="screen-description">No serviço, esta etapa será realizada pelo cartório. Aqui, a validação institucional é apenas simulada.</p>{compact}{receipt && <div className="registration-receipt"><a className="text-link" href={explorerUrl(receipt.signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a><p role="status">Registro confirmado na Devnet: o hash gravado foi conferido.</p><output className="digest">{receipt.hash}</output><p><a className="text-link" href={lookupFragment(receipt.signature)}>Abrir consulta pública</a></p></div>}<span className="status-chip pending">Aguardando validação · simulação</span><div className="validation-card"><div className="validation-symbol"><Icon name="shield" /></div><h3>Uma etapa de confiança</h3><p>Aqui, vamos demonstrar o resultado dessa validação. Depois, você verá a consulta como comprador ou corretor.</p><span className="field-label">Entidade apresentada na demonstração</span><strong>Cartório de exemplo — simulação</strong></div><Note>Nenhum cartório real analisou este documento. A confirmação do registro do hash não equivale à validação do cartório.</Note></>}
+            {step === 1 && <><span className="role">ETAPA DO CARTÓRIO</span>{title(<>Validação pelo <br />cartório.</>)}<p className="screen-description">No fluxo proposto, o cartório analisaria o documento. Nesta demonstração, essa análise não acontece.</p>{compact}{receipt && <div className="registration-receipt"><a className="text-link" href={explorerUrl(receipt.signature)} target="_blank" rel="noreferrer">Ver transação no explorador Devnet</a><p role="status">Registro confirmado na rede de testes: o código gravado foi conferido.</p><output className="digest">{receipt.hash}</output><p><a className="text-link" href={lookupFragment(receipt.signature)}>Abrir consulta pública</a></p></div>}<span className="status-chip pending">Aguardando validação · simulação</span><div className="validation-card"><div className="validation-symbol"><Icon name="shield" /></div><h3>Uma etapa de confiança</h3><p>Aqui, vamos demonstrar o resultado dessa validação. Depois, você verá a consulta como comprador ou corretor.</p><span className="field-label">Entidade apresentada na demonstração</span><strong>Cartório de exemplo — simulação</strong></div><Note>Nenhum cartório real analisou este documento. Registrar o código do arquivo não significa que o cartório o aprovou.</Note></>}
           </section>}
         </div>
-        <footer className="app-footer">{step >= 0 && <button className="text-button switch-profile" disabled={registrationBusy} onClick={() => navigate(-1)}>Trocar perfil</button>}{publicSignature === null && step !== 0 && <button className="primary" onClick={() => step < 0 ? enter() : step === 1 && receipt ? window.location.hash = lookupFragment(receipt.signature) : navigate(step === 3 ? 2 : step + 1)}><span>{step < 0 ? 'Entrar na demonstração' : steps[step].action}</span><Icon name="arrow" /></button>}<p>Solana Devnet · cartório simulado · arquivo somente local.</p><div className="home-indicator" aria-hidden="true" /></footer>
+        <footer className="app-footer">{step >= 0 && <button className="text-button switch-profile" disabled={registrationBusy} onClick={() => navigate(-1)}>Trocar perfil</button>}{!exampleMode && publicSignature === null && step !== 0 && <button className="primary" onClick={() => step < 0 ? enter() : step === 1 && receipt ? window.location.hash = lookupFragment(receipt.signature) : navigate(step === 3 ? 2 : step + 1)}><span>{step < 0 ? profile === 'exemplo' ? 'Experimentar com um exemplo' : 'Continuar com o perfil escolhido' : steps[step].action}</span><Icon name="arrow" /></button>}<p>Rede de testes · cartório simulado · arquivo no seu aparelho.</p><div className="home-indicator" aria-hidden="true" /></footer>
       </main><p className="preview-caption">Toque no botão verde para percorrer a demonstração.</p>
     </div>
   </div>;

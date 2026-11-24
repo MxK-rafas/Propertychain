@@ -22,4 +22,6 @@ Compartilhar o link com a assinatura da transação. Para verificar só o regist
 
 Duas fotos do mesmo papel normalmente têm hashes diferentes, assim como uma imagem recortada ou recomprimida. Divergência de hash demonstra diferença de arquivo, não necessariamente fraude. O MVP não compara conteúdo visual e não recupera o documento a partir do hash.
 
-Para a fixture, a implementação pode carregar o PDF público e comparar automaticamente. Só associar os dados fictícios quando o hash realmente coincidir, nunca por um parâmetro de URL informando o modo.
+No exemplo guiado `#exemplo`, o app carrega o PDF público e confere seu SHA-256 antes de comparar. A assinatura fixa é `2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G`, com hash `d7266d0a2f4b3f727327086e5718c63cf2e675bf59f206e5aa2415b3a5bdc4dd`. Cada passo lê esse registro real; ele precisa corresponder ao PDF. No passo alterado, acrescentar uma quebra de linha em uma cópia em memória. Não alterar a fixture original nem registrar uma transação nova. Devnet indisponível/resetada é erro, sem fallback de sucesso.
+
+A consulta pública comum não seleciona o exemplo automaticamente e não exibe titulares fictícios, mesmo se o hash coincidir. Um parâmetro de URL nunca é evidência do conteúdo do documento.
