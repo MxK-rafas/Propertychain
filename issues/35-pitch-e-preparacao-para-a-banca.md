@@ -1,4 +1,6 @@
-# [Fora do MVP] Pitch e preparação para a banca
+> **Atualização de 24/11/2026:** o autor solicitou preparar o pitch para quinta-feira, 26/11/2026, após concluir o MVP e o relatório PDF. Em seguida, priorizou a revisão de estrutura/spec/roadmap antes de continuar o pitch. A preparação está autorizada; slides, roteiro final e ensaio ainda não estão concluídos nesta revisão. Ver [roadmap atual](../ROADMAP.md). O enquadramento anterior abaixo é histórico, não proibição dessa preparação expressamente solicitada.
+
+# [Apresentação autorizada] Pitch e preparação para a banca
 
 Issue GitHub: [#7](https://github.com/MxK-rafas/Propertychain/issues/7). ID original do kit: 35. O nome histórico do arquivo é preservado; o título e escopo desta seção são atuais.
 

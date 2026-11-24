@@ -10,4 +10,4 @@ Leia [SPEC.md](SPEC.md), [AGENTS.md](AGENTS.md) e [ISSUES.md](ISSUES.md). O esco
 
 Nunca versionar foto/documento real, `.env`, chave privada ou frase-semente. Nunca pedir exportação de chave ao autor. Usar Phantom e Devnet; consulta sem carteira. Os diretórios `private-test-files/` e `testes-privados/` são ignorados para apoiar testes locais, mas documentos pessoais também não devem ser copiados para assets públicos.
 
-Explicar problemas e instruções em português simples. Não implementar Depois/Um dia, OCR, backend, armazenamento remoto ou validação real de cartório.
+Explicar problemas e instruções em português simples. Não implementar novas funcionalidades de Depois/Um dia, OCR, backend, armazenamento remoto ou validação real de cartório sem autorização explícita. Relatórios PDF foram autorizados e aceitos na #56; demais decisões seguem SPEC.md e ROADMAP.md.

@@ -1,4 +1,4 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+> **Comparação histórica de 12/11/2026.** Descreve o estado anterior à implementação do MVP. Não é status operacional atual. Consulte [SPEC](../SPEC.md), [roadmap](../ROADMAP.md) e [revisão atual](REVISAO_DE_ENTREGAS.md).
 
 # Comparação: canvas, telas/spec do chat e PropertyChain
 
@@ -29,7 +29,7 @@ O autor confirmou neste chat Solana Devnet + Phantom, uma carteira, cartório si
 
 Spec e instruções do Codex, documentação/ADRs/backlog reconciliados, modelo PDF/JSON fictício e fontes das quatro telas de referência no mesmo repositório. Código Solidity, testes e histórico foram preservados; sua documentação passou a identificar a condição de legado. A CI continua a testar esse legado, com nome explícito.
 
-## O que ainda precisa ser implementado e comprovado
+## O que ainda faltava na data desta comparação
 
 Frontend React funcional, seleção/hash de arquivo, Phantom, transação Memo, consulta RPC, link sem carteira, medição de 1–5 segundos e deploy Vercel. Não há assinatura/URL de transação de teste desta nova arquitetura para apresentar nesta revisão. A foto real ainda será fornecida pelo autor e não foi publicada.
 

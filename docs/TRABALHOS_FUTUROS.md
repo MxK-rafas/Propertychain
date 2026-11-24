@@ -16,9 +16,11 @@ O MVP foi publicado na Vercel e validado na Solana Devnet. O proprietário regis
 
 O autor aprovou o teste específico com foto real em 23/11/2026. O aceite conclui o MVP no escopo aprovado; a foto permanece fora do repositório e dos serviços de publicação. Trata-se de aceite manual do teste, sem análise jurídica ou validação institucional do conteúdo. [Issue #6](https://github.com/MxK-rafas/Propertychain/issues/6)
 
-## Depois
+## Evolução concluída após o MVP
 
-- Relatórios de verificação.
+Relatório PDF local entregue no PR #57 e aceito em 24/11/2026 na [#56](https://github.com/MxK-rafas/Propertychain/issues/56). A geração não faz nova transação, não guarda o documento e não é validação jurídica.
+
+## Depois
 - Taxa por documento ou consulta e planos mensais.
 - Piloto com cartórios parceiros.
 - Armazenamento seguro para documentos reais e preparação jurídica e de privacidade para essa operação.

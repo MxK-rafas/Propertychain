@@ -1,65 +1,60 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
-
 # Arquitetura atual — Solana Devnet
 
-Fonte de verdade: [SPEC.md](../SPEC.md). A escolha anterior Sepolia/Solidity foi substituída por decisão expressa do autor.
+Revisão de 24/11/2026. Comportamento entregue, conforme [SPEC.md](../SPEC.md); não é uma proposta de integração futura.
 
 ```mermaid
 flowchart LR
-  A[PDF fictício ou foto local] --> B[Navegador: SHA-256 dos bytes]
-  B --> C[Phantom: aprovação do registro]
-  C --> D[Solana Devnet: instrução Memo com hash]
-  D --> E[Link com assinatura da transação]
-  E --> F[Outro celular: consulta RPC sem carteira]
-  G[Cópia digital idêntica: opcional] --> H[SHA-256 local para comparação]
-  H --> F
-  F --> I[Registro confirmado e resultado da comparação]
-  J[Dados fictícios e cartório simulado] --> I
+  A[Arquivo local ou PDF fictício] --> B[SHA-256 no navegador]
+  B --> C[Preparar, simular e revisar taxa]
+  C --> D[Phantom assina via Wallet Standard]
+  D --> E[Envio único na Devnet]
+  E --> F[Conferir status e Memo]
+  F --> G[Link oficial com transação]
+  G --> H[Consulta RPC sem carteira]
+  I[Cópia local opcional] --> H
+  H --> J[Registro e comparação separados]
+  J --> K[PDF local sob demanda]
 ```
 
-## Decisões
+## Estrutura executável
 
-| Tema | Decisão atual |
+| Caminho | Responsabilidade |
 |---|---|
-| Frontend | React + TypeScript + Vite implementados na etapa 2; integração Solana pendente; protótipo HTML separado como referência |
-| Blockchain | Solana Devnet; SOL de teste |
-| Carteira | Uma Phantom para registrar; nenhuma para consultar |
-| Bibliotecas | Solana AI Kit, @solana/kit e integração atual da Phantom, com compatibilidade conferida antes da implementação |
-| Hash | SHA-256 no navegador sobre o arquivo original, sem normalização |
-| Escrita | Memo `propertychain:v1:sha256:<64 caracteres hex minúsculos>` |
-| Programa próprio | Nenhum; usar programa Memo existente |
-| Validação por cartório | Somente UI simulada, sem assinatura ou aprovação on-chain |
-| Dados pessoais/foto | Não enviados; sem OCR, upload ou armazenamento remoto |
-| Compartilhamento | Assinatura da transação em link público de consulta |
-| Publicação | Repositório GitHub único e frontend na Vercel |
+| `frontend/src/App.tsx` | Entrada, rotas, perfis demonstrativos, cadastro e cartório simulado |
+| `preparation.ts`, `PreparationPanel.tsx` | Hash local, conexão Phantom e RPC Devnet |
+| `memo.ts`, `MemoRegistration.tsx`, `memo-errors.ts` | Preparação, revisão, assinatura, envio, confirmação, leitura do Memo e erros |
+| `memo-record.ts` | Comprovante público pendente em sessionStorage e URL do explorador |
+| `consultation-link.ts`, `PublicLookup.tsx` | Referência de consulta, compartilhamento oficial, leitura e comparação |
+| `verification-result.ts` | Resultado e mensagens de comparação compartilhadas com o PDF |
+| `ReportDownload.tsx`, `verification-report.ts` | Geração local e abertura/download do PDF; biblioteca carregada sob demanda |
+| `frontend/prototype/` | Referência visual histórica; não é o app publicado |
+| `fixtures/` | PDF/JSON/TXT fictícios; não contém documentos pessoais |
+| `contracts/` | Solidity/Hardhat legado, isolado do build Vercel |
 
-## Fonte de cada informação
+Os arquivos curtos da tabela, exceto diretórios indicados, ficam em `frontend/src/`. Não há backend, banco de dados, upload, OCR, programa Solana próprio ou carteira de servidor. `scripts/bootstrap_github.sh` apenas lista issues com gh; não cria novo backlog.
 
-- A transação fornece assinatura, sucesso/erro, instrução Memo, hash e metadados públicos de rede.
-- O arquivo local fornece o hash esperado para comparação. Sem arquivo, só se confirma a existência do registro, não integridade de uma imagem específica.
-- O JSON da fixture fornece Maria Oliveira, endereço, tipo e histórico **fictícios**. Só usar esses dados para o exemplo cujo hash coincide com a fixture; nunca por confiar num parâmetro de URL dizendo que o arquivo é fictício.
-- “Cartório de exemplo” é uma demonstração visual; o endereço da carteira registrante não é certificado como cartório ou titular.
+## Bibliotecas e configuração
 
-## Contrato da consulta
+React/TypeScript/Vite; @solana/kit 8.6.0 e @wallet-standard/app 1.1.1; pdf-lib 1.17.1 para o relatório. Versões resolvidas estão no lockfile. O Solana AI Kit orientou a implementação em modo sem instalação; não é dependência runtime. Ver [referências](SOLANA_AI_KIT.md).
 
-Validar assinatura e rede; buscar a transação em Devnet; exigir sucesso (`meta.err == null`) e confirmação `confirmed` ou `finalized`; inspecionar a instrução do programa Memo esperado e validar prefixo/hash. Rejeitar valores ambíguos ou conflitantes.
+Devnet é conferida por genesis. A conexão usa o provedor oficial Phantom; a assinatura usa `solana:signTransaction` para `solana:devnet`. A mensagem v0 contém Compute Budget com preço de prioridade zero, seguido do Memo com o hash. Há taxa de rede em SOL de teste; não existe transferência para terceiros. A assinatura/mensagem são conferidas antes do envio.
 
-Extrair o hash da instrução, não de texto arbitrário nos logs. Comparar ao arquivo local quando disponível. O link não é a fonte da verdade para hash, proprietário ou cartório.
+## Consulta e origem dos dados
 
-Um resultado não encontrado, pendente, falho, incompatível ou divergente não vira confirmação positiva. Consulta é somente leitura; não solicita assinatura nem paga nova taxa.
+`lookupMemo` usa commitment confirmed na leitura da transação e verifica ausência de erro, pagador e instruções esperadas. Aceita o formato atual (Compute Budget zero + Memo) e o formato anterior de apenas Memo. Programa, prefixo, hash e conteúdo incompatíveis são rejeitados. O hash não é extraído de logs arbitrários nem confiado a parâmetros do link.
 
-## Privacidade e persistência
+A assinatura identifica o registro; a cópia local produz o hash esperado. Resultado sem arquivo não compara integridade de uma imagem específica; arquivo diferente não é afirmação de fraude. A consulta pública não exibe proprietário/histórico do exemplo, mesmo que a fixture coincida. JSON fictício apoia o cadastro de exemplo; cartório é apenas apresentação visual.
 
-Não há banco de dados, API de upload nem serviço de OCR. Arquivos reais ficam em memória no navegador durante o teste. A rede recebe só o hash e seus próprios metadados públicos. O hash não anonimiza garantidamente o documento.
+## Persistência e relatório
 
-O link leva a assinatura da transação para que outro aparelho possa consultar sem localStorage compartilhado. O arquivo original precisa ser entregue ao terceiro fora do app para comparação exata. Devnet pode ter resets e disponibilidade variável; não prometer preservação permanente de evidência em rede de testes.
+Arquivo, resultado confirmado e PDF preparado ficam em memória. Apenas hash, pagador e assinatura da tentativa pendente são guardados em sessionStorage antes do envio. Um recarregamento pode retomar essa leitura, sem reenviar automaticamente. O comprovante pendente é limpo ao confirmar ou falhar conclusivamente.
 
-## Desempenho
+PDF captura os dados de uma consulta confirmada, sem arquivo original/nome/titular e sem nova chamada RPC. Data/hora vem do relógio do aparelho, em UTC; não é timestamp certificado ou horário da transação. O URL Blob é temporário e liberado ao sair do resultado. Não há lista permanente de documentos ou relatórios.
 
-Objetivo: consulta de registro confirmado em 1–5 segundos, sem garantia externa. Consultar uma transação diretamente; não varrer eventos/blocos. Separar código de carteira do caminho de leitura. Cache estático é permitido; não usar cache de resultado como substituto silencioso da verificação real.
+## Publicação e limites
 
-Medir carregamento, seleção/hash, leitura RPC e envio/confirmação separadamente. Ver [PLANO_DE_TESTES.md](PLANO_DE_TESTES.md).
+Vite gera `frontend/dist`; Vercel serve o frontend estático em HTTPS no [domínio público oficial](https://propertychain-theta.vercel.app/). Links compartilhados usam esse domínio, mesmo se o app foi aberto em um deploy temporário. URLs coladas são interpretadas localmente; não são visitadas pelo app.
 
-## Legado
+A leitura direta de uma transação evita varredura de blocos. O tempo exibido mede RPC/conferência do Memo; o PDF carrega em chunk separado após solicitação. Não confundir metas de latência com garantias da rede ou com confirmação de uma transação nova. Devnet pode sofrer resets e indisponibilidade.
 
-`contracts/` contém o DocumentRegistry Solidity e seus testes locais. Não há prova de deploy público da fase anterior. Esse código não é apagado nem transformado em programa Solana; não integra o build Vercel. Ver [adr/0008-solana-devnet-mvp.md](adr/0008-solana-devnet-mvp.md).
+O legado EVM é testado em job separado; não fornece prova de integração Solana nem participa do deploy atual. Ver [CI](CI.md) e [ADR 0008](adr/0008-solana-devnet-mvp.md).

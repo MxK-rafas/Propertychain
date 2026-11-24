@@ -1,244 +1,155 @@
-> **Estado atual — 23/11/2026:** Em 23/11/2026, o autor aprovou também o teste local com foto de documento real, concluindo o aceite do MVP no escopo da spec. O aceite foi informado pelo autor; a foto não foi enviada ao Codex nem anexada ao repositório. Isso não constitui análise da autenticidade jurídica do documento ou aprovação por cartório real. [Aceite final — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). Os registros de etapas pendentes abaixo documentam estados anteriores e não representam a situação atual.
+# PropertyChain — especificação atual
 
-# PropertyChain — especificação do MVP
-
-Decisões consolidadas com o autor em 12/11/2026. Esta é a fonte de verdade para a implementação atual. O Lean Canvas e a ficha preservam as hipóteses de negócio; documentos e contratos da fase EVM são históricos quando conflitarem com esta spec. Não tratar planejamento como funcionalidade entregue.
+Revisão de 24/11/2026, baseada no código da main `843d6936fc067cd653dd70aa0db31d44bc89a032` e nos aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
 
 ## Contexto
 
-Proprietários e herdeiros de imóveis antigos têm dificuldade para encontrar e apresentar documentos confiáveis. Compradores e corretores precisam entender a origem desses documentos. O PropertyChain testa um caminho simples de cadastro e consulta no celular.
+Proprietários e herdeiros de imóveis antigos precisam apresentar documentos; compradores e corretores precisam conferir os arquivos recebidos. O PropertyChain permite registrar a impressão digital de um arquivo na Solana Devnet e consultar esse registro sem carteira, inclusive em outro aparelho.
 
-O MVP registra uma impressão digital de arquivo em **Solana Devnet**, com **uma carteira Phantom**, e permite consulta por terceiros sem carteira. O cartório e o histórico de titulares são **simulados**. Registrar um hash não prova a autenticidade jurídica do conteúdo nem a propriedade do imóvel.
+**Pergunta do teste:** uma pessoa consegue consultar um registro confirmado e comparar sua cópia digital, sem carteira e com uma experiência simples no celular?
 
-O projeto é único: código e documentação no [GitHub](https://github.com/MxK-rafas/Propertychain), publicação prevista na **Vercel**. A referência visual está versionada em [frontend/prototype](frontend/prototype/README.md); o [protótipo deste chat](https://documento-imovel-demo-rafael.equaltoucan4.chatgpt.site) é apenas uma referência de aparência e navegação.
+O MVP foi aceito pelo autor em 23/11/2026, incluindo o teste local com foto real. O relatório PDF foi aceito em 24/11/2026. A foto real não foi fornecida ao Codex nem publicada. Esses são aceites manuais do autor, separados das verificações automatizadas. O app público é https://propertychain-theta.vercel.app/ e o repositório é [MxK-rafas/Propertychain](https://github.com/MxK-rafas/Propertychain).
 
-**Pergunta do teste:** outra pessoa consegue consultar o registro de um documento já confirmado, em outro celular, sem carteira e preferencialmente em **1 a 5 segundos**?
-
-O autor pediu um modelo fictício e fornecerá uma foto de documento real para testes locais. Essa foto não integra o repositório nem a publicação. Não inventar leitura automática de seu conteúdo.
+Registro de hash, consulta e comparação são reais na rede de testes. Cartório é uma etapa visual simulada. O registro não comprova autenticidade jurídica, identidade, titularidade ou propriedade; não recupera um documento perdido. Devnet não é infraestrutura registral permanente e pode sofrer resets.
 
 ## O que o app faz (tela por tela)
 
-Manter uma tela inicial de seleção de perfil e as quatro telas do percurso, com um objetivo e um botão principal em cada uma. Voltar, escolher arquivo, abrir explorador e compartilhar link são controles secundários. Estados de carteira, espera e erro aparecem dentro dessas telas.
+Manter entrada por perfil e quatro etapas. Cada etapa tem um objetivo e uma ação principal; escolher arquivo, calcular hash, conectar carteira, voltar, compartilhar e baixar PDF são controles de apoio. Computador e celular usam as mesmas rotas e ações. A navegação lateral é ocultada no layout estreito; o indicador de etapa e o botão de voltar continuam no celular.
 
-### Entrada — escolher perfil (demonstração)
+### Entrada — Como deseja entrar?
 
-Acrescentada por pedido do autor após testar o app. Ao abrir a URL sem rota ou com rota desconhecida, mostrar “Como deseja entrar?”. Apresentar três opções de perfil (seleção única) e um único botão principal: “Entrar na demonstração”.
+Três opções de perfil, sem login ou autorização real. **Botão principal: Entrar na demonstração.**
 
-- Proprietário: abre a tela de cadastro.
-- Comprador / verificador: abre diretamente a consulta, sem carteira.
-- Cartório: abre a etapa de validação simulada, sem conta ou aprovação real.
+- Proprietário abre `#cadastro`.
+- Comprador / verificador abre a consulta real em `#consulta`, sem carteira.
+- Cartório abre `#validacao`, apenas como demonstração institucional.
 
-A escolha apenas organiza a apresentação; não autentica usuários nem concede permissões. Não criar contas, senhas, painel ou integração de carteiras nesta mudança. Preservar os links diretos das quatro etapas. Oferecer “Trocar perfil”; voltar da primeira tela de cada caminho retorna à entrada.
+URL inicial ou rota desconhecida mostra a entrada. Trocar perfil retorna à entrada. Nenhum perfil concede permissões jurídicas ou de validador.
 
-Atualização solicitada em 23/11/2026: computador e celular usam o mesmo percurso real desde a página inicial. Entrar como comprador/verificador não abre uma consulta simulada; apresenta o campo para informar o registro na própria tela 3.
+### 1. Cadastre seu documento — `#cadastro`
 
-### 1. Cadastrar documento
+**Objetivo:** preparar e registrar o hash do arquivo.
 
-**Objetivo:** registrar a impressão digital do arquivo escolhido.
+Usar por padrão o [PDF fictício](fixtures/documento-ficticio.pdf), com os dados de exemplo do [JSON](fixtures/documento-ficticio.json). Permitir escolher PDF, JPEG ou PNG local, recusando arquivo vazio ou tipo incompatível. O arquivo não é enviado. Ao escolher outro arquivo, ocultar os dados de Maria/endereço do exemplo; não há OCR nem extração de titular.
 
-- Título: “Cadastre seu documento.”
-- Antes da ficha: “Vamos usar um documento fictício para você conhecer o caminho do cadastro à verificação.”
-- Por padrão, carregar o [PDF fictício](fixtures/documento-ficticio.pdf), seus dados e a identificação “Demonstração — dados fictícios”.
-- Permitir substituir esse exemplo por uma foto local de teste (JPEG ou PNG) ou por um PDF, sem upload. A escolha é opcional; não criar catálogo ou múltiplos cadastros de arquivos.
-- Ao substituir o exemplo, explicar: “Seu arquivo será lido apenas neste dispositivo. Somente sua impressão digital será registrada na rede de testes.” Ocultar Maria Oliveira, endereço e histórico de exemplo. Não sugerir que esses dados vieram da foto.
-- Mostrar a rede Devnet, o arquivo selecionado e os estados da operação.
+O cadastro entregue tem controles explícitos, nesta ordem de uso:
 
-**Botão principal: “Cadastrar documento”.** Conectar a Phantom se necessário, calcular SHA-256 dos bytes exatos do arquivo, solicitar assinatura, enviar uma única transação e verificar confirmação e sucesso. A assinatura ocorre na carteira, sem outra tela do app. Só avançar à tela 2 quando houver confirmação e hash correto.
+1. **Calcular impressão digital:** SHA-256 dos bytes originais, localmente. Se usar a fixture, conferir o hash com o JSON.
+2. **Conectar Phantom de teste:** obter endereço público e conferir que o RPC do app é Devnet. Isso não muda nem comprova a seleção de rede na interface da Phantom.
+3. **Preparar registro na Devnet:** ação principal inicial. Conferir rede, blockhash, saldo, taxa e simular a transação. A simulação envia apenas o hash ao RPC; não publica o registro.
+4. Mostrar resumo de rede, pagador, hash e taxa. A ação principal passa a **Aprovar registro na Phantom**. A carteira solicita assinatura; o app verifica mensagem e assinatura antes do envio.
+5. Guardar comprovante público da tentativa, mostrar link do explorador e enviar uma única vez. Aguardar confirmação e conferir programa, pagador e hash. Somente então avançar à etapa 2.
 
-Cancelamento, falta de saldo de teste ou falha mantêm a pessoa na tela com explicação e nova tentativa. Bloquear cliques repetidos enquanto a operação estiver pendente. Não reenviar automaticamente uma transação cujo resultado ainda seja incerto.
+A implementação não possui um botão único chamado Cadastrar documento que automaticamente conecta, calcula e assina. A separação atual permite revisar a operação antes de aprovar. Cancelar preparação é secundário e não envia transação.
 
-### 2. Validação pelo cartório
+Clique repetido não duplica o envio. Arquivo/navegação ficam bloqueados durante o processamento. Em resposta incerta, manter o comprovante e oferecer **Conferir registro existente** (somente leitura), sem nova assinatura ou reenvio automático. Erros, recusa, saldo insuficiente e expiração recebem mensagens em português. Confirmar na Phantom não equivale, por si, a confirmação na rede.
 
-**Objetivo:** demonstrar o papel do cartório, sem outra transação.
+### 2. Validação pelo cartório — `#validacao`
 
-- Título: “Validação pelo cartório.”
-- Texto: “Documento cadastrado. No serviço, esta etapa será realizada pelo cartório.”
-- Texto: “Aqui, vamos demonstrar o resultado dessa validação. Depois, você verá a consulta como comprador ou corretor.”
-- Mostrar resumo do arquivo, “Cartório de exemplo — simulação” e o aviso de que não houve análise por cartório real.
-- Mostrar o link da transação confirmada na Devnet. Não confundir confirmação da rede com aprovação do cartório.
+**Objetivo:** explicar a etapa institucional simulada.
 
-**Botão principal: “Ver validação simulada”.** Avançar à tela 3, sem solicitar outra carteira ou assinatura. A simulação é somente apresentação e não cria um estado de aprovação na blockchain.
+Mostrar resumo do arquivo, Cartório de exemplo — simulação e aviso de que nenhum cartório real analisou o documento. Quando o cadastro acaba de confirmar nesta sessão, mostrar o hash, o link do explorador Devnet e **Abrir consulta pública**.
 
-### 3. Verificar documento
+**Botão principal: Ver validação simulada.** Com comprovante confirmado em memória, avançar à consulta desse registro; sem comprovante (entrada pelo perfil Cartório), avançar ao formulário de consulta, que exige informar um registro. Não criar aprovação on-chain ou nova assinatura.
 
-**Objetivo:** consultar o registro como comprador ou corretor, sem carteira.
+O comprovante de sucesso e o arquivo ficam em memória da sessão do app; a tela de cartório aberta diretamente não recupera automaticamente um cadastro concluído em outro aparelho.
 
-- Título: “Conheça a origem do documento.”
-- Aviso: “Validação pelo cartório simulada.”
-- Identificar o registro recebido pelo link. O link deve abrir diretamente nesta tela em outro celular, sem exigir as telas anteriores.
-- Ao entrar sem um link de registro, permitir colar na própria tela o link recebido ou o código da transação. Um único botão “Verificar documento” consulta o registro e compara o arquivo opcional, sem uma etapa intermediária. Links temporários anteriores do PropertyChain podem ser usados como referência, sem visitar sua origem. Links do explorador devem ser da Devnet.
-- No exemplo fictício, usar o mesmo PDF e seus dados fixos.
-- Para outro arquivo, permitir selecionar localmente uma cópia digital idêntica, como controle secundário. Sem arquivo, explicar que só será consultado o registro na rede, sem comparação com a foto.
-- Não buscar um imóvel por endereço, matrícula ou nome. Não exigir Phantom para leitura.
+### 3. Verificar documento — `#consulta` ou `#consulta?tx=…`
 
-**Botão principal: “Verificar documento”.** Consultar a transação na Devnet, conferir sucesso, programa Memo e formato esperado. Se houver arquivo local, comparar seu SHA-256 com o valor do Memo. Avançar ao resultado apenas após uma resposta conclusiva.
+**Objetivo:** consultar um registro como terceiro, sem carteira.
 
-Se faltar identificação, a transação não existir, tiver falhado, ainda estiver pendente ou o arquivo divergir, explicar a situação. Não apresentar aprovação automática nem substituir uma falha por dados fictícios.
+Título atual: **Verificar documento**. Oferecer o campo **Link do registro ou código da transação** e um arquivo local opcional para comparação. Um link recebido preenche a identificação; a página inicial permite informar essa referência na própria tela, sem abrir uma consulta simulada.
 
-### 4. Resultado da verificação
+Aceitar código da transação, links de consulta/resultado no domínio oficial ou em deploys antigos do PropertyChain na Vercel e links do explorador Solana com `cluster=devnet`. Interpretar a referência localmente, sem visitar a origem colada. Assinatura inválida ou referência incompleta não é confirmação de registro.
 
-**Objetivo:** explicar exatamente o que foi encontrado.
+**Botão principal: Verificar documento.** Conferir Devnet e buscar a transação com commitment `confirmed`. Inspecionar sucesso, pagador e instruções esperadas. Se houver arquivo local, calcular SHA-256 e comparar. Registro confirmado com arquivo diferente também avança ao resultado, explicitando a divergência; não é sucesso da comparação.
+
+Sem arquivo, consultar somente o registro. A consulta não faz busca por nome, matrícula, endereço ou hash em um catálogo e não recupera o PDF original. Arquivos não são analisados visualmente. Erros, registro inexistente ou incompatível mantêm a pessoa na consulta com explicação.
+
+### 4. Resultado da verificação — `#resultado?tx=…`
+
+**Objetivo:** explicar o registro encontrado e a comparação realizada.
 
 Exibir separadamente:
 
-- **Registro na Solana Devnet:** confirmado, somente após consulta real com sucesso.
-- **Arquivo:** “Corresponde ao arquivo registrado” apenas após comparação do hash. Sem arquivo: “Registro encontrado; arquivo não comparado”.
-- **Tipo de documento:** “Escritura do imóvel” exclusivamente para o exemplo; para uma foto real sem análise, “Não identificado pelo app”.
-- **Validado por:** “Cartório de exemplo — simulação”, acompanhado de “Nenhum cartório real analisou este documento”.
-- Link da transação no explorador e link da consulta para compartilhar, sem incluir imagem, nome do arquivo ou dados pessoais.
+- Registro confirmado na Devnet, somente após leitura válida.
+- Arquivo correspondente, diferente ou não comparado, sem equiparar divergência a fraude.
+- SHA-256 registrado e tempo da consulta RPC/conferência do Memo.
+- Link do explorador Devnet e **Copiar link da consulta**, sempre em `https://propertychain-theta.vercel.app/`. Se o clipboard falhar, mostrar o endereço para copiar manualmente.
+- Tipo: **Não identificado pelo app**. Nenhum cartório real analisou o documento; cartório/histórico da demonstração são fictícios.
+- **Baixar relatório em PDF**, controle secundário da evolução aceita na #56.
 
-Somente no exemplo fictício, mostrar Maria Oliveira, Rua das Palmeiras, 120 e o histórico: João Oliveira (1985), seguido de Maria Oliveira (2024, herança). Usar “Titular apresentado na demonstração” e “Histórico fictício”. Para um arquivo real, não exibir essa história como se pertencesse ao documento.
+A consulta real atual não apresenta Maria Oliveira, João Oliveira ou histórico de titulares, mesmo para a fixture. Esses dados continuam nos arquivos do exemplo e na [referência visual histórica](frontend/prototype/README.md); não são dados obtidos da blockchain nem uma funcionalidade de histórico público entregue.
 
-**Botão principal: “Fazer nova consulta”.** Voltar à tela 3 com o mesmo registro, sem transação nova.
+**Botão principal: Fazer nova consulta.** Voltar à etapa 3 com a referência, limpar o arquivo e o resultado anterior e descartar o relatório preparado. Trocar/remover o arquivo também invalida a comparação anterior. Abrir diretamente uma rota de resultado sem resultado em memória retorna à consulta; não fabrica sucesso nem restaura comparação de outro aparelho.
 
-## Evolução aprovada após o MVP — relatório PDF (#56)
+### Relatório PDF — evolução #56 concluída
 
-O autor aprovou em 23/11/2026 a proposta da [issue #56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta evolução não reabre o aceite do MVP. Em 24/11/2026, o autor confirmou o funcionamento correto do relatório e aceitou a entrega da issue #56.
+Gerar o PDF localmente e sob demanda, somente depois de uma consulta confirmada. Incluir: PropertyChain, Devnet, status do registro, SHA-256 registrado, identificação da transação, comparação (igual/diferente/sem arquivo), data/hora da consulta em UTC segundo o relógio do aparelho e links oficiais da consulta/explorador. A data não é carimbo certificado nem horário da transação.
 
-Na tela 4, oferecer **Baixar relatório em PDF** como controle secundário, após consulta confirmada e comparação concluída. Gerar o arquivo no próprio aparelho, com: PropertyChain, Solana Devnet, registro confirmado, SHA-256 registrado, identificação da transação, estado da comparação (igual, diferente ou sem arquivo), data/hora da consulta em UTC informada pelo relógio do aparelho, link oficial da consulta e explorador Devnet. A data representa a consulta; não é carimbo de tempo certificado nem horário da transação.
+O PDF descreve aquela leitura; abri-lo não consulta novamente a rede. Incluir limites do registro e identificação de rede de testes. Não incluir nome ou conteúdo do arquivo original, imagem, titular ou anexo. Não oferecer relatório de sucesso em consulta inválida, inexistente, pendente ou com erro.
 
-O PDF descreve aquela consulta, sem consultar novamente a rede ao ser aberto. Incluir aviso de rede de testes, ausência de valor legal, cartório simulado e limites da comprovação. Não incluir o documento original, nome de arquivo, imagem, nomes de titulares ou dados extraídos. Não gerar relatório de sucesso para consulta inexistente, inválida, pendente ou com erro.
-
-A biblioteca de PDF deve carregar somente ao solicitar o relatório. Disponibilizar **Abrir PDF** e opção de baixar novamente quando o arquivo estiver pronto, pois o navegador interno pode não iniciar um download automático. Ao sair do resultado ou mudar a consulta, descartar o relatório preparado. Não adicionar banco de dados, upload, carteira de servidor, cobrança ou outra transação. As verificações automatizadas de conteúdo/download nos dois formatos e as consultas públicas foram concluídas na implementação. O aceite final da entrega foi informado pelo autor em 24/11/2026. Manter esses cenários como roteiro de regressão.
+Carregar pdf-lib só ao solicitar o relatório. Depois de gerar, oferecer **Abrir PDF** e **Baixar PDF novamente** para navegadores que não iniciem o download automático. Liberar o URL temporário ao sair do resultado. O autor aceitou a entrega em 24/11/2026; não há histórico de relatórios salvo no app.
 
 ## Configuração
 
-### Rede, carteira e bibliotecas
+### Aplicativo e bibliotecas
 
-Usar exclusivamente **Solana Devnet** e SOL de teste, sem valor financeiro. Uma única carteira Phantom controlada pelo autor aprova o registro. Consulta pública usa conexão somente de leitura.
+Frontend estático React + TypeScript + Vite em `frontend/`, publicado por HTTPS na Vercel. Executar comandos dentro de `frontend`: `npm ci`, `npm run dev`, `npm test`, `npm run build`. A raiz não tem package.json. Node mínimo 22.12.0; CI usa Node 22. Instalar com o lockfile versionado.
 
-**Use o Solana AI Kit e as bibliotecas atuais da Solana (@solana/kit e Wallet Phantom).**
+**Use o Solana AI Kit e as bibliotecas atuais da Solana (@solana/kit e Wallet Phantom).** O AI Kit foi orientação em modo sem instalação; não é dependência runtime nem carteira de servidor. A conexão usa o provedor oficial Phantom, e a assinatura usa Wallet Standard. Versões resolvidas conferidas nesta revisão: @solana/kit 8.6.0, @wallet-standard/app 1.1.1 e pdf-lib 1.17.1. Ver [arquitetura](docs/ARQUITETURA.md) e [referências do AI Kit](docs/SOLANA_AI_KIT.md).
 
-Antes da implementação, consultar documentação oficial e confirmar versões e compatibilidade. Não copiar receitas antigas de SDK. O AI Kit não autoriza agentes autônomos, carteiras de servidor ou exposição de chaves. Se algum recurso exigir segredo ou não for compatível, explicar no plano e propor uso seguro dos recursos necessários.
+### Rede e transação
 
-Manter React + TypeScript + Vite como proposta do frontend, substituindo a antiga integração ethers/EVM por Solana. Não adicionar backend ou banco de dados para este MVP.
+Somente Solana Devnet e SOL de teste, sem valor financeiro. Defaults públicos: `VITE_SOLANA_CLUSTER=devnet` e `VITE_SOLANA_RPC_URL=https://api.devnet.solana.com`. Conferir o genesis da rede. Configuração local em `frontend/.env.local` ou no projeto Vercel; nunca inserir segredo em VITE_*.
 
-### Registro e consulta
+Transação v0 com uma instrução Compute Budget de taxa de prioridade zero e uma instrução Memo `propertychain:v1:sha256:` seguida do SHA-256 hexadecimal minúsculo de 64 caracteres. Programa Memo: `MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr`. Conferir igualdade byte a byte da mensagem assinada, assinatura do pagador, simulação e prazo antes de transmitir.
 
-- Usar o programa Memo existente; não criar um programa Solana próprio.
-- Conteúdo do Memo: `propertychain:v1:sha256:` seguido do hash SHA-256 hexadecimal de 64 caracteres em minúsculas.
-- Calcular SHA-256 no navegador, sobre os bytes originais. Não comprimir, recortar ou normalizar a imagem antes do cálculo.
-- O programa Memo esperado deve ser explicitamente verificado, não apenas uma ocorrência de texto nos logs. Conferir `meta.err == null` e confirmação `confirmed` ou `finalized`.
-- A identificação pública é a assinatura da transação. Gerar um link com essa assinatura e a rota de consulta; não depender de localStorage de outro dispositivo.
-- Compartilhar sempre pelo endereço público oficial `https://propertychain-theta.vercel.app/`, independentemente do domínio temporário em que o app foi aberto. Endereços de preview da Vercel podem exigir login e não devem ser gerados para terceiros. A consulta e os controles são os mesmos no celular e no computador.
-- O hash esperado vem do arquivo local; o hash registrado vem da instrução Memo. Parâmetros do link não são prova de autenticidade. Validar formato e comprimento antes de consultar.
-- Se houver várias instruções conflitantes ou um Memo fora do padrão, não aceitar silenciosamente.
-- O fato de alguém registrar um arquivo não prova que essa pessoa é proprietária ou um cartório autorizado.
-- Repetir uma consulta nunca envia transação. Registrar de novo o mesmo hash pode produzir outra transação; não prometer exclusividade de documento neste modelo.
+A confirmação exige status confirmado/finalizado sem erro e leitura do conteúdo esperado. A consulta aceita também registros anteriores com apenas o Memo, rejeitando programas/instruções extras incompatíveis. Ler a instrução, não procurar apenas texto nos logs. O hash registrado vem da transação; o hash para comparação vem do arquivo local, nunca de um parâmetro não verificado.
 
-Explorador: `https://explorer.solana.com/tx/ASSINATURA?cluster=devnet`.
+### Dados e persistência
 
-### Dados fictícios e foto real
+O arquivo original fica no aparelho, sem OCR, upload ou armazenamento remoto. Duas cópias com os mesmos bytes coincidem; duas fotos do mesmo papel normalmente não. O hash e os metadados da transação, inclusive a carteira, são públicos; hash não é garantia de anonimato.
 
-O modelo é [fixtures/documento-ficticio.pdf](fixtures/documento-ficticio.pdf), acompanhado de dados e hash em [fixtures/documento-ficticio.json](fixtures/documento-ficticio.json). Não alterar seus bytes sem atualizar o hash. O conteúdo é uma ficha de demonstração, não uma reprodução de escritura oficial.
+Antes do envio, guardar apenas hash, pagador e assinatura em `sessionStorage` da aba. Isso recupera uma tentativa incerta após atualizar a página. Não guardar arquivo, nome, imagem, segredo ou bytes assinados. Remover o comprovante pendente após confirmação/falha conclusiva. O sucesso concluído não é uma lista persistente de documentos. Recarregar descarta seleção local e PDF preparado.
 
-A foto real será fornecida posteriormente pelo autor. Ler somente em memória no navegador; não enviar para GitHub, Vercel, RPC, IPFS, analytics, OCR ou armazenamento. Somente o hash vai à blockchain, junto dos metadados públicos próprios da transação, como carteira e horário. Um hash não garante anonimato.
+### Publicação e desempenho
 
-**Duas fotos do mesmo papel normalmente têm hashes diferentes.** Para testar correspondência, usar uma cópia do mesmo arquivo digital. Hash não reconhece documentos visualmente nem recupera uma foto perdida. O terceiro precisa receber o arquivo original fora do app se quiser compará-lo.
+Vercel: Root Directory `frontend`, framework Vite, instalação `npm ci`, build `npm run build`, saída `dist`. O [domínio oficial](https://propertychain-theta.vercel.app/) é público sem login; previews temporários podem ser protegidos. `frontend/prototype/` e `contracts/` não são a aplicação publicada.
 
-### GitHub e Vercel
-
-- Repositório único: `MxK-rafas/Propertychain`.
-- Frontend funcional a implementar em `frontend/`; referência visual separada em `frontend/prototype/`.
-- Publicação futura na Vercel: raiz `frontend`, instalação `npm ci`, build `npm run build`, saída `dist` e HTTPS. Os scripts já existem na entrega da etapa 2; isso não significa que houve publicação Vercel.
-- Preferir rotas por fragmento (`#consulta`) para permitir abertura direta sem reescrita de servidor. O link identifica a transação e preserva o domínio local ou publicado.
-- Variáveis planejadas: `VITE_SOLANA_CLUSTER=devnet` e `VITE_SOLANA_RPC_URL`. Só valores públicos podem estar em `VITE_*`; não colocar tokens secretos do provedor no frontend.
-- Não há chave privada de deploy ou endereço de contrato próprio.
-- A publicação na Vercel e a validação com Phantom são etapas futuras, não entregas desta consolidação documental.
-
-### Meta de velocidade
-
-Buscar consulta em **1 a 5 segundos**, do toque em “Verificar documento” até resultado conclusivo de um registro já confirmado, incluindo comparação local quando houver arquivo selecionado. Não é garantia da rede.
-
-Medir separadamente: carregamento inicial do app, seleção do arquivo, aprovação humana na Phantom e envio/confirmação de nova transação. Não esconder esses tempos para afirmar que todo o processo dura cinco segundos.
-
-Ler apenas a transação necessária, evitar varrer blocos ou históricos, carregar sob demanda o código da carteira e não exigir conexão para leitura. Cache de recursos estáticos é permitido; uma aprovação antiga em cache não substitui a consulta real.
-
-Medir pelo menos dez consultas no celular, incluindo outro aparelho sem carteira e primeira consulta sem cache. Anotar mediana, máximo, quantidade de erros e condições de rede. Se passar de cinco segundos, mostrar espera honesta e investigar RPC/rede; nunca fabricar sucesso para cumprir a meta. Registrar tempo de hash e tamanho do arquivo separadamente para identificar fotos grandes.
+Meta de 1–5 segundos para leitura de um registro confirmado, sem garantia externa. O tempo mostrado mede conferência do RPC Devnet e leitura/conferência do Memo; não inclui carregamento, seleção/hash local, aprovação humana, envio/confirmação de nova transação ou geração do PDF. Não confundir medições técnicas com o tempo total percebido.
 
 ## Regras
 
-- Português em toda a interface, fontes grandes, bom contraste, poucas cores e botões acessíveis no celular.
-- Preservar o visual claro com verde escuro e as quatro telas finais do protótipo.
-- Nunca pedir frase-semente ou chave privada, em chat, formulário, terminal ou `.env`. Assinatura ocorre na Phantom.
-- Somente Devnet. O app deve verificar a rede utilizada e não registrar em Mainnet.
-- Fotos e documentos pessoais não podem ser versionados, enviados em logs ou incorporados ao build público. Testes automatizados usam somente fixtures fictícias.
-- Sem OCR, extração automática de nomes, avaliação jurídica, detecção de fraude por imagem ou inferência de proprietário.
-- Mensagens claras para carteira ausente, cancelamento, saldo de teste insuficiente, rede indisponível, registro pendente/não encontrado, transação falha e arquivo divergente.
-- Nunca mostrar “funcionou” por receber apenas uma assinatura. Conferir sucesso e hash na Devnet.
-- Sempre distinguir registro técnico real, cartório simulado e dados fictícios. O exemplo não é resultado da análise de uma foto real.
-- Não criar funcionalidades fora desta spec.
+- Português, letras legíveis no celular e uma ação principal por tela/estado.
+- Nunca pedir frase-semente ou chave privada. A assinatura acontece na Phantom.
+- Mostrar o link do explorador antes de anunciar sucesso e conferir transação/Memo.
+- Explicar espera e erros honestamente; nunca substituir falha por dados fictícios.
+- Não versionar foto real, credenciais ou dados pessoais no repositório, build, logs ou relatório.
+- Não anunciar autenticidade jurídica, análise de cartório ou propriedade confirmada.
+- Usar arquivos fictícios em testes automatizados. Aceite manual do autor não é auditoria independente de conteúdo.
 
 ## Fora do escopo
 
-Contas/login, banco de dados, upload/armazenamento remoto de documentos, catálogo de imóveis, busca por matrícula/salt, NFT/token, transferência de propriedade, programa próprio, validação/rejeição/revogação on-chain por cartório, painel do validador, segunda carteira, atestação on-chain de titular, histórico real de propriedade, QR code, analytics e cobranças.
+Contas/senhas, autorização real por perfil, banco de dados, upload/armazenamento remoto, OCR, catálogo de imóveis, busca por matrícula/salt/nome, NFT/token, transferência de propriedade, programa próprio, painel do validador, aprovação/rejeição/revogação on-chain de cartório, atestação de titular, histórico real de propriedade, QR code do app, analytics e cobrança.
 
-**Depois:** relatórios; taxas por documento/consulta; planos mensais; piloto com cartórios; armazenamento seguro para documentos reais e preparação jurídica/LGPD para essa operação.
-
-**Um dia:** licenciamento para cartórios.
-
-O registro de hash na Devnet e a seleção local da foto real foram antecipados expressamente pelo autor. Isso não traz os demais itens do roadmap para o MVP. Os contratos Solidity em `contracts/` são legado preservado, não dependência do app atual.
+O relatório PDF saiu de Depois mediante aprovação e está entregue. Continuam em **Depois**: taxas por documento/consulta, planos mensais, piloto com cartórios e armazenamento seguro acompanhado de avaliação jurídica/privacidade. **Um dia**: licenciamento para cartórios. Nada disso é implementação autorizada automaticamente. Ver [roadmap](ROADMAP.md).
 
 ## Como vamos trabalhar
 
-Estas instruções são para o Codex e qualquer IA de programação:
+Plano antes do código, uma etapa por vez e pausa para teste do autor, conforme [AGENTS.md](AGENTS.md). Explicar erros e testes em linguagem simples. Atualizar os documentos ativos, mantendo decisões anteriores em histórico. Não enviar mensagens a terceiros ou usar documentos reais em apresentações públicas sem instrução específica.
 
-1. Ler esta spec, [AGENTS.md](AGENTS.md) e a comparação com o repositório. Apresentar plano simples **antes do código** e esperar aprovação.
-2. Trabalhar uma etapa por vez. Explicar o que mudou, como abrir e como testar; parar e aguardar meu teste antes de avançar.
-3. Explicar erros em linguagem simples: o que aconteceu, o que impede e qual é o próximo passo.
-4. Nunca solicitar segredos. Se eu precisar agir na Phantom ou Vercel, explicar o que conferir e aguardar essa ação.
-5. **Mostrar o link da transação no explorador antes de dizer que funcionou**, após confirmar sucesso e Memo correto na Devnet.
-6. Não tratar um teste de contrato EVM, uma simulação ou uma tela pronta como prova de integração Solana.
-7. Não enviar foto real ao repositório ou a serviços externos. Não inventar dados extraídos dela.
-8. Se uma escolha técnica estiver incompatível ou faltar um dado, explicar e propor a menor solução dentro do escopo.
-9. Atualizar documentação e evidências ao concluir uma etapa, sem marcar tarefas futuras como entregues.
+A preparação do pitch foi solicitada para quinta-feira, 26/11/2026, e está na [issue #7](https://github.com/MxK-rafas/Propertychain/issues/7). O autor priorizou esta revisão antes de continuar o material; não declarar slides ou ensaio como concluídos. Feedback de amigos ainda será trazido pelo autor.
 
-## Etapas
+## Etapas e aceite
 
-### 1. Revisar modelo, decisões e plano
+| Etapa | Estado | Pronto quando |
+|---|---|---|
+| 1. Escopo e modelo fictício | Concluída | Autor revisa modelo e aprova decisões, sem compartilhar segredos |
+| 2. Telas e seleção local | Concluída | Percurso legível, arquivo local sem upload e dados fictícios separados |
+| 3. SHA-256 e Phantom | Concluída | Mesmo arquivo gera mesmo hash; conexão, recusa e troca de conta tratadas |
+| 4. Registro Memo Devnet | Concluída | Link do explorador, status sem erro e Memo/hash conferidos; envio incerto não é repetido |
+| 5. Consulta pública | Concluída | Registro sem carteira e três resultados corretos; medições técnicas identificadas |
+| 6. Publicação e revisão | Concluída | HTTPS público, testes em dois formatos e aceite do autor na #6 |
 
-Revisar o PDF fictício, o escopo da foto local, a arquitetura Solana e o plano. O autor aprovou no chat o plano do primeiro bloco de implementação; a entrega da etapa 2 aguarda seu teste.
-
-**Pronto quando:** abro o modelo, confirmo que é fictício e aprovo o plano sem compartilhar foto real, frase-semente ou chave privada.
-
-### 2. Implementar as quatro telas no frontend
-
-Preparar React/TypeScript/Vite, reproduzir a referência visual e permitir exemplo ou arquivo local. Nesta etapa, identificar que a blockchain ainda está simulada. Preparar scripts de build/teste e CI do frontend sem torná-lo dependente de `contracts/`.
-
-**Pronto quando:** percorro as quatro telas no celular; ao selecionar uma foto de teste, os dados de Maria desaparecem; o arquivo não é enviado a servidor; build e verificações do frontend passam.
-
-### 3. Conectar Phantom e calcular hash
-
-Implementar assinatura pela carteira de teste e cálculo local, sem armazenar segredos. Comparação usa cópia idêntica do arquivo.
-
-**Pronto quando:** conecto a Phantom na Devnet, posso cancelar sem travar e o mesmo arquivo produz sempre o mesmo hash; um arquivo alterado produz outro.
-
-### 4. Registrar na Solana Devnet
-
-Implementar Memo, confirmação, proteção contra clique repetido, erros e link do explorador.
-
-**Pronto quando:** aprovo uma transação, vejo o link da Devnet e confiro seu sucesso e hash. Cancelamento/falha não mostram cadastro concluído. A simulação do cartório não cria outra transação.
-
-### 5. Consultar em outro celular e medir
-
-Implementar link público sem carteira, leitura da transação, comparação opcional do arquivo e distinção entre registro encontrado e arquivo comparado.
-
-**Pronto quando:** outra pessoa abre o link sem Phantom, verifica o exemplo e compara uma cópia idêntica de um arquivo; uma cópia diferente não passa. Executamos dez consultas e registramos os tempos frente à meta de 1–5 segundos, sem falsificar confirmação.
-
-### 6. Publicar na Vercel e revisar a entrega
-
-Conectar o repositório ao projeto Vercel, configurar build/variáveis públicas e repetir testes de leitura no link HTTPS.
-
-**Pronto quando:** abro o app publicado em dois aparelhos, cadastro com Phantom onde suportado, consulto no outro sem carteira, não encontro foto real no código/build/logs e consigo explicar o que é registro real e o que é simulação.
-
-## Estado após a entrega da etapa 2
-
-App React com quatro telas, seleção local de arquivo, scripts, seis testes e CI implementados. Operações continuam simuladas: não há carteira, hash ou transação real. O autor aprovou o plano e deve testar conforme frontend/README.md antes de avançar às etapas seguintes.
-
-## Progresso em 16/11/2026
-
-Etapa 2 aceita pelo autor e integrada no PR #45. Etapa 3 implementada para teste: SHA-256 real no navegador, Phantom (API oficial injetada), validação de endereço e getGenesisHash usando @solana/kit 8.6.0. Conexão/cálculo disponíveis no cadastro; comprador pode calcular sem carteira. A rede do app é conferida pelo RPC; a conexão não modifica ou identifica por si só a seleção de rede na interface Phantom. Nenhuma assinatura ou transação é solicitada nesta etapa. Carteira com aprovação humana e teste no dispositivo do autor ainda aguardam aceite. Referências do Solana AI Kit usadas em modo sem instalação: docs/SOLANA_AI_KIT.md. Etapas 4–6 continuam pendentes.
-
-## Estado da etapa 4
-
-Etapa 3 aceita pelo autor e PR #46 integrado. Registro Memo Devnet implementado para teste em novo PR, com resumo/taxa e assinatura explícita na Phantom via Wallet Standard (mensagem v0). Preparação simula antes de pedir assinatura; o cliente verifica que a carteira não alterou a mensagem. Envio único, sem reconstrução automática. Apenas o recibo público (hash, pagador e assinatura) é guardado na sessão da aba para acompanhar envio incerto após recarregar; arquivo/segredos não são persistidos. Confirmar exige status confirmado/finalizado sem erro, leitura da transação e conferência de Memo/programa/pagador/hash. Link aparece antes da declaração de sucesso. Cartório e consulta por terceiros ainda simulados; etapa 5 continua pendente. Aguardar teste real do autor antes de integrar esta entrega.
+A evolução de PDF foi publicada no [PR #57](https://github.com/MxK-rafas/Propertychain/pull/57) e aceita na [#56](https://github.com/MxK-rafas/Propertychain/issues/56). A [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md) separa testes automatizados, consulta pública e aceites manuais. As etapas concluídas não prometem ausência de bugs ou prontidão para operação imobiliária em produção.

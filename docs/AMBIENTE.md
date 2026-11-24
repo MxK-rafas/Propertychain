@@ -1,43 +1,55 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+# Ambiente do aplicativo atual
 
-# Ambiente do MVP atual
+Atualizado em 24/11/2026. App funcional e público em https://propertychain-theta.vercel.app/. Registro, consulta e comparação usam Solana Devnet; cartório permanece simulado. Ver [SPEC](../SPEC.md) e [guia do frontend](../frontend/README.md).
 
-Seguir [SPEC.md](../SPEC.md) e [AGENTS.md](../AGENTS.md). O app de telas está implementado, ainda com operações simuladas. Execute as instruções de frontend/README.md para testar.
+## Executar localmente
 
-## Ferramentas
+Node.js **22.12.0 ou superior** com npm; Node 22 é usado na CI. Git é necessário para clonar. Na pasta `frontend`:
 
-Git, Node.js 22 ou 24 LTS com npm e acesso ao repositório GitHub. Para cadastrar, Phantom com uma carteira exclusiva de testes e SOL da Devnet obtido em faucet. Não comprar moedas. Para consultar, basta navegador e internet.
+```bash
+npm ci
+npm run dev
+```
 
-No computador, planejar suporte à extensão Phantom. No celular, planejar cadastro no navegador da Phantom; consulta deve funcionar no navegador comum, sem instalar carteira.
+Abrir o endereço mostrado, normalmente `http://localhost:5173/`. A raiz não tem package.json. `npm ci` depende do package-lock.json já versionado: não copiar apenas package.json ou executar na pasta errada.
 
-Nunca solicitar frase-semente ou exportação de chave privada. Não há chave privada de deploy e não há programa próprio a publicar.
+Verificações, na mesma pasta: `npm test` e `npm run build`. A build gera `frontend/dist`.
 
-## Configuração pública planejada
+## Configuração pública
 
-Copiar as variáveis de [.env.example](../.env.example) para a configuração local do frontend quando ele existir. `VITE_SOLANA_CLUSTER=devnet` e `VITE_SOLANA_RPC_URL` são públicas; nunca inserir segredos em variáveis Vite. Não usar um RPC cujo token precise ficar secreto num bundle público. O endpoint público é ponto de partida, sujeito a limites e indisponibilidade.
+Usar [.env.example](../.env.example) como referência para `frontend/.env.local`, se precisar configurar além dos defaults:
 
-## Estado atual e primeiro passo
+```text
+VITE_SOLANA_CLUSTER=devnet
+VITE_SOLANA_RPC_URL=https://api.devnet.solana.com
+```
 
-`frontend/prototype/` preserva a referência original. O app React está em `frontend/src/`; em `frontend/`, execute `npm ci` e `npm run dev`. Testes: `npm test`. Build: `npm run build`. Não executar npm na raiz, que não tem package.json.
+Esses valores são públicos no bundle. Não inserir token secreto em VITE_*, nem chave privada ou frase-semente. O app confere o genesis Devnet e não publica programa próprio.
 
-Para abrir a referência visual, seguir [frontend/prototype/README.md](../frontend/prototype/README.md). Para revisar o modelo, abrir [documento-ficticio.pdf](../fixtures/documento-ficticio.pdf).
+## Carteira e aparelhos
 
-## Arquivo real de teste
+Cadastro exige Phantom e saldo em SOL de teste obtido em faucet, sem compra de moedas. No computador, usar extensão compatível; no celular, usar o navegador interno da Phantom. O cálculo de hash exige localhost ou HTTPS. A conexão verifica o RPC do app e não muda a rede selecionada na UI da Phantom.
 
-Será fornecido pelo autor. Manter em uma pasta local ignorada, por exemplo `private-test-files/`, fora de `public/`, `fixtures/` e do build. A implementação deve ler apenas no navegador. Não anexar ao PR, Actions, logs ou Vercel.
+Consulta e PDF não exigem carteira. A pessoa pode entrar como comprador/verificador e colar link/código, ou abrir o link oficial recebido. Computador e celular têm as mesmas ações; apenas o layout se adapta.
 
-## Publicação futura
+## Documentos e persistência
 
-Na Vercel, conectar este repositório; usar `frontend` como raiz, Vite, `npm ci`, `npm run build` e `dist` quando esses scripts existirem. Configurar Devnet/RPC público, confirmar que a build não contém a foto e testar HTTPS em dois aparelhos. Ver [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md).
+O autor aprovou o teste local com foto real; o arquivo não foi recebido pelo Codex. Não copiar documentos pessoais para fixtures, assets, build, PRs ou logs. Pastas `private-test-files/` e `testes-privados/` são ignoradas para teste local. O arquivo não é enviado; o PDF de relatório também não contém o original ou seu nome.
 
-## Problemas a tratar
+O app mantém apenas comprovante público de tentativa pendente em sessionStorage. Atualizar a página perde o arquivo local e o PDF preparado; não compartilha um histórico automático entre aparelhos. Para consultar o mesmo registro, usar seu link/código.
 
-| Situação | Orientação simples |
+## Publicação e problemas comuns
+
+A Vercel já está configurada para `frontend`, build `npm run build`, saída `dist`. O endereço oficial é público; previews específicos podem exigir login. Ver [deploy](DEPLOY_VERCEL.md).
+
+| Situação | Próximo passo |
 |---|---|
-| Phantom indisponível | Explicar como abrir em ambiente compatível; consulta continua sem carteira |
-| Sem saldo de teste | Orientar faucet Devnet; não pedir compra ou chave privada |
-| Usuário cancelou | Manter o arquivo selecionado e permitir tentar de novo |
-| RPC indisponível/limitado | Informar falha temporária, sem mostrar sucesso fictício |
-| Arquivo divergiu | Explicar que é necessário o mesmo arquivo digital; outra foto pode ter hash diferente |
+| Phantom ausente ou cancelada | Abrir ambiente compatível ou tentar de novo; consulta permanece sem carteira |
+| Saldo insuficiente | Obter SOL Devnet no faucet, sem comprar moedas |
+| Registro pendente ou resposta incerta | Usar Conferir registro existente; não enviar outro automaticamente |
+| Referência incompleta | Colar link completo ou código da transação, não SHA-256 do arquivo |
+| Arquivo diferente | Usar a cópia exata; outra foto ou compressão altera o hash |
+| PDF sem download automático | Usar Abrir PDF ou Baixar PDF novamente |
+| Interface antiga ou endereço diferente | Conferir domínio oficial, rota e recarregar; não presumir a causa sem evidência |
 
-O ambiente Hardhat é legado independente: [AMBIENTE_LOCAL.md](AMBIENTE_LOCAL.md). Não é requisito do MVP Solana.
+Hardhat é [legado independente](AMBIENTE_LOCAL.md); não é requisito para abrir o app ou gerar relatório.

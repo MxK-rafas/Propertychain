@@ -83,7 +83,7 @@ export function App() {
   const isExample = !file && (!sourceHash || sourceHash === sample.sha256);
   const fileName = file ? file.name : isExample ? sample.tipo : 'Arquivo do registro';
   const facts = isExample && <dl className="facts"><div><dt>Imóvel fictício</dt><dd>{sample.endereco}</dd></div><div><dt>Titular apresentado na demonstração</dt><dd>{sample.titular}</dd></div></dl>;
-  const compact = <div className="compact-doc"><span className="doc-icon"><Icon name="doc" /></span><div><strong className="file-name">{fileName}</strong><small>{file ? 'Arquivo local · conteúdo não analisado' : `${sample.endereco} · Exemplo fictício`}</small></div></div>;
+  const compact = <div className="compact-doc"><span className="doc-icon"><Icon name="doc" /></span><div><strong className="file-name">{fileName}</strong><small>{file ? 'Arquivo local · conteúdo não analisado' : isExample ? `${sample.endereco} · Exemplo fictício` : 'Comprovante do registro · arquivo não selecionado'}</small></div></div>;
   const title = (children: React.ReactNode) => <h2 className="screen-title" ref={heading} tabIndex={-1}>{children}</h2>;
   return <div className="studio" onClickCapture={event => { if (registrationBusy && (event.target as HTMLElement).closest('a[href^="#"]')) event.preventDefault(); }}>
     <aside className="guide" aria-label="Navegação da demonstração">

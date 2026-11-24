@@ -72,7 +72,7 @@ O script de bootstrap foi substituído por consulta do backlog, pois reexecutar 
 Após o merge do PR #42, foram implementados o workflow de CI, o gate de 90% de linhas por contrato, deploy/seed local e exportação de ABI/configuração. A primeira revisão acima fica preservada como histórico.
 
 - **#19**: 33 testes unitários aprovados, 100% de cobertura e workflow para executá-los em Pull Requests. A confirmação no GitHub Actions consta no novo PR.
-- **#13**: workflow pronto, incluindo teste RPC e relatório como artefato. A proteção da main permanece pendente: a credencial recebeu `403 Resource not accessible by integration` ao consultar esse recurso. Veja [CI.md](CI.md).
-- **#39**: nó, deploy, validador, cinco documentos, duas atestações, seed repetível e exportação implementados. O teste de integração verifica o fluxo completo com consultas sem carteira e detecta reinício do nó. O critério de aplicativo conectado aguarda o frontend da #21; a issue permanece aberta. Veja [AMBIENTE_LOCAL.md](AMBIENTE_LOCAL.md).
+- **#13**: workflow pronto, incluindo teste RPC e relatório como artefato. A proteção da main permanece pendente: a credencial recebeu `403 Resource not accessible by integration` ao consultar esse recurso. Veja [CI.md](../CI.md).
+- **#39**: nó, deploy, validador, cinco documentos, duas atestações, seed repetível e exportação implementados. O teste de integração verifica o fluxo completo com consultas sem carteira e detecta reinício do nó. O critério de aplicativo conectado aguarda o frontend da #21; a issue permanece aberta. Veja [AMBIENTE_LOCAL.md](../AMBIENTE_LOCAL.md).
 
 O gate também foi validado com relatório de 0% de linhas, que falhou como esperado, antes de restaurar o relatório real. Nenhuma carteira ou chave de rede pública foi utilizada.
