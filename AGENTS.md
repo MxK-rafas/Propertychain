@@ -17,7 +17,7 @@ O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também
 
 ## Evolução autorizada — relatório de verificação (#56)
 
-Em 23/11/2026, o autor aprovou a proposta da issue #56: gerar relatório PDF local a partir de uma consulta confirmada, com hash, transação, comparação, data/hora da consulta no aparelho e links oficiais. Sem arquivo original, backend ou nova transação. Esta é a única antecipação autorizada de Depois nesta etapa. Conferir download/abertura no computador e celular; o teste na Phantom real e o aceite final desta evolução continuam a cargo do autor. Não fechar a #56 antes desse retorno.
+Em 23/11/2026, o autor aprovou a proposta da issue #56: gerar relatório PDF local a partir de uma consulta confirmada, com hash, transação, comparação, data/hora da consulta no aparelho e links oficiais. Sem arquivo original, backend ou nova transação. Esta é a única antecipação autorizada de Depois nesta etapa. Implementação publicada no PR #57, com 90 testes e verificações de download/abertura em Chromium nos dois formatos. Em 24/11/2026, o autor confirmou: “o relatório está funcionando corretamente”, aceitando a entrega da #56. Não iniciar outra evolução sem nova decisão do autor.
 
 ## Conclusão em 23/11/2026
 

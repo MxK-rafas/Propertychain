@@ -42,7 +42,7 @@ O [link do protótipo deste chat](https://documento-imovel-demo-rafael.equaltouc
 
 ## Evolução autorizada após o MVP
 
-[Relatório de verificação em PDF — issue #56](https://github.com/MxK-rafas/Propertychain/issues/56): aprovado para implementação pelo autor. Geração local na tela de resultado, com hash, transação, comparação, data/hora da consulta e links públicos; sem anexar o documento original ou enviar nova transação. Disponível para teste, com aceite e download/abertura na Phantom real ainda pendentes. [Como testar](frontend/README.md#relatório-pdf--evolução-56).
+[Relatório de verificação em PDF — issue #56](https://github.com/MxK-rafas/Propertychain/issues/56): aprovado para implementação pelo autor. Geração local na tela de resultado, com hash, transação, comparação, data/hora da consulta e links públicos; sem anexar o documento original ou enviar nova transação. Entrega publicada e aceita pelo autor em 24/11/2026, após confirmar que o relatório funciona corretamente. [Como testar](frontend/README.md#relatório-pdf--evolução-56).
 
 ## Modelo fictício e documentos reais
 
