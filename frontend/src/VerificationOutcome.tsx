@@ -20,6 +20,7 @@ export function VerificationOutcome({ result, actionLabel, onAction }: {
       <h2>{comparisonTitle[result.comparison]}</h2>
       <p>{comparisonText[result.comparison]}</p>
     </div>
+    <button className="primary" onClick={onAction}>{actionLabel}</button>
     <p><a className="text-link" href={explorerUrl(result.record.signature)} target="_blank" rel="noreferrer">Ver comprovante público</a></p>
     <button className="text-button" onClick={copyLink}>Copiar link da consulta</button>
     {copyStatus === 'copied' && <p role="status">Link copiado.</p>}
@@ -35,6 +36,5 @@ export function VerificationOutcome({ result, actionLabel, onAction }: {
     </details>
     <p className="result-limits">Nenhum cartório real analisou este documento. A comparação não comprova a autenticidade do conteúdo nem a propriedade do imóvel.</p>
     <ReportDownload key={`${result.record.signature}:${result.checkedAt}`} result={result} />
-    <button className="primary" onClick={onAction}>{actionLabel}</button>
   </>;
 }

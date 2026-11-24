@@ -80,13 +80,13 @@ export function ExampleGuide() {
     <span className="role">PASSO {phase + 1} DE 4 · EXEMPLO SEM CARTEIRA</span>
     <h1 className="screen-title" ref={heading} tabIndex={-1}>{titles[phase]}</h1>
     <p className="screen-description">{explanations[phase]}</p>
+    {result && !busy ? <VerificationOutcome key={`${phase}:${result.checkedAt}`} result={result} actionLabel={actionLabels[phase]} onAction={advance} /> : <button className="primary" disabled={busy} onClick={() => run(phase === 0 ? 1 : phase)}>{busy ? 'Conferindo o exemplo…' : error ? 'Tentar esta etapa novamente' : actionLabels[phase]}</button>}
     {phase === 0 && <>
       <div className="learning-card"><strong>O que você vai experimentar</strong><ol><li>Comparar uma cópia igual ao arquivo registrado.</li><li>Conferir o que acontece quando o arquivo muda.</li><li>Entender o limite de uma consulta sem arquivo.</li></ol><a className="text-link" href={samplePdf} target="_blank" rel="noreferrer">Abrir o PDF fictício</a></div>
       <NetworkHelp />
     </>}
     {busy && <div className="learning-card"><p role="status">{activity}</p><p>Estamos lendo um registro existente. Nenhuma carteira, pagamento ou novo cadastro será solicitado.</p></div>}
     {error && <><p role="alert" className="error-message">{error}</p><a className="text-link" href="#consulta">Consultar outro registro</a></>}
-    {result && !busy ? <VerificationOutcome key={`${phase}:${result.checkedAt}`} result={result} actionLabel={actionLabels[phase]} onAction={advance} /> : <button className="primary" disabled={busy} onClick={() => run(phase === 0 ? 1 : phase)}>{busy ? 'Conferindo o exemplo…' : error ? 'Tentar esta etapa novamente' : actionLabels[phase]}</button>}
     {phase > 0 && !busy && <button className="text-button" onClick={() => { setPhase(0); setResult(null); setError(''); setActivity(''); }}>Recomeçar exemplo</button>}
   </section>;
 }
