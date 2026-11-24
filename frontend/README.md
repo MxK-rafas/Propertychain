@@ -51,7 +51,7 @@ O PDF informa hash registrado, identificação da transação, comparação (arq
 
 Se o download não aparecer, use **Abrir PDF**; **Baixar PDF novamente** mantém o mesmo relatório enquanto essa consulta estiver aberta. Ao iniciar nova consulta, trocar o arquivo ou sair do resultado, o relatório preparado é descartado. Não há histórico de relatórios armazenado no app.
 
-Teste do autor: abra/baixe o PDF no computador e na Phantom real, repita com os três resultados de arquivo e confira se texto/hash/links correspondem à tela. A [issue #56](https://github.com/MxK-rafas/Propertychain/issues/56) permanece aberta até esse aceite. Os testes em Chromium em tamanho de celular não substituem o teste na Phantom.
+Em 24/11/2026, o autor confirmou que o relatório está funcionando corretamente e aceitou a entrega da [issue #56](https://github.com/MxK-rafas/Propertychain/issues/56). Para regressões futuras, repetir abertura/download e os três resultados de arquivo, conferindo texto, hash e links. As verificações automatizadas em Chromium e o aceite informado pelo autor são evidências distintas; não declarar testes adicionais de dispositivos que não foram realizados.
 
 Implementação: [pdf-lib 1.17.1](https://pdf-lib.js.org/docs/api/classes/pdfdocument), carregado sob demanda. Usa fontes padrão do PDF, sem buscar fontes externas ou anexar arquivos ao PDF.
 

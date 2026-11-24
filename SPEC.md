@@ -93,13 +93,13 @@ Somente no exemplo fictício, mostrar Maria Oliveira, Rua das Palmeiras, 120 e o
 
 ## Evolução aprovada após o MVP — relatório PDF (#56)
 
-O autor aprovou em 23/11/2026 a proposta da [issue #56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta evolução não reabre o aceite do MVP.
+O autor aprovou em 23/11/2026 a proposta da [issue #56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta evolução não reabre o aceite do MVP. Em 24/11/2026, o autor confirmou o funcionamento correto do relatório e aceitou a entrega da issue #56.
 
 Na tela 4, oferecer **Baixar relatório em PDF** como controle secundário, após consulta confirmada e comparação concluída. Gerar o arquivo no próprio aparelho, com: PropertyChain, Solana Devnet, registro confirmado, SHA-256 registrado, identificação da transação, estado da comparação (igual, diferente ou sem arquivo), data/hora da consulta em UTC informada pelo relógio do aparelho, link oficial da consulta e explorador Devnet. A data representa a consulta; não é carimbo de tempo certificado nem horário da transação.
 
 O PDF descreve aquela consulta, sem consultar novamente a rede ao ser aberto. Incluir aviso de rede de testes, ausência de valor legal, cartório simulado e limites da comprovação. Não incluir o documento original, nome de arquivo, imagem, nomes de titulares ou dados extraídos. Não gerar relatório de sucesso para consulta inexistente, inválida, pendente ou com erro.
 
-A biblioteca de PDF deve carregar somente ao solicitar o relatório. Disponibilizar **Abrir PDF** e opção de baixar novamente quando o arquivo estiver pronto, pois o navegador interno pode não iniciar um download automático. Ao sair do resultado ou mudar a consulta, descartar o relatório preparado. Não adicionar banco de dados, upload, carteira de servidor, cobrança ou outra transação. Validar celular e computador e aguardar o teste do autor na Phantom real antes de concluir a issue.
+A biblioteca de PDF deve carregar somente ao solicitar o relatório. Disponibilizar **Abrir PDF** e opção de baixar novamente quando o arquivo estiver pronto, pois o navegador interno pode não iniciar um download automático. Ao sair do resultado ou mudar a consulta, descartar o relatório preparado. Não adicionar banco de dados, upload, carteira de servidor, cobrança ou outra transação. As verificações automatizadas de conteúdo/download nos dois formatos e as consultas públicas foram concluídas na implementação. O aceite final da entrega foi informado pelo autor em 24/11/2026. Manter esses cenários como roteiro de regressão.
 
 ## Configuração
 

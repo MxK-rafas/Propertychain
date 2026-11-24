@@ -51,4 +51,4 @@ Build Vercel com somente assets fictícios, HTTPS, abertura direta do link em do
 - Ao fazer nova consulta ou trocar o arquivo, o relatório antigo não fica disponível como se pertencesse à nova comparação. Falha ao gerar permite tentar de novo sem apagar o resultado da consulta.
 - A publicação oficial deve abrir em uma sessão anônima, sem login Vercel e sem carteira para consulta. Não usar URL protegida de preview para os testadores.
 
-Somente encerrar a issue #56 após o teste e aceite do autor. O MVP original permanece aceito na #6.
+O autor confirmou o funcionamento correto do relatório em 24/11/2026, aceitando a entrega da issue #56. Os cenários acima permanecem como roteiro de regressão. O MVP original permanece aceito na #6.

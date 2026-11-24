@@ -19,7 +19,7 @@ O autor validou o registro na Phantom e a consulta em outro aparelho com os trê
 
 ## Evolução autorizada após o MVP
 
-- [#56 — relatório de verificação em PDF](https://github.com/MxK-rafas/Propertychain/issues/56): escopo aprovado pelo autor em 23/11/2026; geração local após consulta confirmada, sem incluir o arquivo original ou enviar nova transação. Implementação para teste; aceite final e abertura/download na Phantom real ainda pendentes.
+- [#56 — relatório de verificação em PDF](https://github.com/MxK-rafas/Propertychain/issues/56): escopo aprovado pelo autor em 23/11/2026; geração local após consulta confirmada, sem incluir o arquivo original ou enviar nova transação. Implementação publicada no PR #57 e aceita pelo autor em 24/11/2026.
 
 ## Depois
 - Taxa por documento/consulta e planos mensais.
