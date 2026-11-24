@@ -25,7 +25,7 @@ flowchart LR
 | `memo.ts`, `MemoRegistration.tsx`, `memo-errors.ts` | Preparação, revisão, assinatura, envio, confirmação, leitura do Memo e erros |
 | `memo-record.ts` | Comprovante público pendente em sessionStorage e URL do explorador |
 | `consultation-link.ts`, `PublicLookup.tsx` | Referência de consulta, compartilhamento oficial, leitura e comparação |
-| `ExampleGuide.tsx` | Percurso sem carteira: fixture conferida, cópia alterada em memória e três leituras do registro público fixo |
+| `ExampleGuide.tsx` | Quatro etapas completas: anexo/hash locais, carteira/publicação ilustradas, cartório simulado, escolha de comparação e resultado/PDF |
 | `NetworkHelp.tsx` | Explicações simples de blockchain e Phantom, instalação oficial e alternativa sem carteira |
 | `VerificationOutcome.tsx` | Apresentação compartilhada de comparação, detalhes recolhidos, links e relatório |
 | `verification-result.ts` | Resultado e mensagens de comparação compartilhadas com o PDF |
@@ -50,7 +50,7 @@ A assinatura identifica o registro; a cópia local produz o hash esperado. Resul
 
 ## Exemplo guiado #61
 
-A entrada seleciona o exemplo por padrão; `#exemplo` tem contador e navegação próprios. `lookupMemo` consulta a assinatura fixa do PDF fictício: hash do arquivo e hash da transação precisam corresponder à fixture. Para a cópia alterada, acrescenta um byte de quebra de linha em memória e calcula de novo; para a consulta sem arquivo, não fornece hash local. A fixture é carregada uma vez por execução, mas as três consultas de rede são novas. AbortController cancela/ignora resposta ao sair; bloqueio por ref evita clique duplicado. Não chama conexão, preparação ou envio de transação. Indisponibilidade da Devnet é erro com retry, sem resultado fictício.
+A entrada seleciona o exemplo por padrão; `#exemplo` acompanha cadastro, cartório, verificação e resultado, com contador e navegação próprios. O cadastro tem estados de anexo, hash, conexão ilustrativa, aprovação/publicação ilustrada e registro existente conferido. O cartório tem estados anterior/posterior à aprovação somente visual. Carteira/publicação não acessam provedor, assinatura, envio ou sessionStorage. `lookupMemo` consulta a assinatura fixa do PDF fictício: hash do arquivo e hash da transação precisam corresponder à fixture. Para a cópia alterada, acrescenta um byte de quebra de linha em memória e calcula de novo; para a consulta sem arquivo, não fornece hash local. A fixture é carregada ao anexar e conferida no cálculo; a publicação ilustrada faz uma leitura do registro existente, e cada caso selecionado na etapa 3 faz outra leitura. O resultado e o PDF só são montados na etapa 4 e são descartados ao testar outro caso. A aprovação visual não é dado da transação nem do relatório. AbortController cancela/ignora resposta ao sair; bloqueio por ref evita clique duplicado. Não chama conexão, preparação ou envio de transação. Indisponibilidade da Devnet é erro com retry, sem resultado fictício.
 
 ## Persistência e relatório
 

@@ -4,8 +4,8 @@ Executar conforme cada etapa da [spec](../SPEC.md), parando para o autor testar.
 
 ## Feedbacks #61 — exemplo e explicações
 
-- Em celular e computador, abrir a raiz e entrar pelo exemplo padrão, sem carteira. Percorrer os quatro passos e conferir Mesmo arquivo → Arquivo diferente → Arquivo não comparado. Nenhuma instalação, assinatura ou taxa.
-- Conferir explicação de cada passo, um botão principal, detalhes recolhidos, comprovante Devnet e PDF. A leitura deve ser real; interromper RPC ou usar fixture/registro divergente deve mostrar erro, sem sucesso ou relatório. Tentar de novo e sair durante consulta devem ser seguros.
+- Em celular e computador, abrir a raiz e entrar pelo exemplo padrão, sem carteira. Percorrer cadastro (anexar PDF, calcular hash, simular conexão e aprovação/publicação), cartório (simular análise), verificação (escolher caso) e resultado. Testar Mesmo arquivo, Arquivo diferente e Arquivo não comparado, retornando à etapa 3 entre eles. Nenhuma instalação, assinatura ou taxa.
+- Conferir explicação de cada ação, um botão principal e aviso de carteira/publicação/cartório simulados. Hash e leitura devem ser reais; resultado e PDF somente na etapa 4. A aprovação visual do cartório não aparece como dado do relatório. Voltar e recomeçar não podem reutilizar relatório de outro caso. Conferir detalhes recolhidos e comprovante Devnet. Interromper RPC ou usar fixture/registro divergente deve mostrar erro, sem sucesso ou relatório. Tentar de novo e sair durante consulta devem ser seguros.
 - Na entrada, os três perfis continuam disponíveis. Antes de conectar como proprietário, conferir ajuda Phantom, instalação oficial, teste sem dinheiro real e opção de voltar ao exemplo. Ajuda blockchain deve explicar o que fica público e o que não comprova.
 - Teste do autor e novo feedback dos amigos ficam pendentes na #61. Não declarar que a barreira de uso foi resolvida para todos apenas com testes automatizados.
 
