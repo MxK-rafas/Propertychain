@@ -8,7 +8,7 @@ Atualizado em 24/11/2026. A coluna de estado abaixo foi conferida no GitHub na b
 - Relatório PDF entregue no PR #57 e aceito na [#56](https://github.com/MxK-rafas/Propertychain/issues/56), fechada. É uma evolução concluída, não uma proposta pendente de Depois.
 - [#59](https://github.com/MxK-rafas/Propertychain/issues/59): revisão de estrutura, spec e roadmap solicitada antes do pitch; evidências em [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md).
 - [#7](https://github.com/MxK-rafas/Propertychain/issues/7): pitch solicitado para 26/11/2026, autorizado como material de apresentação. Slides e ensaio ainda não concluídos nesta revisão.
-- [#61](https://github.com/MxK-rafas/Propertychain/issues/61): autor relatou dificuldade de amigos com carteira e autorizou exemplo guiado sem instalação, explicações e linguagem simples. Implementação/testes em [registro da evolução](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md); aceite manual ainda pendente.
+- [#61](https://github.com/MxK-rafas/Propertychain/issues/61): autor relatou dificuldade de amigos com carteira e autorizou exemplo guiado sem instalação, explicações e linguagem simples. O autor pediu ampliar o exemplo para as quatro etapas do app: cadastro com anexo/hash/carteira/publicação ilustradas, cartório simulado, seleção dos três casos e resultado/relatório final. Implementação/testes em [registro da evolução](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md); aceite manual ainda pendente.
 
 ## Catálogo original de 41 tarefas
 

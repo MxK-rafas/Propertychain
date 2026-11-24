@@ -1,6 +1,6 @@
 # PropertyChain — especificação atual
 
-Atualizada em 24/11/2026 com a evolução de feedbacks [#61](https://github.com/MxK-rafas/Propertychain/issues/61), sobre a main `bf0752fd9d5b2439b4bc40d5d193d45d2941df34`, e os aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
+Atualizada em 24/11/2026 com a evolução de feedbacks [#61](https://github.com/MxK-rafas/Propertychain/issues/61), sobre a main `41d633802e98c61751a347127ed2652a69b8e11e`, e os aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
 
 ## Contexto
 
@@ -14,7 +14,7 @@ Registro de hash, consulta e comparação são reais na rede de testes. Cartóri
 
 ## O que o app faz (tela por tela)
 
-Manter entrada com exemplo guiado e três perfis. O percurso de cadastro/consulta tem quatro etapas; o exemplo tem quatro passos próprios, sem carteira. Cada etapa tem um objetivo e uma ação principal; escolher arquivo, calcular hash, conectar carteira, voltar, compartilhar e baixar PDF são controles de apoio. Computador e celular usam as mesmas rotas e ações. A navegação lateral é ocultada no layout estreito; o indicador de etapa e o botão de voltar continuam no celular.
+Manter entrada com exemplo guiado e três perfis. O percurso de cadastro/consulta tem quatro etapas; o exemplo acompanha as mesmas quatro etapas, sem carteira pessoal. Cada etapa tem um objetivo e uma ação principal; escolher arquivo, calcular hash, conectar carteira, voltar, compartilhar e baixar PDF são controles de apoio. Computador e celular usam as mesmas rotas e ações. A navegação lateral é ocultada no layout estreito; o indicador de etapa e o botão de voltar continuam no celular.
 
 ### Entrada — O arquivo é o mesmo?
 
@@ -30,16 +30,24 @@ URL inicial ou rota desconhecida mostra a entrada. Trocar perfil retorna à entr
 
 ### Exemplo guiado — `#exemplo`
 
-**Objetivo:** entender a comparação antes de instalar uma carteira. Não publica registro novo, não pede assinatura nem recupera documentos privados. Usa o PDF fictício e a transação pública de exemplo especificados em [dados de teste](docs/DADOS_DE_TESTE.md).
+**Objetivo:** experimentar o percurso completo antes de instalar uma carteira. Quatro etapas, como no app real: cadastro, cartório, verificação e resultado. A solicitação do autor de 24/11/2026 amplia a primeira versão da #61, que ensinava somente as comparações.
 
-| Passo | O que aparece | Botão principal e destino |
+| Etapa | O que aparece | Ação principal |
 |---|---|---|
-| 1. Conheça o arquivo de exemplo | PDF fictício, explicação do percurso e ajuda sobre blockchain | Verificar o exemplo → passo 2 |
-| 2. Vamos conferir a cópia original | Cálculo local e leitura real do registro; Mesmo arquivo | Testar uma cópia alterada → passo 3 |
-| 3. Agora, uma cópia alterada | Cópia com uma quebra de linha acrescentada somente em memória; novo hash e leitura real; Arquivo diferente | Consultar sem arquivo → passo 4 |
-| 4. E se eu não tiver o arquivo? | Leitura real sem hash local; Arquivo não comparado | Concluir exemplo → entrada |
+| 1. Cadastro de exemplo | PDF fictício a anexar, hash real, carteira de exemplo e publicação ilustrada; explicações da Phantom e blockchain | Anexar documento fictício → Calcular hash do documento → Simular conexão com a Phantom → Simular aprovação e publicação → Ir para o cartório (uma ação por estado) |
+| 2. O papel do cartório | Papel de avaliar a veracidade e decidir pela validação; aprovação visual explicitamente simulada | Simular análise do cartório → Ir para verificação |
+| 3. Verificar documento | Registro já existente; seleção de mesmo arquivo, arquivo diferente ou sem arquivo | Verificar documento → etapa 4 |
+| 4. Resultado da verificação | Resultado real da consulta, comparação, comprovante público, detalhes e relatório PDF | Testar outro caso → etapa 3; Concluir exemplo é secundário |
 
-Explicar o que acontece em cada passo e mostrar atividade durante a espera. Conferir o hash do PDF antes da comparação e o hash do registro após a leitura. Cada consulta usa a Devnet; nunca substituir erro, reset ou registro ausente por sucesso pré-programado. Oferecer tentar novamente ou consultar outro registro. Clique repetido não duplica leitura; sair cancela/descarta respostas atrasadas. O PDF e o registro original não são alterados. Os três resultados usam a mesma apresentação e relatório da consulta pública, com uma única ação principal. Recomeçar exemplo é secundário.
+Na etapa 1, buscar o PDF público ao anexar e calcular SHA-256 somente após a ação correspondente. Conferir o hash contra o JSON antes de continuar. A conexão é ilustrativa: não acessar provedor Phantom, pedir endereço, assinatura ou saldo. Explicar que no cadastro real a carteira identifica quem autoriza, conectar não publica nada, a aprovação acontece na Phantom e a taxa usa SOL de teste sem valor financeiro. Explicar que a Solana recebe código/metadados públicos, não o PDF.
+
+**Simular aprovação e publicação** lê o registro real já existente especificado em [dados de teste](docs/DADOS_DE_TESTE.md). Exigir registro confirmado e hash da fixture; não enviar transação nova ou inventar comprovante. Mostrar o link do registro existente e identificar a publicação deste percurso como simulação. Falha de rede ou registro divergente impede avanço, mesmo sendo um exemplo.
+
+Na etapa 2, explicar que, no serviço proposto, o cartório avaliaria a veracidade do documento e poderia validá-lo após análise. A ação didática mostra **Documento fictício validado — simulação**; nenhum cartório recebe ou examina o PDF, e essa aprovação não é gravada na blockchain. Não transformar a simulação em alegação de autenticidade/propriedade.
+
+Na etapa 3, usar o PDF original, uma cópia com uma quebra de linha acrescentada em memória ou nenhum arquivo, conforme a escolha. Fazer nova leitura real a cada verificação, calcular o hash local quando houver cópia e só então abrir a etapa 4. A leitura anterior do cadastro não substitui essa consulta. Resultado e PDF aparecem somente na etapa final, usando os mesmos componentes e limites da consulta pública comum; o relatório não contém a aprovação simulada do cartório.
+
+Manter um botão principal por estado, indicador das quatro etapas, explicação de cada ação e atividade durante espera. Retornar da etapa 4 permite testar outro caso sem repetir o cadastro, descartando resultado/PDF anterior. Voltar e recomeçar são secundários; recomeçar limpa anexo, hash, carteira e aprovação ilustrativos. Sair cancela/ignora respostas atrasadas. O exemplo não altera comprovante real pendente em sessionStorage. Não modificar a fixture, o cadastro real, a assinatura da Phantom ou itens de Depois/Um dia.
 
 ### 1. Cadastre seu documento — `#cadastro`
 
