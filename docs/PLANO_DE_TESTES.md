@@ -1,6 +1,13 @@
 # Testes manuais do MVP
 
-Executar conforme cada etapa da [spec](../SPEC.md), parando para o autor testar. Este plano não afirma que a integração Solana já foi implementada.
+Executar conforme cada etapa da [spec](../SPEC.md), parando para o autor testar. A integração está entregue; este é o roteiro de regressão, separado do aceite manual.
+
+## Feedbacks #61 — exemplo e explicações
+
+- Em celular e computador, abrir a raiz e entrar pelo exemplo padrão, sem carteira. Percorrer os quatro passos e conferir Mesmo arquivo → Arquivo diferente → Arquivo não comparado. Nenhuma instalação, assinatura ou taxa.
+- Conferir explicação de cada passo, um botão principal, detalhes recolhidos, comprovante Devnet e PDF. A leitura deve ser real; interromper RPC ou usar fixture/registro divergente deve mostrar erro, sem sucesso ou relatório. Tentar de novo e sair durante consulta devem ser seguros.
+- Na entrada, os três perfis continuam disponíveis. Antes de conectar como proprietário, conferir ajuda Phantom, instalação oficial, teste sem dinheiro real e opção de voltar ao exemplo. Ajuda blockchain deve explicar o que fica público e o que não comprova.
+- Teste do autor e novo feedback dos amigos ficam pendentes na #61. Não declarar que a barreira de uso foi resolvida para todos apenas com testes automatizados.
 
 ## Arquivos
 
@@ -19,9 +26,9 @@ Abrir a página inicial tanto no computador quanto no celular, escolher Comprado
 
 Ao abrir um link público, a navegação deve marcar **Etapa 3 de 4**. Após verificar um registro confirmado, deve avançar para **Resultado da verificação**, marcar **Etapa 4 de 4** e manter a assinatura no endereço. Conferir os três casos: sem arquivo, cópia idêntica e arquivo diferente. A comparação escolhida deve aparecer no resultado. **Fazer nova consulta** retorna à etapa 3 e limpa o arquivo selecionado. Se voltar e trocar/remover o arquivo, o resultado anterior não pode ser reapresentado como uma nova comparação sem verificar novamente. Erros de consulta permanecem na etapa 3.
 
-Abrir link em outro celular sem Phantom; consultar a mesma assinatura. Exemplo fixo pode ser comparado automaticamente; para outro documento, distinguir registro encontrado de arquivo não comparado. Comparar uma cópia exata e uma alterada. Testar assinatura ausente/inválida, transação inexistente, falha/pendente, programa errado, Memo incompatível e conteúdo conflitante. Consulta não solicita assinatura nem taxa.
+Abrir link em outro celular sem Phantom; consultar a mesma assinatura. No exemplo guiado, a cópia é selecionada pelo próprio guia; na consulta pública comum, sem arquivo deve aparecer Arquivo não comparado. Comparar uma cópia exata e uma alterada. Testar assinatura ausente/inválida, transação inexistente, falha/pendente, programa errado, Memo incompatível e conteúdo conflitante. Consulta não solicita assinatura nem taxa.
 
-Cartório permanece simulado. Nada na Devnet comprova titularidade legal ou validação institucional. Os dados/histórico de Maria só devem aparecer quando o arquivo corresponde à fixture.
+Cartório permanece simulado. Nada na Devnet comprova titularidade legal ou validação institucional. Dados/histórico de Maria não aparecem na consulta pública; os dados do exemplo são usados apenas na apresentação fictícia do cadastro.
 
 ## Velocidade
 

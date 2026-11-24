@@ -27,13 +27,13 @@ describe('Demonstração do PropertyChain', () => {
     await screen.findByRole('heading', { name: /Validação pelo cartório/ });
     await next('Ver validação simulada');
     expect(await screen.findByRole('heading', { name: 'Verificar documento' })).toBeVisible();
-    expect(screen.getByLabelText('Link do registro ou código da transação')).toHaveValue('');
+    expect(screen.getByLabelText('Cole o link do registro')).toHaveValue('');
     expect(screen.getByText('ETAPA 3 DE 4')).toBeVisible();
     await next('Verificar documento');
     expect(await screen.findByRole('alert')).toHaveTextContent('Cole o link completo');
     expect(screen.queryByRole('heading', { name: 'Resultado da verificação' })).not.toBeInTheDocument();
     await next('Trocar perfil');
-    expect(await screen.findByRole('heading', { name: /Como deseja entrar/ })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible();
   });
 
   it('mantém arquivo local sem rede e remove dados fictícios em todo o percurso', async () => {
@@ -51,7 +51,7 @@ describe('Demonstração do PropertyChain', () => {
     await next('Ver validação simulada');
     await screen.findByRole('heading', { name: 'Verificar documento' });
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
-    expect(screen.getByLabelText('Link do registro ou código da transação')).toHaveValue('');
+    expect(screen.getByLabelText('Cole o link do registro')).toHaveValue('');
     expect(screen.queryByText('João Oliveira')).not.toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Histórico fictício' })).not.toBeInTheDocument();
     expect(screen.queryByText(/Rua das Palmeiras/)).not.toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('Demonstração do PropertyChain', () => {
     render(<App />);
     expect(screen.getByRole('heading', { name: 'Verificar documento' })).toBeVisible();
     window.location.hash = 'rota-inexistente';
-    await waitFor(() => expect(screen.getByRole('heading', { name: /Como deseja entrar/ })).toBeVisible());
+    await waitFor(() => expect(screen.getByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible());
   });
 
   it('não mantém seleção do arquivo após desmontar e abrir o app novamente', async () => {
@@ -111,12 +111,12 @@ describe('Entrada demonstrativa por perfil', () => {
     ['Cartório', /Validação pelo cartório/],
   ])('abre o caminho de %s sem autenticação', async (profile, destination) => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: /Como deseja entrar/ })).toBeVisible();
+    expect(screen.getByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible();
     await userEvent.click(screen.getByRole('radio', { name: new RegExp(String(profile)) }));
-    await next('Entrar na demonstração');
+    await next('Continuar com o perfil escolhido');
     expect(await screen.findByRole('heading', { name: destination as RegExp })).toBeVisible();
     await next('Trocar perfil');
-    expect(await screen.findByRole('heading', { name: /Como deseja entrar/ })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible();
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
   });
 });

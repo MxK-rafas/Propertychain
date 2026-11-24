@@ -3,6 +3,7 @@ import sample from '../../fixtures/documento-ficticio.json';
 import samplePdf from '../../fixtures/documento-ficticio.pdf?url';
 import { checkDevnet, getPhantom, sha256, validatePublicAddress } from './preparation';
 import { MemoRegistration } from './MemoRegistration';
+import { PhantomHelp, NetworkHelp } from './NetworkHelp';
 import { readPending } from './memo-record';
 import type { MemoRecord } from './memo-record';
 import type { PhantomProvider } from './preparation';
@@ -67,7 +68,7 @@ export function PreparationPanel({ file, wallet = false, onRegistered, onBusy, o
   }
   async function connect() {
     const p = getPhantom();
-    if (!p?.isPhantom) { setWalletError('Phantom não encontrada. No computador, instale a extensão oficial. No celular, abra o app pelo navegador da Phantom. A consulta não exige carteira.'); return; }
+    if (!p?.isPhantom) { setWalletError('Phantom não encontrada. Abra “Ainda não tenho a Phantom” para saber como começar, ou use o exemplo sem carteira.'); return; }
     const id = ++walletRequest.current;
     watch(p);
     setWalletBusy(true); setWalletError(''); setAccount('');
@@ -94,13 +95,13 @@ export function PreparationPanel({ file, wallet = false, onRegistered, onBusy, o
     catch { setWalletError('A conexão foi removida deste app. Confira também os aplicativos conectados na Phantom.'); }
   }
   return <section className="preparation" aria-label="Preparação do documento">
-    <h3>Impressão digital do arquivo</h3>
-    <p>Um código calculado neste dispositivo. Ele identifica os bytes do arquivo; não comprova sua autenticidade ou propriedade.</p>
-    <button className="secondary-action" disabled={hashBusy || registrationBusy || (wallet && !!readPending())} onClick={calculate}>{hashBusy ? 'Calculando…' : 'Calcular impressão digital'}</button>
-    <div aria-live="polite">{digest && <><span className="field-label">SHA-256 calculado localmente</span><output className="digest">{digest}</output><p>O mesmo arquivo produz o mesmo código. Outra foto do mesmo papel normalmente produz um código diferente.</p></>}</div>
+    <h3>Código do arquivo</h3>
+    <p>Vamos calcular um código que muda quando o arquivo muda. Ele permite comparar cópias; não comprova autenticidade ou propriedade.</p>
+    <button className="secondary-action" disabled={hashBusy || registrationBusy || (wallet && !!readPending())} onClick={calculate}>{hashBusy ? 'Calculando…' : 'Calcular código do arquivo'}</button>
+    <div aria-live="polite">{digest && <><span className="field-label">Código calculado neste aparelho (SHA-256)</span><output className="digest">{digest}</output><p>O mesmo arquivo produz o mesmo código. Outra foto do mesmo papel normalmente produz um código diferente.</p></>}</div>
     {hashError && <p role="alert" className="error-message">{hashError}</p>}
-    {wallet && <div className="wallet-panel"><h3>Carteira de teste</h3><p>A conexão permite ver seu endereço público. O registro só será assinado após você conferir o resumo e aprovar na Phantom.</p>
-      {account ? <><p role="status">Carteira conectada · RPC Solana Devnet confirmado</p><output className="digest">{account}</output><p>Isso identifica a rede do app; não altera a rede selecionada na interface da Phantom.</p><button className="secondary-action" disabled={registrationBusy} onClick={disconnect}>Desconectar Phantom</button></> : <button className="secondary-action" disabled={walletBusy || registrationBusy} onClick={connect}>{walletBusy ? 'Conectando e conferindo a Devnet…' : 'Conectar Phantom de teste'}</button>}
+    {wallet && <div className="wallet-panel"><PhantomHelp /><NetworkHelp />
+      {account ? <><p role="status">Carteira conectada · rede do app: Solana Devnet</p><output className="digest">{account}</output><p>Isso identifica a rede do app; não altera a rede selecionada na interface da Phantom.</p><button className="secondary-action" disabled={registrationBusy} onClick={disconnect}>Desconectar Phantom</button></> : <button className="secondary-action" disabled={walletBusy || registrationBusy} onClick={connect}>{walletBusy ? 'Conectando e conferindo a Devnet…' : 'Conectar Phantom de teste'}</button>}
       {walletError && <p role="alert" className="error-message">{walletError}</p>}
     </div>}
     {wallet ? <MemoRegistration hash={digest} account={account} onRegistered={onRegistered} onBusy={busyChanged} onPendingHash={onPendingHash} /> : <p>O cálculo é local; esta consulta ainda não busca transações na blockchain.</p>}

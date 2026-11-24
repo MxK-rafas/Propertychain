@@ -28,7 +28,7 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
     try {
       const service = await import('./memo');
       if (!pending && !draft) {
-        setPhase('Conferindo rede, saldo, taxa e simulação…');
+        setPhase('Conferindo se o registro pode ser feito e qual será a taxa de teste…');
         const prepared = await service.prepareMemo(hash, account, abort.signal);
         if (current.current.hash !== hash || current.current.account !== account) return;
         setDraft(prepared); setPhase('Preparado. Confira o resumo antes de aprovar na Phantom.');
@@ -45,7 +45,7 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
       const status = await service.confirmMemo(record, abort.signal);
       abort.signal.throwIfAborted();
       if (status === 'confirmed') {
-        clearPending(); setPending(null); setPhase('Registro confirmado: hash e transação conferidos na Devnet.');
+        clearPending(); setPending(null); setPhase('Registro confirmado: código e comprovante conferidos na rede de testes.');
         onRegistered?.(record);
       } else if (status === 'failed') {
         clearPending(); setPending(null); setDraft(null);
@@ -66,15 +66,15 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
   }
   return <section className="registration" aria-label="Registro na Solana Devnet">
     <h3>Registrar na rede de testes</h3>
-    <p>A preparação envia apenas o hash ao RPC para simular. A publicação na blockchain depende da sua aprovação na Phantom.</p>
-    <p>Somente a impressão digital será publicada. O arquivo fica neste dispositivo. Não há transferência de SOL para terceiros; a carteira paga apenas a taxa da rede Devnet.</p>
-    {!hash && !pending && <p>Calcule a impressão digital do arquivo para preparar o registro.</p>}
+    <p>Primeiro, vamos conferir a operação e a taxa de teste, sem publicar o registro. Depois, você poderá aprovar na Phantom.</p>
+    <p>Somente o código do arquivo será publicado. O arquivo fica neste dispositivo. Não há transferência de SOL para terceiros; a carteira paga apenas a taxa da rede Devnet.</p>
+    {!hash && !pending && <p>Calcule o código do arquivo antes de revisar o registro.</p>}
     {!account && !pending && <p>Conecte a Phantom de teste antes de preparar.</p>}
-    {draft && <dl className="facts"><div><dt>Rede</dt><dd>Solana Devnet</dd></div><div><dt>Operação</dt><dd>Um Memo com o hash; nenhuma transferência para terceiros.</dd></div><div><dt>Carteira que paga a taxa</dt><dd className="digest">{draft.payer}</dd></div><div><dt>Hash a registrar</dt><dd className="digest">{draft.hash}</dd></div><div><dt>Taxa estimada</dt><dd>{formatTestSol(draft.fee)}</dd></div></dl>}
-    {pending && <><p>Comprovante público da tentativa. O resultado pode estar pendente; este link não significa sucesso.</p><a className="text-link" href={explorerUrl(pending.signature)} target="_blank" rel="noreferrer">Acompanhar transação no explorador Devnet</a><output className="digest">{pending.signature}</output><span className="field-label">Hash desta tentativa</span><output className="digest">{pending.hash}</output></>}
+    {draft && <dl className="facts"><div><dt>Rede</dt><dd>Solana Devnet</dd></div><div><dt>Operação</dt><dd>Registrar somente o código do arquivo, sem transferir saldo a terceiros.</dd></div><div><dt>Carteira que paga a taxa</dt><dd className="digest">{draft.payer}</dd></div><div><dt>Código do arquivo a registrar</dt><dd className="digest">{draft.hash}</dd></div><div><dt>Taxa estimada</dt><dd>{formatTestSol(draft.fee)}</dd></div></dl>}
+    {pending && <><p>Comprovante público da tentativa. O resultado pode estar pendente; este link não significa sucesso.</p><a className="text-link" href={explorerUrl(pending.signature)} target="_blank" rel="noreferrer">Acompanhar transação no explorador Devnet</a><output className="digest">{pending.signature}</output><span className="field-label">Código desta tentativa</span><output className="digest">{pending.hash}</output></>}
     <p role="status">{phase}</p>
     {error && <p role="alert" className="error-message">{error}</p>}
-    <button className="primary" disabled={busy || (!pending && (!hash || !account))} onClick={run}>{busy ? 'Aguarde…' : pending ? 'Conferir registro existente' : draft ? 'Aprovar registro na Phantom' : 'Preparar registro na Devnet'}</button>
+    <button className="primary" disabled={busy || (!pending && (!hash || !account))} onClick={run}>{busy ? 'Aguarde…' : pending ? 'Conferir registro existente' : draft ? 'Aprovar registro na Phantom' : 'Revisar registro'}</button>
     {draft && !busy && <button className="text-button" onClick={() => { setDraft(null); setPhase('Preparação cancelada. Nenhuma assinatura solicitada.'); }}>Cancelar preparação</button>}
   </section>;
 }

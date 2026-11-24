@@ -4,7 +4,7 @@ Cadastro de impressão digital de documentos e consulta pública no celular. **M
 
 > Demonstração educacional, sem valor legal. O registro de um hash não comprova propriedade, autenticidade jurídica nem análise por cartório real.
 
-[Abrir o PropertyChain](https://propertychain-theta.vercel.app/) · [Consultar um registro de teste sem carteira](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G)
+[Abrir o PropertyChain](https://propertychain-theta.vercel.app/) · [Experimentar sem carteira](https://propertychain-theta.vercel.app/#exemplo) · [Consultar um registro de teste sem carteira](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G)
 
 ## Comece aqui
 
@@ -45,6 +45,8 @@ O [link do protótipo deste chat](https://documento-imovel-demo-rafael.equaltouc
 
 [Relatório de verificação em PDF — issue #56](https://github.com/MxK-rafas/Propertychain/issues/56): aprovado para implementação pelo autor. Geração local na tela de resultado, com hash, transação, comparação, data/hora da consulta e links públicos; sem anexar o documento original ou enviar nova transação. Entrega publicada e aceita pelo autor em 24/11/2026, após confirmar que o relatório funciona corretamente. [Como testar](frontend/README.md#relatório-pdf--evolução-56).
 
+[Feedbacks e exemplo guiado — issue #61](https://github.com/MxK-rafas/Propertychain/issues/61): caminho de quatro passos para conhecer o app sem carteira, explicações da Phantom e blockchain e linguagem simples. [Detalhes e teste de aceite](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md). O aceite do autor desta evolução ainda está pendente.
+
 ## Modelo fictício e documentos reais
 
 O exemplo usa Maria Oliveira, João Oliveira, Rua das Palmeiras, 120 e Cartório de exemplo. Todos são dados de demonstração. O app calcula o SHA-256 da foto localmente. Ao aprovar o registro, o usuário publica o hash e os metadados da transação na Devnet. O conteúdo e o nome do arquivo ficam no aparelho. Os campos fictícios do exemplo são ocultados ao selecionar um arquivo próprio.
@@ -67,9 +69,10 @@ contracts/             legado Solidity/Hardhat preservado
 
 ## Como testar
 
-1. Abra a [consulta de teste](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G) e clique em **Verificar documento** sem escolher arquivo. O app deve confirmar o registro e indicar que o arquivo não foi comparado.
-2. Repita com o [PDF fictício](fixtures/documento-ficticio.pdf) para obter correspondência. Repita com outro arquivo para ver a divergência.
-3. Para executar o app localmente ou registrar um novo exemplo com a Phantom, siga o [guia do frontend](frontend/README.md).
+1. Na página inicial, experimente o exemplo guiado: cópia original, cópia alterada e consulta sem arquivo. Não instale carteira para esse teste.
+2. Para uma consulta própria, abra a [consulta de teste](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G) e clique em **Verificar documento** sem escolher arquivo. O app deve confirmar o registro e indicar que o arquivo não foi comparado.
+3. Repita com o [PDF fictício](fixtures/documento-ficticio.pdf) para obter correspondência. Repita com outro arquivo para ver a divergência.
+4. Para executar o app localmente ou registrar um novo exemplo com a Phantom, siga o [guia do frontend](frontend/README.md).
 
 As dez leituras do registro já confirmado tiveram mediana de 0,45 s, máximo de 1,05 s e zero erros. A medição cobre a consulta RPC e a conferência do Memo. Uma consulta no site publicado levou 1,49 s.
 

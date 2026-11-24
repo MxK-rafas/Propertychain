@@ -29,26 +29,26 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
     render(<App />);
     await userEvent.click(screen.getByRole('radio', { name: /Comprador/ }));
-    await userEvent.click(screen.getByRole('button', { name: 'Entrar na demonstração' }));
-    const input = await screen.findByLabelText('Link do registro ou código da transação');
+    await userEvent.click(screen.getByRole('button', { name: 'Continuar com o perfil escolhido' }));
+    const input = await screen.findByLabelText('Cole o link do registro');
     await userEvent.type(input, `https://propertychain-9g0563usr-rafael-vinicius.vercel.app/${lookupFragment(tx)}`);
     const file = new File(['abc'], 'arquivo.pdf', { type: 'application/pdf' });
     Object.defineProperty(file, 'arrayBuffer', { value: async () => new TextEncoder().encode('abc').buffer });
     await userEvent.upload(screen.getByLabelText(/Escolher arquivo para comparar/), file);
     await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
     expect(await screen.findByRole('heading', { name: 'Resultado da verificação' })).toBeVisible();
-    expect(screen.getByText(/impressão digital do arquivo coincide/)).toBeVisible();
+    expect(screen.getByText(/cópia é igual ao arquivo registrado/)).toBeVisible();
     expect(screen.getByText('ETAPA 4 DE 4')).toBeVisible();
     expect(screen.getByRole('button', { name: 'Baixar relatório em PDF' })).toBeVisible();
     expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
     expect(lookupMemo).toHaveBeenCalledExactlyOnceWith(tx, expect.any(AbortSignal));
-    expect(screen.getByRole('link', { name: /Ver transação no explorador/ })).toHaveAttribute('href', `https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    expect(screen.getByRole('link', { name: /Ver comprovante público/ })).toHaveAttribute('href', `https://explorer.solana.com/tx/${tx}?cluster=devnet`);
   });
 
   it('explica referência inválida na entrada sem consultar a rede', async () => {
     window.history.replaceState(null, '', '/#consulta');
     render(<App />);
-    await userEvent.type(screen.getByLabelText('Link do registro ou código da transação'), 'link incompleto');
+    await userEvent.type(screen.getByLabelText('Cole o link do registro'), 'link incompleto');
     await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Cole o link completo');
     expect(lookupMemo).not.toHaveBeenCalled();
@@ -56,9 +56,9 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
   });
 
   it.each([
-    [null, /Arquivo não comparado/],
-    ['abc', /impressão digital do arquivo coincide/],
-    ['abd', /impressão digital do arquivo é diferente/],
+    [null, /Nenhum arquivo foi selecionado para comparar/],
+    ['abc', /cópia é igual ao arquivo registrado/],
+    ['abd', /cópia é diferente do arquivo registrado/],
   ])('consulta com arquivo %s', async (content, outcome) => {
     vi.stubGlobal('crypto', webcrypto);
     vi.mocked(lookupMemo).mockResolvedValue({ status: 'confirmed', record, elapsedMs: 750 });
@@ -72,11 +72,12 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Verificar documento' }));
     expect(await screen.findByText(outcome)).toBeVisible();
+    await userEvent.click(screen.getByText('Ver detalhes do registro', { exact: true }));
     expect(screen.getByText(record.hash)).toBeVisible();
     expect(screen.getByText('Tipo de documento')).toBeVisible();
     expect(screen.getByText('Não identificado pelo app.')).toBeVisible();
-    expect(screen.getByText('Validado por')).toBeVisible();
-    expect(screen.getByText(/Nenhum cartório analisou/)).toBeVisible();
+
+    expect(screen.getByText(/Nenhum cartório real analisou/)).toBeVisible();
     expect(screen.getByText(/não comprova a autenticidade/)).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
     expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
@@ -128,6 +129,7 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     expect(window.location.hash).toBe(lookupFragment(tx));
     await userEvent.click(screen.getByRole('link', { name: /Resultado da verificação/ }));
     expect(await screen.findByRole('heading', { name: 'Resultado da verificação' })).toBeVisible();
+    await userEvent.click(screen.getByText('Ver detalhes do registro', { exact: true }));
     expect(screen.getByText(record.hash)).toBeVisible();
     expect(lookupMemo).toHaveBeenCalledOnce();
   });

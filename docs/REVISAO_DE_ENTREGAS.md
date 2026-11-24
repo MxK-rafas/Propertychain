@@ -59,4 +59,4 @@ Não foram encontrados, entre os caminhos versionados conferidos, arquivos .env 
 
 ## O que segue pendente
 
-Preparação e ensaio do pitch para 26/11/2026, na [#7](https://github.com/MxK-rafas/Propertychain/issues/7), e feedback dos amigos que o autor pretende convidar. Nenhuma rodada externa, parceria de cartório, receita, produção jurídica ou função de Depois/Um dia é apresentada como concluída. Não houve mudança na validade do aceite do MVP ou do PDF.
+Preparação e ensaio do pitch para 26/11/2026, na [#7](https://github.com/MxK-rafas/Propertychain/issues/7). Após esta auditoria, o autor relatou dificuldade de amigos com carteiras e autorizou a [evolução #61](FEEDBACKS_E_EXEMPLO_GUIADO.md); o registro separado documenta implementação e testes. A contagem de participantes e a melhora de usabilidade ainda não foram medidas. Nenhuma parceria de cartório, receita, produção jurídica ou função de Depois/Um dia é apresentada como concluída. Não houve mudança na validade do aceite do MVP ou do PDF.

@@ -20,8 +20,8 @@ O autor é iniciante. Ler [SPEC.md](SPEC.md), [ROADMAP.md](ROADMAP.md) e [revis�
 
 - MVP e teste local com foto real: aceite do autor em 23/11/2026, [#6](https://github.com/MxK-rafas/Propertychain/issues/6). A foto não foi fornecida ao Codex.
 - Relatório PDF local: escopo autorizado, PR #57 publicado e aceite do autor em 24/11/2026, [#56](https://github.com/MxK-rafas/Propertychain/issues/56), documentado no PR #58. Sem arquivo original, backend ou nova transação.
-- 91 testes atuais e verificações de build/consulta/download documentados na revisão; o texto do aceite não deve ser ampliado para testes não relatados.
+- 99 testes atuais em dez arquivos; a revisão histórica registrou 91 antes da evolução de feedbacks. Ver [#61](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md); o texto do aceite não deve ser ampliado para testes não relatados.
 
 ## Trabalho atual
 
-O autor solicitou pitch para quinta-feira, 26/11/2026 ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) e depois priorizou a auditoria da estrutura/spec/roadmap ([#59](https://github.com/MxK-rafas/Propertychain/issues/59)). Preparação do pitch é material de apresentação, não autorização de novas funcionalidades. Não declarar slides/ensaio ou feedback de amigos como já concluídos. Retomar a preparação após esta revisão.
+O autor solicitou pitch para quinta-feira, 26/11/2026 ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) e depois priorizou a auditoria da estrutura/spec/roadmap ([#59](https://github.com/MxK-rafas/Propertychain/issues/59)). Após a auditoria, o autor relatou dificuldade de amigos com carteiras e autorizou explicitamente a evolução [#61](https://github.com/MxK-rafas/Propertychain/issues/61): exemplo guiado sem carteira, explicação Phantom/blockchain e linguagem simples. Usar leituras reais do registro fictício; nunca simular sucesso ou enviar transações automaticamente. A issue fica aberta até teste/aceite do autor. Retomar o pitch após esta evolução. Preparação do pitch é material de apresentação; não declarar slides, ensaio, contagem de testadores ou ganho de conversão sem evidência.

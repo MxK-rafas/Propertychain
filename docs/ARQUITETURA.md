@@ -25,6 +25,9 @@ flowchart LR
 | `memo.ts`, `MemoRegistration.tsx`, `memo-errors.ts` | Preparação, revisão, assinatura, envio, confirmação, leitura do Memo e erros |
 | `memo-record.ts` | Comprovante público pendente em sessionStorage e URL do explorador |
 | `consultation-link.ts`, `PublicLookup.tsx` | Referência de consulta, compartilhamento oficial, leitura e comparação |
+| `ExampleGuide.tsx` | Percurso sem carteira: fixture conferida, cópia alterada em memória e três leituras do registro público fixo |
+| `NetworkHelp.tsx` | Explicações simples de blockchain e Phantom, instalação oficial e alternativa sem carteira |
+| `VerificationOutcome.tsx` | Apresentação compartilhada de comparação, detalhes recolhidos, links e relatório |
 | `verification-result.ts` | Resultado e mensagens de comparação compartilhadas com o PDF |
 | `ReportDownload.tsx`, `verification-report.ts` | Geração local e abertura/download do PDF; biblioteca carregada sob demanda |
 | `frontend/prototype/` | Referência visual histórica; não é o app publicado |
@@ -44,6 +47,10 @@ Devnet é conferida por genesis. A conexão usa o provedor oficial Phantom; a as
 `lookupMemo` usa commitment confirmed na leitura da transação e verifica ausência de erro, pagador e instruções esperadas. Aceita o formato atual (Compute Budget zero + Memo) e o formato anterior de apenas Memo. Programa, prefixo, hash e conteúdo incompatíveis são rejeitados. O hash não é extraído de logs arbitrários nem confiado a parâmetros do link.
 
 A assinatura identifica o registro; a cópia local produz o hash esperado. Resultado sem arquivo não compara integridade de uma imagem específica; arquivo diferente não é afirmação de fraude. A consulta pública não exibe proprietário/histórico do exemplo, mesmo que a fixture coincida. JSON fictício apoia o cadastro de exemplo; cartório é apenas apresentação visual.
+
+## Exemplo guiado #61
+
+A entrada seleciona o exemplo por padrão; `#exemplo` tem contador e navegação próprios. `lookupMemo` consulta a assinatura fixa do PDF fictício: hash do arquivo e hash da transação precisam corresponder à fixture. Para a cópia alterada, acrescenta um byte de quebra de linha em memória e calcula de novo; para a consulta sem arquivo, não fornece hash local. A fixture é carregada uma vez por execução, mas as três consultas de rede são novas. AbortController cancela/ignora resposta ao sair; bloqueio por ref evita clique duplicado. Não chama conexão, preparação ou envio de transação. Indisponibilidade da Devnet é erro com retry, sem resultado fictício.
 
 ## Persistência e relatório
 

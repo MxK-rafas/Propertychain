@@ -6,7 +6,11 @@ export type VerificationResult = Extract<MemoLookup, { status: 'confirmed' }> & 
 };
 
 export const comparisonText = {
-  none: 'Arquivo não comparado. Nenhum arquivo foi selecionado.',
-  match: 'A impressão digital do arquivo coincide com a do registro.',
-  different: 'A impressão digital do arquivo é diferente da que consta no registro.',
+  none: 'Nenhum arquivo foi selecionado para comparar.',
+  match: 'Esta cópia é igual ao arquivo registrado.',
+  different: 'Esta cópia é diferente do arquivo registrado.',
+} as const;
+
+export const comparisonTitle = {
+  none: 'Arquivo não comparado', match: 'Mesmo arquivo', different: 'Arquivo diferente',
 } as const;

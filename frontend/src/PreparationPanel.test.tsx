@@ -25,7 +25,7 @@ describe('Preparação sem transações', () => {
     const f = new File(['abc'], 'teste.pdf', { type: 'application/pdf' });
     Object.defineProperty(f, 'arrayBuffer', { value: async () => new TextEncoder().encode('abc').buffer });
     const { rerender } = render(<PreparationPanel file={f} />);
-    await userEvent.click(screen.getByRole('button', { name: 'Calcular impressão digital' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Calcular código do arquivo' }));
     const digest = 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad';
     expect(await screen.findByText(digest)).toBeVisible();
     expect(network).not.toHaveBeenCalled();
@@ -39,10 +39,10 @@ describe('Preparação sem transações', () => {
     const f = new File(['a'], 'lento.pdf', { type: 'application/pdf' });
     Object.defineProperty(f, 'arrayBuffer', { value: () => new Promise<ArrayBuffer>(r => { resolve = r; }) });
     const { rerender } = render(<PreparationPanel file={f} />);
-    await userEvent.click(screen.getByRole('button', { name: 'Calcular impressão digital' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Calcular código do arquivo' }));
     rerender(<PreparationPanel file={null} />);
     await act(async () => { resolve(new TextEncoder().encode('abc').buffer); await new Promise(r => setTimeout(r, 10)); });
-    expect(screen.queryByText('SHA-256 calculado localmente')).not.toBeInTheDocument();
+    expect(screen.queryByText('Código calculado neste aparelho (SHA-256)')).not.toBeInTheDocument();
   });
   it('explica Phantom ausente', async () => {
     render(<PreparationPanel file={null} wallet />);
@@ -56,19 +56,19 @@ describe('Preparação sem transações', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Conectar Phantom de teste' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Conexão cancelada');
     expect(check).not.toHaveBeenCalled();
-    expect(screen.queryByText('Carteira conectada · RPC Solana Devnet confirmado')).not.toBeInTheDocument();
+    expect(screen.queryByText('Carteira conectada · rede do app: Solana Devnet')).not.toBeInTheDocument();
   });
   it('conecta somente após checar Devnet e invalida troca de conta', async () => {
     const { p, handlers } = phantom();
     vi.spyOn(preparation, 'checkDevnet').mockResolvedValue();
     render(<PreparationPanel file={null} wallet />);
     await userEvent.click(screen.getByRole('button', { name: 'Conectar Phantom de teste' }));
-    expect(await screen.findByText('Carteira conectada · RPC Solana Devnet confirmado')).toBeVisible();
+    expect(await screen.findByText('Carteira conectada · rede do app: Solana Devnet')).toBeVisible();
     act(() => handlers.get('accountChanged')?.({ toString: () => 'outro endereço' }));
-    expect(screen.queryByText('Carteira conectada · RPC Solana Devnet confirmado')).not.toBeInTheDocument();
+    expect(screen.queryByText('Carteira conectada · rede do app: Solana Devnet')).not.toBeInTheDocument();
     expect(screen.getByRole('alert')).toHaveTextContent('trocou de conta');
     await userEvent.click(screen.getByRole('button', { name: 'Conectar Phantom de teste' }));
-    await screen.findByText('Carteira conectada · RPC Solana Devnet confirmado');
+    await screen.findByText('Carteira conectada · rede do app: Solana Devnet');
     await userEvent.click(screen.getByRole('button', { name: 'Desconectar Phantom' }));
     await waitFor(() => expect(p.disconnect).toHaveBeenCalledOnce());
   });
@@ -88,6 +88,6 @@ describe('Preparação sem transações', () => {
     render(<PreparationPanel file={null} wallet />);
     await userEvent.click(screen.getByRole('button', { name: 'Conectar Phantom de teste' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('não é da Solana Devnet');
-    expect(screen.queryByText('Carteira conectada · RPC Solana Devnet confirmado')).not.toBeInTheDocument();
+    expect(screen.queryByText('Carteira conectada · rede do app: Solana Devnet')).not.toBeInTheDocument();
   });
 });
