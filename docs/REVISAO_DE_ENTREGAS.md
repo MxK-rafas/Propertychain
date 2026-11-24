@@ -1,52 +1,62 @@
-> **Estado atual — 23/11/2026:** Em 23/11/2026, o autor aprovou também o teste local com foto de documento real, concluindo o aceite do MVP no escopo da spec. O aceite foi informado pelo autor; a foto não foi enviada ao Codex nem anexada ao repositório. Isso não constitui análise da autenticidade jurídica do documento ou aprovação por cartório real. [Aceite final — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6). Os registros de etapas pendentes abaixo documentam estados anteriores e não representam a situação atual.
+# Revisão de estrutura e entregas — 24/11/2026
 
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+Solicitada pelo autor antes de continuar o pitch, [issue #59](https://github.com/MxK-rafas/Propertychain/issues/59). Base examinada: main `843d6936fc067cd653dd70aa0db31d44bc89a032`. Esta revisão consolida o estado do código, da documentação ativa, do build e das evidências; não é auditoria jurídica ou de segurança independente.
 
-# Revisão atual de entregas — consolidação para Solana
+## Conclusão
 
-Base analisada: `869ea6c2c2c8629fdfbf416fc58c0f7be83fab8b`. A comparação completa está em [COMPARACAO_E_ALINHAMENTO.md](COMPARACAO_E_ALINHAMENTO.md). A revisão anterior de código EVM/CI foi preservada em [historico/REVISAO_ANTES_SOLANA.md](historico/REVISAO_ANTES_SOLANA.md).
+A estrutura funcional está coerente com o frontend Solana/Phantom e a publicação estática. Havia divergências documentais concretas: estados de implantação antigos, botões diferentes dos atuais, histórico fictício prometido no resultado, PDF simultaneamente entregue e listado como futuro e descrições de CI desatualizadas. Foram corrigidas nos documentos ativos sem adicionar funcionalidades. Também foi corrigida uma identificação incorreta no resumo de tentativa recuperada: sem arquivo original, o comprovante de outro hash não pode receber o endereço da fixture.
 
-## Documentos e referências entregues
+A spec foi reescrita como descrição única do comportamento entregue; o roadmap separa concluído, apresentação solicitada e hipóteses futuras. A comparação de 12/11/2026 permanece identificada como histórica. Versões anteriores da [spec](historico/SPEC_ANTES_REVISAO_2026-11-24.md) e da [revisão](historico/REVISAO_ANTES_AUDITORIA_2026-11-24.md) foram preservadas, com ajuste apenas de links relativos para a nova localização.
 
-- SPEC.md como fonte operacional atual e AGENTS.md para o Codex.
-- Arquitetura, ambiente, limites, personas, ADRs, roadmap e 41 tarefas reconciliados.
-- Fonte das quatro telas aprovadas em frontend/prototype, identificada como simulação.
-- Modelo PDF inteiramente fictício com JSON e SHA-256 verificável.
-- Plano de teste e configuração alvo Vercel, sem chave privada de deploy.
-- Código/fixtures/testes Solidity preservados como legado; job de CI identificado como EVM.
+## Comparação e correções
 
-## Limites da entrega
+| Tema | Divergência encontrada | Estado documentado após a revisão |
+|---|---|---|
+| Cadastro | Spec prometia um botão automático Cadastrar documento | Hash e conexão explícitos, preparação, revisão e aprovação na Phantom |
+| Consulta desde a entrada | Parte dos textos ainda tratava a consulta como simulada | Campo de link/código e arquivo opcional; leitura real da Devnet sem carteira |
+| Resultado | Spec prometia Maria e histórico de titulares | Tipo não identificado, sem titular/histórico público; dados antigos preservados na fixture/protótipo |
+| Transação | Texto do AI Kit ainda descrevia somente Memo | Compute Budget de preço zero + Memo; compatibilidade de leitura com Memo anterior |
+| Relatório | Retrospectiva/spec ainda o listavam em Depois | Geração local entregue no PR #57 e aceite do autor na #56 em 24/11 |
+| Persistência | Arquitetura não detalhava o comprovante de tentativa | sessionStorage só para hash/pagador/assinatura pendentes; arquivo/resultado/PDF em memória |
+| Ambiente/Vercel | Guias descreviam frontend ou deploy futuros | App público, raiz frontend, build/dist e variáveis públicas efetivamente usados |
+| CI | Contagens antigas e etapas simuladas | 90 testes em nove arquivos; job EVM separado; nomes do workflow preservados |
+| Recuperação de tentativa | Comprovante de outro hash, sem arquivo, podia mostrar o endereço fictício | Resumo identifica arquivo não selecionado; teste reproduziu o erro antes da correção |
+| Metadados | Descrição HTML dizia operações simuladas | Descrição de cadastro/consulta Devnet, comparação local e PDF; cartório simulado |
+| Próxima prioridade | Pitch seguia apenas como material fora do MVP | Solicitação para 26/11 registrada, sem fingir material/ensaio concluídos |
+| Catálogo | Estado histórico de tarefas podia ser lido como fila atual | Índice com estados GitHub, distinção de legado e #26 como referência visual |
 
-Não foi implementada a integração Solana nem realizado deploy Vercel. Não foi conectada carteira, enviada transação, validada velocidade real ou recebida foto real. A documentação não deve ser usada como prova desses resultados.
+A mudança sobre histórico de titulares é correção de documentação: não foi reintroduzida uma função ausente na consulta pública. As fontes de negócio preservam a hipótese original, sem transformá-la em entrega ou em autorização para ampliar o app.
 
-O autor deve revisar o modelo e aprovar o plano antes de o Codex iniciar a implementação funcional, uma etapa por vez. O teste por terceiros e os resultados de desempenho entram aqui quando forem realmente executados.
+## Estrutura conferida
 
-## Verificações desta consolidação
+- `frontend/src`: entrada/rotas, hash e Phantom, Memo/RPC, consulta, compartilhamento e PDF.
+- `frontend/index.html` e Vite: entrada real do app; assets fictícios importados de fixtures; geração em dist.
+- `frontend/prototype`: referência visual histórica, sem integração real; não é a publicação final.
+- `fixtures`: PDF/JSON/TXT fictícios. O segundo modelo gerado no chat não foi apresentado como fixture versionada nesta revisão.
+- `contracts`: Hardhat/Solidity e seus lockfile/scripts/testes próprios, sem importação pelo frontend.
+- `.github/workflows/ci.yml`: jobs separados de frontend e legado EVM, Node 22.
+- `scripts/bootstrap_github.sh`: somente consulta issues; não cria ou substitui backlog.
+- `.env.example`: apenas defaults públicos Devnet; `.gitignore`: cobre configurações locais, documentos de teste, builds e artefatos.
+- Canvas/ficha e ADRs históricas: fontes preservadas, com limites e referências ao escopo atual.
 
-Conferir SHA-256 e leitura do PDF, links locais da documentação ativa, instruções destinadas ao Codex, preservação dos arquivos executáveis legados e sintaxe/navegação da referência visual. CI do PR continua responsável por verificar o legado EVM; não confundir seu resultado com validação do app novo.
+## Evidências e validação
 
-## Evidências futuras a registrar
+Na cópia exata da base, executar em frontend: **npm ci, npm test e npm run build**. Resultado inicial: **90 testes em nove arquivos, TypeScript e build aprovados**. Uma nova regressão de recuperação de comprovante falhou antes da correção; após o ajuste, a suíte tem **91 testes em nove arquivos**. A execução final de 91 testes, TypeScript e build passou. Dependências não foram atualizadas.
 
-Link da transação Devnet, resultado do Memo/hash, navegador/aparelhos usados, comparação do mesmo arquivo, erro para arquivo diferente, tabela de dez consultas (mediana/máximo/erros) e URL real da Vercel. Mostrar o link da transação antes de anunciar sucesso.
+Versões resolvidas no lockfile: React/react-dom 19.3.1; Vite 7.3.8; TypeScript 5.9.3; Vitest 4.1.12; @solana/kit 8.6.0; @wallet-standard/app 1.1.1; pdf-lib 1.17.1. A raiz não tem package.json e o deploy Vercel não depende de contracts.
 
-## Etapa 2 — entrega aprovada para implementação
+As checagens desta revisão incluem links locais dos Markdown versionados, consistência das referências de arquivos, SHA-256 da fixture, assets da build, regras de ignore e leitura do app público/relatório com registro fictício existente. Não se envia transação em nome do autor. Resultado: 82 arquivos Markdown e 246 referências locais conferidos, sem caminhos ou âncoras quebradas; SHA-256 da fixture preservado. Dois links locais antigos no histórico EVM foram corrigidos. A restauração do comprovante também foi conferida em Chromium, em 390 e 1440 pixels, sem endereço fictício e com o acompanhamento disponível. Evidências na issue #59 e no PR da revisão.
 
-O autor aprovou o plano registrado na issue #21. Implementados frontend React/TypeScript/Vite, quatro telas, seleção local de PDF/JPEG/PNG, remoção de metadados fictícios para outro arquivo, erros de tipo/arquivo vazio e retorno ao exemplo. Não há leitura/hash, upload, persistência, Phantom ou acesso Solana.
+Não foram encontrados, entre os caminhos versionados conferidos, arquivos .env locais, chaves .pem/.key ou documentos nas pastas pessoais de teste. Os caminhos de teste e dist/deployments estão ignorados. Isso é uma verificação de estrutura e regras, não garantia de ausência de vulnerabilidades ou auditoria completa de segredos.
 
-Validação: seis testes de comportamento, TypeScript e build passaram. Chromium foi executado em 390×844 e 1440×1000, cobrindo navegação, troca de arquivo, ausência de dados fictícios, zero requisições após seleção/navegação, descarte da seleção ao recarregar, ausência de overflow horizontal e erros JavaScript. A build também serve o PDF fictício com hash idêntico à fixture. CI do frontend adicionada separadamente da EVM.
+## Evidências anteriores preservadas
 
-Aceite manual do autor pendente: seguir frontend/README.md. Não avançar para a etapa 3 até ele informar o resultado. Nenhuma transação ou publicação Vercel foi realizada.
+- [Transação de exemplo no explorador Devnet](https://explorer.solana.com/tx/2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G?cluster=devnet). Memo confirmado, teste manual do autor no PR #47.
+- Consulta em outro aparelho, mesma cópia, cópia diferente e sem arquivo; correções de navegação e domínio oficial nos PRs #48–#54.
+- Dez leituras de um registro confirmado: mediana 0,45 s, máximo 1,05 s, zero erros. Medição técnica registrada em 17/11/2026, excluindo carregamento, hash local e nova escrita; não é benchmark repetido nesta revisão.
+- [#6](https://github.com/MxK-rafas/Propertychain/issues/6): aceite manual do teste com foto real em 23/11/2026. O arquivo não foi recebido pelo Codex; não alegar análise independente de seu conteúdo.
+- [#56](https://github.com/MxK-rafas/Propertychain/issues/56): relatório implementado no PR #57, 90 testes e PDFs conferidos nos três estados, acesso público em sessões sem login; aceite informado pelo autor em 24/11/2026 e registrado no PR #58. Os relatos do autor não são ampliados para novos testes específicos não informados.
 
-## Ajuste solicitado após teste: entrada por perfil
+## O que segue pendente
 
-Adicionada tela “Como deseja entrar?” antes do percurso. Proprietário vai para cadastro, comprador/verificador para consulta e cartório para a demonstração de validação. Um botão principal, três opções de perfil e ação secundária Trocar perfil; sem autenticação, contas, senhas ou autorização real. Rotas diretas preservadas; a rota padrão/desconhecida abre a entrada. Nove testes e TypeScript/build passaram, incluindo três caminhos de perfil; Chromium mobile conferiu entrada e retorno. Atualização no mesmo PR de teste, sem integrar na main antes do aceite.
-
-## 16/11/2026 — aceite da etapa 2 e entrega da etapa 3
-
-O autor declarou que está tudo certo e autorizou continuar. PR #45 integrado com CI verde. Etapa 3 preparada em novo PR: SHA-256 local; conexão/desconexão Phantom; validação de endereço e genesis Devnet com Kit 8.6.0; tratamento de recusa, indisponibilidade e troca de conta. 23 testes locais e build passaram. Nenhuma assinatura/transação enviada. Leitura pública de getGenesisHash conferida. Testes de carteira são controlados; teste com extensão real pelo autor continua pendente. Não avançar à escrita Memo antes desse aceite.
-
-## Etapa 4 — escrita de hash na Devnet
-
-O autor testou cálculo/conexão e autorizou continuar; PR #46 integrado. Implementados preparo/saldo/taxa/simulação, assinatura em bytes Wallet Standard/Phantom, checagem de mensagem/assinatura, envio único, link/recibo antes de sucesso, confirmação e conferência do Memo. Envio incerto mantém recibo público na sessão e oferece só acompanhamento; não repete envio automaticamente.
-
-41 testes e TypeScript/build passaram. Chromium mobile percorreu o fluxo com chave efêmera, Wallet Standard e RPCs controlados, um envio interceptado e avanço após conferência. Isso não é evidência de transação real na Devnet. Não houve uso de carteira com fundos nem envio real pelo Codex. Teste/aceite do autor com link real do explorador pendente. Não iniciar etapa 5 antes desse teste.
+Preparação e ensaio do pitch para 26/11/2026, na [#7](https://github.com/MxK-rafas/Propertychain/issues/7), e feedback dos amigos que o autor pretende convidar. Nenhuma rodada externa, parceria de cartório, receita, produção jurídica ou função de Depois/Um dia é apresentada como concluída. Não houve mudança na validade do aceite do MVP ou do PDF.

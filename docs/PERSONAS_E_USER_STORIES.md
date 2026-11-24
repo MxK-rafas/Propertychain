@@ -14,8 +14,9 @@ Referência: [SPEC.md](../SPEC.md). As personas são fictícias; o escopo se res
 |---|---|
 | Como proprietário, uso um exemplo ou seleciono um arquivo local para registrar seu hash | Só hash é enviado; foto não sai do dispositivo |
 | Como proprietário, aprovo na Phantom de teste | Devnet explícita, uma carteira, cancelamento tratado, nenhuma chave privada pedida |
-| Como iniciante, entendo que cartório e titularidade são simulados | Tela 2 explica papéis e não executa outra transação |
-| Como terceiro, abro o link sem carteira | Outro aparelho consulta a mesma transação |
+| Como iniciante, entendo que cartório é visual e o app não comprova titularidade | Tela 2 explica papéis e não executa outra transação |
+| Como terceiro, abro o link ou informo a referência desde a entrada | Outro aparelho consulta a mesma transação sem carteira |
+| Como terceiro, baixo o relatório PDF | Dados da consulta e comparação, sem anexar o documento ou enviar transação |
 | Como terceiro, comparo minha cópia idêntica do arquivo | Hash igual coincide, diferente não; sem arquivo não há afirmação de correspondência |
 | Como pessoa pouco técnica, entendo o resultado e erros | Português, fontes grandes, uma ação principal por tela e mensagens simples |
 | Como avaliador, observo a velocidade | Dez medições de leitura de registro confirmado frente à meta de 1–5 segundos, sem incluir ação humana como tempo de rede |

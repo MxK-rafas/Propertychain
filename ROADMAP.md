@@ -1,38 +1,44 @@
 # Roadmap do PropertyChain
 
-O escopo ativo é [SPEC.md](SPEC.md). Este roadmap substitui o plano de Sepolia/contrato próprio da fase anterior. O [MVP publicado na Vercel](https://propertychain-theta.vercel.app/) foi testado no computador e no celular. O teste com foto real foi aprovado pelo autor em 23/11/2026, concluindo as seis etapas do MVP no escopo aprovado. [Aceite final — issue #6](https://github.com/MxK-rafas/Propertychain/issues/6).
+Atualizado em 24/11/2026. A fonte operacional é [SPEC.md](SPEC.md), alinhada com o aplicativo público e a [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md). Não usar o estado de tarefas EVM antigas como fila de implementação Solana.
 
-## Entregas do MVP
+## Concluído e aceito
 
-| Etapa | Entrega | Pronto quando |
-|---|---|---|
-| 1 | Modelo fictício, revisão do escopo e plano | Autor revisa o PDF e aprova o plano antes do código |
-| 2 | Frontend React/TypeScript/Vite com quatro telas | Fluxo legível no celular; arquivo local não causa upload; dados fictícios não aparecem como extraídos de foto real; build e verificações passam |
-| 3 | Phantom e SHA-256 local | Uma carteira Devnet, cancelamento tratado e hash reproduzível pelos mesmos bytes |
-| 4 | Registro Memo na Solana Devnet | Link no explorador, transação confirmada sem erro e hash correto; cartório continua simulado |
-| 5 | Consulta em outro celular e medição | Sem carteira; arquivo idêntico coincide e diferente não; dez medições frente à meta de 1–5 segundos para leitura de registro confirmado |
-| 6 | Publicação Vercel e teste final | HTTPS e consulta em dois aparelhos; nenhum documento real no código, build ou logs |
+| Entrega | Evidência / aceite |
+|---|---|
+| Modelo fictício e escopo único Solana | Fixtures, spec e PR #44 |
+| Entrada por perfil, cadastro e cartório simulado | PR #45; teste manual do autor |
+| SHA-256 local e Phantom | PR #46; teste manual do autor |
+| Memo Devnet, link e confirmação | [PR #47](https://github.com/MxK-rafas/Propertychain/pull/47); registro público de exemplo |
+| Consulta pública e comparação em outro aparelho | PRs #48, #49, #51, #53 e #54; sem arquivo, igual e diferente |
+| Vercel público, sem login para consulta | [Endereço oficial](https://propertychain-theta.vercel.app/); perfis organizam o percurso, sem autenticação |
+| Teste com foto real e aceite do MVP | [#6](https://github.com/MxK-rafas/Propertychain/issues/6), aceite do autor em 23/11/2026; foto não fornecida ao Codex |
+| Relatório de verificação em PDF | [PR #57](https://github.com/MxK-rafas/Propertychain/pull/57) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56), aceito em 24/11/2026 |
 
-Não avançar automaticamente entre etapas. Assinatura humana e confirmação da transação não fazem parte da meta de leitura de 1–5 segundos. Medir e informar esses tempos à parte.
+As seis etapas originais e seus critérios Pronto quando estão na spec. A medição registrada de dez leituras de um registro confirmado teve mediana de 0,45 s, máximo de 1,05 s e zero erros; não representa o tempo completo de uso, hash, assinatura ou confirmação. Ver [guia](frontend/README.md).
 
-O autor validou o registro na Phantom e a consulta em outro aparelho com os três resultados esperados. As dez leituras do registro confirmado tiveram mediana de 0,45 s, máximo de 1,05 s e zero erros. [Registro de teste](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G) · [Guia do frontend](frontend/README.md)
+## Prioridade atual — preparar a apresentação
 
-## Evolução autorizada após o MVP
+- Revisar estrutura, spec e roadmap antes do pitch, conforme solicitado pelo autor em 24/11/2026. [Revisão #59](https://github.com/MxK-rafas/Propertychain/issues/59).
+- Preparar pitch, roteiro de demonstração e perguntas/respostas na [#7](https://github.com/MxK-rafas/Propertychain/issues/7), para quinta-feira, **26/11/2026**. Solicitação autorizada; material e ensaio ainda não concluídos nesta revisão.
+- O autor enviará o app a amigos e trará feedback. Ainda não há resultados dessa rodada registrados; correções e prioridades serão definidas a partir dos relatos.
 
-- [#56 — relatório de verificação em PDF](https://github.com/MxK-rafas/Propertychain/issues/56): escopo aprovado pelo autor em 23/11/2026; geração local após consulta confirmada, sem incluir o arquivo original ou enviar nova transação. Implementação publicada no PR #57 e aceita pelo autor em 24/11/2026.
+A preparação do pitch é material de apresentação, sem nova funcionalidade ou alteração do aceite do MVP. Não iniciar novas funcionalidades enquanto esses feedbacks/prioridades não forem definidos pelo autor.
 
-## Depois
+## Depois — sem implementação autorizada
+
 - Taxa por documento/consulta e planos mensais.
-- Piloto com cartórios parceiros.
-- Armazenamento seguro para documentos reais e preparação jurídica/LGPD para essa operação.
+- Piloto com cartórios parceiros (não há parceria confirmada no MVP).
+- Armazenamento seguro de documentos reais e avaliação jurídica/privacidade para essa operação; [#27](https://github.com/MxK-rafas/Propertychain/issues/27).
+
+Relatórios PDF não são mais pendência de Depois: foram antecipados expressamente e aceitos na #56.
 
 ## Um dia
 
 - Licenciamento da plataforma para cartórios.
 
-## Decisões de escopo
+## Fora deste recorte e legado
 
-- Antecipados por pedido do autor: registro real de hash na Devnet e seleção local de foto real de teste.
-- Fora deste MVP: programa/contrato próprio, painel de validador, aprovação de cartório na blockchain, revogação, atestação de titular, busca por matrícula/salt e QR code.
-- O código Solidity existente e seus testes ficam preservados como legado. Não precisam ser migrados para Solana para entregar este MVP.
-- [ISSUES.md](ISSUES.md) reconcilia os 41 IDs originais com o escopo atual, sem apresentar tarefas antigas como requisitos extras.
+Busca por matrícula/salt, atestação de titular, transferência de propriedade, painel/aprovação real de cartório, revogação, programa próprio e QR code do app continuam fora do recorte. Vídeo e capturas da #41 não foram entregues por esta revisão. `contracts/` e #39 preservam o legado Hardhat; não são dependência do frontend e não serão retomados por inferência.
+
+[ISSUES.md](ISSUES.md) diferencia o catálogo original, o estado no GitHub, as evoluções aceitas e a apresentação solicitada.

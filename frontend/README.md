@@ -2,7 +2,7 @@
 
 [Versão publicada na Vercel](https://propertychain-theta.vercel.app/) · [Consulta de teste sem carteira](https://propertychain-theta.vercel.app/#consulta?tx=2s5ruPV79nw66AfL6DHgUuqGx7nH59WJEkxvqfAEDYsRiBTGemsFo8Pw7oaEegW5kkHTKDmYs3qwRtTPYmFRJ4G)
 
-O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. Esta versão implementa o registro de um hash com Memo na Solana Devnet. **A consulta lê registros reais da Devnet; o cartório e o histórico do exemplo são simulados.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
+O autor testou e aprovou cálculo e conexão da etapa 3; PR #46 integrado. O aplicativo entregue registra um hash com Memo na Solana Devnet, consulta o registro e gera relatório PDF. **A consulta lê registros reais da Devnet; o cartório e o histórico do exemplo são simulados.** Não há contas/senhas, contrato próprio ou transferência de propriedade.
 
 ## Abrir e preparar
 
@@ -91,7 +91,7 @@ npm run build
 npm run preview
 ```
 
-90 testes passaram (incluindo geração e download do relatório PDF): consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
+91 testes passaram (incluindo geração e download do relatório PDF): consulta pública por link, comparação local e tratamento de resultados; percurso e perfis; hash; conexão; preparação/simulação; saldo insuficiente; expiração; recusa; alteração/ausência de assinatura; envio incerto sem repetição; programa/hash divergente; confirmação; persistência somente de comprovante público e retomada sem nova assinatura; diagnósticos após aprovação, bloqueio de armazenamento e indisponibilidade da consulta. Testes criptográficos usam chaves efêmeras locais sem fundos; nenhum envio real foi feito pelo Codex. Chromium conferiu o fluxo completo com Wallet Standard e RPCs controlados.
 
 O [Solana AI Kit](https://github.com/solanabr/ai-kit) orienta a implementação em [modo sem instalação](../docs/SOLANA_AI_KIT.md). A conexão direta Phantom da etapa anterior é mantida; a assinatura da transação usa Wallet Standard, e o Kit compila/verifica/serializa a mensagem. Não há web3.js legado, agentes autônomos ou exportação de chaves.
 

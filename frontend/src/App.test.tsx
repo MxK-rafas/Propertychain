@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { App } from './App';
+import { savePending } from './memo-record';
 
 afterEach(() => vi.unstubAllGlobals());
 function openCadastro() { window.history.replaceState(null, '', '/#cadastro'); }
@@ -9,6 +10,15 @@ async function next(label: string) {
   await userEvent.click(screen.getByRole('button', { name: label }));
 }
 describe('Demonstração do PropertyChain', () => {
+  it('não atribui endereço fictício a comprovante recuperado sem o arquivo original', () => {
+    savePending({ hash: 'a'.repeat(64), payer: '1'.repeat(32), signature: '1'.repeat(64) });
+    openCadastro();
+    render(<App />);
+    expect(screen.getByText('Arquivo do registro')).toBeVisible();
+    expect(screen.queryByText(/Rua das Palmeiras/)).not.toBeInTheDocument();
+    expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Conferir registro existente' })).toBeEnabled();
+  });
   it('vai do cadastro e cartório à consulta real, sem inventar resultado', async () => {
     openCadastro();
     render(<App />);

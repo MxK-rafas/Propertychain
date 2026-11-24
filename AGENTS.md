@@ -1,28 +1,27 @@
 # Instruções para o Codex no PropertyChain
 
-O autor é iniciante. A especificação ativa é [SPEC.md](SPEC.md). Ler também [docs/COMPARACAO_E_ALINHAMENTO.md](docs/COMPARACAO_E_ALINHAMENTO.md) e [ROADMAP.md](ROADMAP.md).
+O autor é iniciante. Ler [SPEC.md](SPEC.md), [ROADMAP.md](ROADMAP.md) e [revisão atual](docs/REVISAO_DE_ENTREGAS.md). A spec atual descreve o aplicativo entregue. Canvas, protótipo, tarefas importadas e documentos em histórico preservam decisões anteriores; não autorizam funcionalidades por si.
 
-- Antes do código, apresentar um plano simples e esperar aprovação. Trabalhar uma etapa por vez; parar para o autor testar antes de avançar.
-- Explicar o que mudou, como abrir e como testar, sem exigir conhecimento de programação. Explicar erros em português simples.
-- Stack atual: Solana Devnet + Phantom; hash SHA-256 local; Memo; consulta pública sem carteira; frontend React/TypeScript/Vite publicado na Vercel.
-- Use o Solana AI Kit e as bibliotecas atuais da Solana (@solana/kit e Wallet Phantom). Conferir a documentação atual e compatibilidade antes de instalar. Não introduzir carteira de servidor ou agentes autônomos.
-- `contracts/`, o ambiente Hardhat e ADRs EVM marcados como históricos NÃO são dependências do MVP Solana. Não implementar ethers, Sepolia, MetaMask, painel do validador ou atestação on-chain por seguir tarefas antigas.
-- `frontend/prototype/` é referência visual simulada, não app Solana funcional. Não marcar como entregue o frontend funcional apenas porque a referência abre.
-- Nunca solicitar frase-semente ou chave privada; não adicionar `DEPLOYER_PRIVATE_KEY` a configuração ativa. Assinatura só na Phantom.
-- O autor aprovou o teste local com foto real em 23/11/2026. Não versionar, publicar, logar nem enviar a serviços. Calcular hash localmente; não fazer OCR ou inventar proprietário a partir dela.
-- Dois arquivos com os mesmos bytes coincidem; duas fotos do mesmo papel geralmente não. Sem arquivo local, só confirmar registro, não integridade da foto.
-- Meta de leitura: 1–5 segundos para registro já confirmado, medida separadamente de carregamento, ação humana e confirmação da transação. Não usar sucesso fictício para cumprir tempo.
-- Mostrar link da transação no explorador Devnet antes de anunciar sucesso; verificar confirmação, ausência de erro e Memo/hash esperado.
-- Não implementar itens de Depois/Um dia. Não marcar testes EVM como evidência de Solana.
+- Antes de novo código/funcionalidade, apresentar plano simples e aguardar aprovação. Trabalhar uma etapa por vez e parar para o autor testar.
+- Explicar mudanças, erros e como testar em português simples, sem presumir conhecimento de programação.
+- App: React/TypeScript/Vite, Solana Devnet, SHA-256 local e Phantom. Consulta e relatório PDF sem carteira; publicação estática e pública na Vercel.
+- Use o Solana AI Kit e as bibliotecas atuais da Solana (@solana/kit e Wallet Phantom). Conferir compatibilidade antes de alterar dependências; não instalar agentes, hooks ou carteiras de servidor por inferência.
+- `contracts/` é legado Solidity/Hardhat isolado, sem dependência no build atual. Não retomar Sepolia/MetaMask/ethers, painel do validador ou atestação de titular por seguir tarefas históricas.
+- Nunca pedir frase-semente/chave privada. Assinatura só na Phantom, com SOL de teste. Conexão confere o RPC Devnet, sem mudar a rede selecionada na UI da carteira.
+- Fotos/documentos reais ficam no aparelho: sem versionar, publicar, logar, enviar a serviços ou usar em capturas públicas. Não fazer OCR nem inventar titular/endereço.
+- Mesmos bytes coincidem; duas fotos do mesmo papel podem divergir. Sem arquivo, só consultar registro, sem afirmar integridade de uma cópia.
+- Mostrar link do explorador antes de anunciar sucesso e conferir status/Memo/hash. Nunca reenviar automaticamente uma tentativa incerta.
+- A meta de 1–5 s é leitura de registro confirmado. Separar carregamento, hash, assinatura humana, confirmação de escrita e PDF; não fabricar resultados para cumprir tempo.
+- Manter português e uma ação principal por tela; nomes/estados atuais estão na spec. Não reintroduzir consulta simulada ou histórico de titularidade na tela real sem nova decisão.
+- Não implementar itens de Depois/Um dia sem autorização explícita. Não apresentar testes EVM como evidência de Solana ou aceite manual como auditoria jurídica.
+- Compartilhar o domínio oficial https://propertychain-theta.vercel.app/; previews podem exigir login.
 
-## Evolução autorizada — relatório de verificação (#56)
+## Entregas aceitas
 
-Em 23/11/2026, o autor aprovou a proposta da issue #56: gerar relatório PDF local a partir de uma consulta confirmada, com hash, transação, comparação, data/hora da consulta no aparelho e links oficiais. Sem arquivo original, backend ou nova transação. Esta é a única antecipação autorizada de Depois nesta etapa. Implementação publicada no PR #57, com 90 testes e verificações de download/abertura em Chromium nos dois formatos. Em 24/11/2026, o autor confirmou: “o relatório está funcionando corretamente”, aceitando a entrega da #56. Não iniciar outra evolução sem nova decisão do autor.
+- MVP e teste local com foto real: aceite do autor em 23/11/2026, [#6](https://github.com/MxK-rafas/Propertychain/issues/6). A foto não foi fornecida ao Codex.
+- Relatório PDF local: escopo autorizado, PR #57 publicado e aceite do autor em 24/11/2026, [#56](https://github.com/MxK-rafas/Propertychain/issues/56), documentado no PR #58. Sem arquivo original, backend ou nova transação.
+- 91 testes atuais e verificações de build/consulta/download documentados na revisão; o texto do aceite não deve ser ampliado para testes não relatados.
 
-## Conclusão em 23/11/2026
+## Trabalho atual
 
-Em 23/11/2026, o autor aprovou também o teste local com foto de documento real, concluindo o aceite do MVP no escopo da spec. O aceite foi informado pelo autor; a foto não foi enviada ao Codex nem anexada ao repositório. Isso não constitui análise da autenticidade jurídica do documento ou aprovação por cartório real. Os fluxos de cadastro, consulta por terceiros e uso na Phantom foram aceitos; PRs #53 e #54 corrigiram navegação e consulta desde a entrada. Itens de Depois/Um dia continuam fora do escopo e exigem nova decisão do autor antes de implementar.
-
-## Estado em 17/11/2026 (histórico)
-
-Os PRs #45–#49 foram integrados à main. O autor validou o SHA-256, a conexão Phantom e o registro real do Memo na Devnet. A consulta sem carteira foi validada no computador e no celular, com arquivo idêntico, diferente e sem arquivo. O [app está publicado por HTTPS](https://propertychain-theta.vercel.app/). O cartório e o histórico da demonstração são fictícios. A [issue #6](https://github.com/MxK-rafas/Propertychain/issues/6) acompanha o teste específico com foto real.
+O autor solicitou pitch para quinta-feira, 26/11/2026 ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) e depois priorizou a auditoria da estrutura/spec/roadmap ([#59](https://github.com/MxK-rafas/Propertychain/issues/59)). Preparação do pitch é material de apresentação, não autorização de novas funcionalidades. Não declarar slides/ensaio ou feedback de amigos como já concluídos. Retomar a preparação após esta revisão.

@@ -16,5 +16,5 @@
 - [ ] Verificações apropriadas passaram; testes EVM não são apresentados como Solana
 - [ ] Dados fictícios e foto real não foram misturados
 - [ ] Nenhuma foto real, chave, frase-semente ou segredo no código/build/logs
-- [ ] Não há funcionalidade de Depois/Um dia incluída
+- [ ] Qualquer antecipação de Depois/Um dia tem autorização explícita e está refletida na spec/roadmap
 - [ ] Documentação e evidências refletem o que foi realmente testado

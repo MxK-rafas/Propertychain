@@ -1,25 +1,36 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e seis testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
+# Publicação atual na Vercel
 
-# Publicação prevista na Vercel
+Atualizado em 24/11/2026. Repositório: [MxK-rafas/Propertychain](https://github.com/MxK-rafas/Propertychain). Aplicativo público: **https://propertychain-theta.vercel.app/**.
 
-Repositório único: [MxK-rafas/Propertychain](https://github.com/MxK-rafas/Propertychain). O autor autorizou Vercel como destino. Esta consolidação não cria conta Vercel, integração, projeto hospedado ou deploy.
+## Configuração em uso
 
-## Quando o frontend funcional existir
+| Campo | Valor |
+|---|---|
+| Root Directory | `frontend` |
+| Framework | Vite |
+| Instalação | `npm ci` |
+| Build | `npm run build` (TypeScript + Vite) |
+| Saída | `dist` |
+| Rede | Solana Devnet |
+| Variáveis opcionais | `VITE_SOLANA_CLUSTER`, `VITE_SOLANA_RPC_URL` públicas |
 
-1. Validar etapas anteriores da [spec](../SPEC.md), especialmente leitura real sem carteira.
-2. Na conta do autor, importar este repositório na Vercel.
-3. Selecionar `frontend` como Root Directory; framework Vite; instalar com `npm ci`; construir com `npm run build`; saída `dist`.
-4. Configurar `VITE_SOLANA_CLUSTER=devnet` e RPC permitido para uso público no navegador. Não inserir frase-semente, chave privada ou token secreto em variáveis públicas.
-5. Conferir o conteúdo da build: nenhum arquivo real, credencial ou dado pessoal pode estar em `public/`, `dist/` ou assets.
-6. Publicar e testar link HTTPS no celular; a rota por fragmento deve abrir diretamente a consulta recebida.
-7. Testar cadastro no ambiente Phantom suportado e consulta em outro navegador/aparelho sem carteira. Registrar link real e evidências na revisão de entregas.
+Não publicar `frontend/prototype/` como app funcional. Não incluir `contracts/` no build, nem endereços/chaves de deploy EVM. Não há backend, banco ou API de upload.
 
-Os comandos de build já existem na etapa 2. O deploy Vercel ainda não foi executado; o app atual tem operações simuladas. `contracts/` não faz parte do build Vercel. Não configurar endereço EVM, bloco de deploy ou chave privada.
+## Acesso público e compartilhamento
 
-## Referência visual
+O endereço oficial foi aberto e consultado em sessões novas sem cookies/login/carteira. O cadastro ainda exige aprovação na Phantom; isso não é login na Vercel. O relatório PDF também pode ser gerado pelo visitante sem carteira após consulta confirmada.
 
-`frontend/prototype/` é um conjunto estático de quatro telas simuladas. Não apontar a publicação final para essa pasta e afirmar que o MVP Solana está pronto. Um preview dessa referência deve ser identificado como simulado.
+Deploys específicos e previews da Vercel podem exigir autenticação. Não afirmar que todas as configurações de proteção do projeto foram removidas: o acesso comprovado é o do domínio público oficial. O app gera links de compartilhamento sempre nesse domínio, com `#consulta?tx=…`.
 
-## Erros
+A página inicial abre a escolha de perfil. O comprador/verificador pode informar o registro dentro da aplicação, sem uma URL temporária. Rotas usam fragmentos; não exigem uma API ou banco de registros.
 
-Explicar em português o que falhou e qual campo/configuração revisar. Manter o último resultado de build como evidência; não anunciar publicação sem URL retornada e teste da aplicação. Limite/erro do RPC não pode ser ocultado por resultado fixo.
+## Validar uma atualização
+
+1. Em `frontend`, executar `npm ci`, `npm test` e `npm run build`.
+2. Conferir que dist contém somente código/assets públicos e fictícios. Nunca incluir foto real ou segredo em VITE_*.
+3. Integrar a alteração autorizada após CI/revisão. Conferir o status da Vercel; um build aprovado sozinho não prova publicação.
+4. Abrir o domínio oficial em sessão sem login. Conferir entrada, consulta conhecida, comparação e relatório PDF.
+5. Recarregar no celular e no computador; testar Phantom real pelo autor quando houver mudança de carteira/abertura de arquivo.
+6. Registrar erros e limites honestamente. RPC indisponível não pode virar sucesso fixo ou dados fictícios.
+
+O teste de produção usa leitura de registro fictício existente; não executar nova transação em nome do autor. [Revisão e evidências](REVISAO_DE_ENTREGAS.md).

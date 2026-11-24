@@ -1,27 +1,22 @@
-> **Atualização — etapa 2:** frontend React/TypeScript/Vite, quatro telas, seleção local, scripts, lockfile e 41 testes implementados. Operações ainda simuladas; Phantom, SHA-256, transação/consulta Solana e publicação Vercel continuam pendentes. Aguardar o teste do autor. Ver [frontend/README.md](../frontend/README.md). Notas abaixo sobre frontend inexistente descrevem o estado anterior à etapa 2.
-
 # Integração contínua e limites da evidência
 
-O workflow [.github/workflows/ci.yml](../.github/workflows/ci.yml) mantém o job **Contratos legados (EVM)**: Node.js 22, instalação, compilação, testes, cobertura mínima de 90% por contrato e teste local de deploy/seed. Nenhuma carteira pública ou chave privada é usada.
+Atualizado em 24/11/2026. Workflow: [.github/workflows/ci.yml](../.github/workflows/ci.yml), executado em PRs e push na main, com Node 22 e lockfiles separados.
 
-O código Solidity permanece preservado. Esse job testa somente o legado Hardhat, **não** Phantom, Solana, Memo, velocidade de consulta ou publicação Vercel. Não é critério suficiente de entrega do MVP atual.
+| Job (nome atual no GitHub) | Diretório | Verificações |
+|---|---|---|
+| Frontend (telas e arquivo local) | `frontend` | `npm ci`, `npm test` e `npm run build`, incluindo TypeScript |
+| Contratos legados (EVM) | `contracts` | Instalação, compilação, testes, cobertura mínima de 90% por contrato, recompilação e teste local de deploy/seed |
 
-O job Frontend (telas e arquivo local) executa npm ci, 41 testes e npm run build (incluindo TypeScript), usando frontend/package-lock.json. Os testes novos devem usar arquivos fictícios; nunca anexar foto real a Actions ou artefatos.
+O nome do job frontend é histórico, mas sua suíte atual tem **91 testes em nove arquivos**: perfis/rotas, SHA-256, Phantom controlada, preparação/assinatura/envio e conferência, referências de consulta, comparação e relatório PDF. A contagem foi reproduzida nesta revisão, não é uma quantidade fixa no workflow.
 
-## Reproduzir o legado (opcional)
+Os testes de assinatura usam chaves efêmeras e mocks de carteira/RPC. Não pedem fundos, segredos ou carteira real. Fixtures são fictícias. A suíte não substitui o teste do autor na Phantom real, os registros públicos de demonstração ou a confirmação de publicação.
 
-Em `contracts/`, usando o lockfile já versionado:
+O job EVM não é dependência de build da Vercel e não comprova Solana, carteira ou velocidade. Não alterar nomes de checks por motivo cosmético sem considerar eventual configuração administrativa de proteção; esta revisão preserva o workflow.
 
-```bash
-npm ci
-npm run compile
-npm test
-npm run coverage
-npm run coverage:check
-npm run compile -- --force
-npm run test:local
-```
+## Reproduzir
 
-A porta 8545 precisa estar livre para o último passo. Isso não instala nem inicia um app Solana.
+Frontend, em `frontend`: `npm ci`, `npm test`, `npm run build`.
 
-Proteção da main e exigência administrativa de checks não foram modificadas nesta consolidação. A implementação futura deve ser validada com os critérios da [spec](../SPEC.md) e do [plano de testes](PLANO_DE_TESTES.md).
+Legado opcional, em `contracts`: `npm ci`, `npm run compile`, `npm test`, `npm run coverage`, `npm run coverage:check`, `npm run compile -- --force`, `npm run test:local`. O teste local requer porta 8545 livre; não inicia o app Solana.
+
+O workflow não passa variáveis de carteira pública ou chave privada. Não anexar documentos pessoais a artefatos. Um status de Vercel bem-sucedido deve ser complementado com abertura do app público. [Revisão de entregas](REVISAO_DE_ENTREGAS.md).

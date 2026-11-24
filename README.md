@@ -1,6 +1,6 @@
 # PropertyChain
 
-Cadastro de impressão digital de documentos e consulta pública no celular. **MVP publicado na Vercel, com registro na Solana Devnet e assinatura pela Phantom.** O cartório e o histórico de titulares da demonstração são simulados.
+Cadastro de impressão digital de documentos e consulta pública no celular. **MVP publicado na Vercel, com registro na Solana Devnet e assinatura pela Phantom.** O cartório é simulado. Dados/histórico de titulares pertencem à referência fictícia; não são exibidos como dados da consulta pública atual.
 
 > Demonstração educacional, sem valor legal. O registro de um hash não comprova propriedade, autenticidade jurídica nem análise por cartório real.
 
@@ -8,16 +8,17 @@ Cadastro de impressão digital de documentos e consulta pública no celular. **M
 
 ## Comece aqui
 
-- **[SPEC.md](SPEC.md): especificação atual para implementar o projeto.**
+- **[SPEC.md](SPEC.md): especificação vigente do aplicativo.**
 - [AGENTS.md](AGENTS.md): como a IA deve trabalhar, uma etapa por vez e com pausas para teste.
 - [Comparação e alinhamento](docs/COMPARACAO_E_ALINHAMENTO.md): contexto histórico da mudança de escopo.
 - [Roadmap](ROADMAP.md) e [tarefas conciliadas](ISSUES.md).
+- [Revisão de estrutura e entregas — 24/11/2026](docs/REVISAO_DE_ENTREGAS.md): evidências, correções documentais e limites.
 
 ## Problema e primeira versão
 
 Proprietários e herdeiros têm dificuldade de apresentar documentos de imóveis antigos; compradores e corretores precisam conferir sua origem. Esta versão permite cadastrar o hash de um arquivo na Solana Devnet e consultar esse registro sem carteira, inclusive em outro celular.
 
-O app começa com uma entrada demonstrativa por perfil (proprietário, comprador/verificador ou cartório), sem autenticação. O percurso mantém quatro telas: **cadastrar documento → validação simulada pelo cartório → verificar documento → resultado**. Há um único botão principal em cada tela. O resultado distingue registro real na rede de testes, comparação exata de arquivo e informações fictícias.
+O app começa com uma entrada demonstrativa por perfil (proprietário, comprador/verificador ou cartório), sem autenticação. O percurso mantém quatro telas: **cadastrar documento → validação simulada pelo cartório → verificar documento → resultado**. Há um único botão principal em cada tela. O resultado distingue registro confirmado na rede de testes e comparação exata do arquivo, com avisos claros sobre o cartório simulado.
 
 O autor definiu meta de **1–5 segundos para consultar uma transação já confirmada**, quando possível. Assinar na carteira e confirmar uma nova transação são tempos separados, dependentes da pessoa e da rede; não há garantia de cinco segundos para o processo inteiro.
 
