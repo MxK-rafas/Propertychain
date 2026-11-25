@@ -66,12 +66,12 @@ export function MemoRegistration({ hash, account, onRegistered, onBusy, onPendin
   }
   return <section className="registration" aria-label="Registro na Solana Devnet">
     <h3>Registrar na rede de testes</h3>
-    <p>Primeiro, vamos conferir a operação e a taxa de teste, sem publicar o registro. Depois, você poderá aprovar na Phantom.</p>
-    <p>Somente o código do arquivo será publicado. O arquivo fica neste dispositivo. Não há transferência de SOL para terceiros; a carteira paga apenas a taxa da rede Devnet.</p>
+    <p>Revise o código e a taxa antes de aprovar na Phantom.</p>
+    <p>Só o código será publicado. A carteira paga a taxa em SOL de teste, sem transferências a terceiros.</p>
     {!hash && !pending && <p>Calcule o código do arquivo antes de revisar o registro.</p>}
     {!account && !pending && <p>Conecte a Phantom de teste antes de preparar.</p>}
     {draft && <dl className="facts"><div><dt>Rede</dt><dd>Solana Devnet</dd></div><div><dt>Operação</dt><dd>Registrar somente o código do arquivo, sem transferir saldo a terceiros.</dd></div><div><dt>Carteira que paga a taxa</dt><dd className="digest">{draft.payer}</dd></div><div><dt>Código do arquivo a registrar</dt><dd className="digest">{draft.hash}</dd></div><div><dt>Taxa estimada</dt><dd>{formatTestSol(draft.fee)}</dd></div></dl>}
-    {pending && <><p>Comprovante público da tentativa. O resultado pode estar pendente; este link não significa sucesso.</p><a className="text-link" href={explorerUrl(pending.signature)} target="_blank" rel="noreferrer">Acompanhar transação no explorador Devnet</a><output className="digest">{pending.signature}</output><span className="field-label">Código desta tentativa</span><output className="digest">{pending.hash}</output></>}
+    {pending && <><p>Envio ainda não confirmado. Confira o andamento neste link.</p><a className="text-link" href={explorerUrl(pending.signature)} target="_blank" rel="noreferrer">Acompanhar transação no explorador Devnet</a><output className="digest">{pending.signature}</output><span className="field-label">Código desta tentativa</span><output className="digest">{pending.hash}</output></>}
     <p role="status">{phase}</p>
     {error && <p role="alert" className="error-message">{error}</p>}
     <button className="primary" disabled={busy || (!pending && (!hash || !account))} onClick={run}>{busy ? 'Aguarde…' : pending ? 'Conferir registro existente' : draft ? 'Aprovar registro na Phantom' : 'Revisar registro'}</button>

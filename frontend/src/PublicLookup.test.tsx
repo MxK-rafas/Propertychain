@@ -78,7 +78,7 @@ describe('Consulta pública aberta por assinatura, sem carteira', () => {
     expect(screen.getByText('Não identificado pelo app.')).toBeVisible();
 
     expect(screen.getByText(/Nenhum cartório real analisou/)).toBeVisible();
-    expect(screen.getByText(/não comprova a autenticidade/)).toBeVisible();
+    expect(screen.getByText(/não comprova autenticidade/)).toBeVisible();
     expect(screen.queryByText('Maria Oliveira')).not.toBeInTheDocument();
     expect(window.location.hash).toBe(lookupFragment(tx, 'resultado'));
     expect(screen.getByText('ETAPA 4 DE 4')).toBeVisible();

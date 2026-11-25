@@ -96,12 +96,12 @@ export function PreparationPanel({ file, wallet = false, onRegistered, onBusy, o
   }
   return <section className="preparation" aria-label="Preparação do documento">
     <h3>Código do arquivo</h3>
-    <p>Vamos calcular um código que muda quando o arquivo muda. Ele permite comparar cópias; não comprova autenticidade ou propriedade.</p>
+    <p>O código (hash) identifica o arquivo e permite comparar cópias.</p>
     <button className="secondary-action" disabled={hashBusy || registrationBusy || (wallet && !!readPending())} onClick={calculate}>{hashBusy ? 'Calculando…' : 'Calcular código do arquivo'}</button>
-    <div aria-live="polite">{digest && <><span className="field-label">Código calculado neste aparelho (SHA-256)</span><output className="digest">{digest}</output><p>O mesmo arquivo produz o mesmo código. Outra foto do mesmo papel normalmente produz um código diferente.</p></>}</div>
+    <div aria-live="polite">{digest && <><span className="field-label">Código calculado neste aparelho (SHA-256)</span><output className="digest">{digest}</output><p>Outra foto do mesmo papel pode ter um código diferente.</p></>}</div>
     {hashError && <p role="alert" className="error-message">{hashError}</p>}
     {wallet && <div className="wallet-panel"><PhantomHelp /><NetworkHelp />
-      {account ? <><p role="status">Carteira conectada · rede do app: Solana Devnet</p><output className="digest">{account}</output><p>Isso identifica a rede do app; não altera a rede selecionada na interface da Phantom.</p><button className="secondary-action" disabled={registrationBusy} onClick={disconnect}>Desconectar Phantom</button></> : <button className="secondary-action" disabled={walletBusy || registrationBusy} onClick={connect}>{walletBusy ? 'Conectando e conferindo a Devnet…' : 'Conectar Phantom de teste'}</button>}
+      {account ? <><p role="status">Carteira conectada · rede do app: Solana Devnet</p><output className="digest">{account}</output><p>Confira também a rede de testes na Phantom.</p><button className="secondary-action" disabled={registrationBusy} onClick={disconnect}>Desconectar Phantom</button></> : <button className="secondary-action" disabled={walletBusy || registrationBusy} onClick={connect}>{walletBusy ? 'Conectando e conferindo a Devnet…' : 'Conectar Phantom de teste'}</button>}
       {walletError && <p role="alert" className="error-message">{walletError}</p>}
     </div>}
     {wallet ? <MemoRegistration hash={digest} account={account} onRegistered={onRegistered} onBusy={busyChanged} onPendingHash={onPendingHash} /> : <p>O cálculo é local; esta consulta ainda não busca transações na blockchain.</p>}

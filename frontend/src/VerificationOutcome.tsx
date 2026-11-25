@@ -34,7 +34,7 @@ export function VerificationOutcome({ result, actionLabel, onAction }: {
         <div><dt>Tipo de documento</dt><dd>Não identificado pelo app.</dd></div>
       </dl>
     </details>
-    <p className="result-limits">Nenhum cartório real analisou este documento. A comparação não comprova a autenticidade do conteúdo nem a propriedade do imóvel.</p>
+    <p className="result-limits">Nenhum cartório real analisou este documento. A comparação não comprova autenticidade ou propriedade.</p>
     <ReportDownload key={`${result.record.signature}:${result.checkedAt}`} result={result} />
   </>;
 }

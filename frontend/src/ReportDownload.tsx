@@ -40,7 +40,7 @@ export function ReportDownload({ result }: { result: VerificationResult }) {
 
   return <section className="report-download" aria-label="Relatório da consulta">
     {ready ? <>
-      <p role="status">PDF pronto neste aparelho. Se o download não aparecer, toque em Abrir PDF.</p>
+      <p role="status">PDF pronto. Se não baixou, toque em Abrir PDF.</p>
       <a className="text-link" href={ready} download="propertychain-relatorio-devnet.pdf">Baixar PDF novamente</a>
       <a className="text-link" href={ready} target="_blank" rel="noopener noreferrer">Abrir PDF</a>
     </> : <button className="text-button" disabled={busy} onClick={generate}>{busy ? 'Gerando PDF…' : 'Baixar relatório em PDF'}</button>}

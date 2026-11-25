@@ -36,3 +36,11 @@ O roteiro de regressão está no [plano de testes](PLANO_DE_TESTES.md). A abertu
 5. Conclua o exemplo e diga onde ainda ficou em dúvida. A issue fica aberta para esse aceite; a melhora com os amigos ainda não foi medida.
 
 A #61 permanece aberta até esse teste/aceite. Os aceites anteriores do MVP (#6) e PDF (#56) são preservados; a evolução não comprova autenticidade ou propriedade.
+
+## Revisão de linguagem — 25/11/2026
+
+Após o autor confirmar funcionamento no computador e no celular, novos testadores ainda tiveram dúvidas sobre a finalidade e relataram excesso de texto. A revisão explica na entrada: comparar um documento de imóvel com uma versão registrada para conferir se o arquivo mudou. Não promete autenticidade, titularidade ou transferência.
+
+Instruções curtas por estado; hash apresentado como código do arquivo. Passos, código calculado e explicações de Phantom/blockchain/cartório ficam em detalhes fechados, disponíveis por toque e teclado. O exemplo mantém as quatro etapas e os três casos; carteira/cartório simulados e comparação real permanecem explícitos. Taxa, rede, código e carteira na revisão de uma transação real continuam visíveis antes da aprovação.
+
+O aceite anterior do percurso completo foi informado pelo autor em 24/11/2026. A compreensão desta nova redação ainda precisa de feedback; testes técnicos não comprovam melhora de entendimento.
