@@ -33,7 +33,7 @@ describe('Demonstração do PropertyChain', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Cole o link completo');
     expect(screen.queryByRole('heading', { name: 'Resultado da verificação' })).not.toBeInTheDocument();
     await next('Trocar perfil');
-    expect(await screen.findByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: /Confira a cópia do documento/ })).toBeVisible();
   });
 
   it('mantém arquivo local sem rede e remove dados fictícios em todo o percurso', async () => {
@@ -88,7 +88,7 @@ describe('Demonstração do PropertyChain', () => {
     render(<App />);
     expect(screen.getByRole('heading', { name: 'Verificar documento' })).toBeVisible();
     window.location.hash = 'rota-inexistente';
-    await waitFor(() => expect(screen.getByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible());
+    await waitFor(() => expect(screen.getByRole('heading', { name: /Confira a cópia do documento/ })).toBeVisible());
   });
 
   it('não mantém seleção do arquivo após desmontar e abrir o app novamente', async () => {
@@ -111,12 +111,12 @@ describe('Entrada demonstrativa por perfil', () => {
     ['Cartório', /Validação pelo cartório/],
   ])('abre o caminho de %s sem autenticação', async (profile, destination) => {
     render(<App />);
-    expect(screen.getByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible();
+    expect(screen.getByRole('heading', { name: /Confira a cópia do documento/ })).toBeVisible();
     await userEvent.click(screen.getByRole('radio', { name: new RegExp(String(profile)) }));
     await next('Continuar com o perfil escolhido');
     expect(await screen.findByRole('heading', { name: destination as RegExp })).toBeVisible();
     await next('Trocar perfil');
-    expect(await screen.findByRole('heading', { name: /O arquivo é o mesmo/ })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: /Confira a cópia do documento/ })).toBeVisible();
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
   });
 });

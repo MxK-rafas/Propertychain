@@ -27,7 +27,7 @@ afterEach(() => { vi.unstubAllGlobals(); delete (window as { phantom?: unknown }
 const click = async (name: string) => userEvent.click(await screen.findByRole('button', { name }));
 async function prepare() {
   await click('Anexar documento fictício');
-  await click('Calcular hash do documento');
+  await click('Calcular código do arquivo');
   await click('Simular conexão com a Phantom');
 }
 async function toVerification() {
@@ -44,13 +44,19 @@ describe('Exemplo completo sem carteira pessoal', () => {
     await click('Experimentar com um exemplo');
     await screen.findByRole('heading', { name: 'Cadastro de exemplo.' });
     expect(screen.getByText('Documento que será anexado')).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'Para que serve a Phantom?' })).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'Por que usar blockchain?' })).toBeVisible();
+    expect(screen.getByText('Saiba mais: Phantom e simulação')).toBeVisible();
+    expect(screen.getByText(/A Phantom é a carteira que autoriza o cadastro real/)).not.toBeVisible();
+    await userEvent.click(screen.getByText('Saiba mais: Phantom e simulação'));
+    expect(screen.getByText(/A Phantom é a carteira que autoriza o cadastro real/)).toBeVisible();
+    await userEvent.click(screen.getByText('Saiba mais: Phantom e simulação'));
+    expect(screen.getByText('Saiba mais: blockchain')).toBeVisible();
     expect(readPdf).not.toHaveBeenCalled();
     await click('Anexar documento fictício');
     expect(screen.getByText('Documento fictício anexado')).toBeVisible();
     expect(screen.queryByText(sample.sha256)).not.toBeInTheDocument();
-    await click('Calcular hash do documento');
+    await click('Calcular código do arquivo');
+    expect(screen.getByText(sample.sha256)).not.toBeVisible();
+    await userEvent.click(screen.getByText('Ver código calculado (hash)'));
     expect(screen.getByText(sample.sha256)).toBeVisible();
     expect(lookupMemo).not.toHaveBeenCalled();
     await click('Simular conexão com a Phantom');
@@ -59,7 +65,7 @@ describe('Exemplo completo sem carteira pessoal', () => {
     await click('Simular aprovação e publicação');
     await screen.findByRole('button', { name: 'Ir para o cartório' });
     expect(screen.getByRole('link', { name: 'Ver registro de exemplo na Solana Devnet' })).toHaveAttribute('href', `https://explorer.solana.com/tx/${EXAMPLE_SIGNATURE}?cluster=devnet`);
-    expect(screen.getByText(/A publicação deste percurso foi simulada/)).toBeVisible();
+    expect(screen.getByText(/Publicação simulada, sem novo envio/)).toBeVisible();
     await click('Ir para o cartório');
     expect(screen.getByText('ETAPA 2 DE 4 · EXEMPLO GUIADO')).toBeVisible();
     expect(screen.queryByRole('button', { name: 'Ir para verificação' })).not.toBeInTheDocument();
@@ -113,10 +119,12 @@ describe('Exemplo completo sem carteira pessoal', () => {
   it('recusa fixture alterada no cálculo e permite anexar a cópia correta', async () => {
     readPdf.mockResolvedValueOnce({ ok: true, arrayBuffer: async () => new TextEncoder().encode('outro PDF').buffer });
     render(<ExampleGuide />);
-    await click('Anexar documento fictício'); await click('Calcular hash do documento');
+    await click('Anexar documento fictício'); await click('Calcular código do arquivo');
     expect(await screen.findByRole('alert')).toHaveTextContent('O PDF de exemplo não corresponde');
     expect(lookupMemo).not.toHaveBeenCalled();
-    await click('Tentar novamente'); await click('Calcular hash do documento');
+    await click('Tentar novamente'); await click('Calcular código do arquivo');
+    expect(screen.getByText(sample.sha256)).not.toBeVisible();
+    await userEvent.click(screen.getByText('Ver código calculado (hash)'));
     expect(screen.getByText(sample.sha256)).toBeVisible();
     expect(readPdf).toHaveBeenCalledTimes(2);
   });

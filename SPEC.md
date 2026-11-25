@@ -16,7 +16,7 @@ Registro de hash, consulta e comparação são reais na rede de testes. Cartóri
 
 Manter entrada com exemplo guiado e três perfis. O percurso de cadastro/consulta tem quatro etapas; o exemplo acompanha as mesmas quatro etapas, sem carteira pessoal. Cada etapa tem um objetivo e uma ação principal; escolher arquivo, calcular hash, conectar carteira, voltar, compartilhar e baixar PDF são controles de apoio. Computador e celular usam as mesmas rotas e ações. A navegação lateral é ocultada no layout estreito; o indicador de etapa e o botão de voltar continuam no celular.
 
-### Entrada — O arquivo é o mesmo?
+### Entrada — Confira a cópia do documento.
 
 Explicar primeiro o benefício: conferir se o arquivo recebido é o mesmo que foi registrado antes. Sem login ou autorização real. Quatro opções, com **Experimentar com um exemplo** selecionada por padrão. O botão principal tem esse mesmo texto no exemplo e **Continuar com o perfil escolhido** nos demais perfis.
 
@@ -34,7 +34,7 @@ URL inicial ou rota desconhecida mostra a entrada. Trocar perfil retorna à entr
 
 | Etapa | O que aparece | Ação principal |
 |---|---|---|
-| 1. Cadastro de exemplo | PDF fictício a anexar, hash real, carteira de exemplo e publicação ilustrada; explicações da Phantom e blockchain | Anexar documento fictício → Calcular hash do documento → Simular conexão com a Phantom → Simular aprovação e publicação → Ir para o cartório (uma ação por estado) |
+| 1. Cadastro de exemplo | PDF fictício a anexar, hash real, carteira de exemplo e publicação ilustrada; explicações da Phantom e blockchain | Anexar documento fictício → Calcular código do arquivo → Simular conexão com a Phantom → Simular aprovação e publicação → Ir para o cartório (uma ação por estado) |
 | 2. O papel do cartório | Papel de avaliar a veracidade e decidir pela validação; aprovação visual explicitamente simulada | Simular análise do cartório → Ir para verificação |
 | 3. Verificar documento | Registro já existente; seleção de mesmo arquivo, arquivo diferente ou sem arquivo | Verificar documento → etapa 4 |
 | 4. Resultado da verificação | Resultado real da consulta, comparação, comprovante público, detalhes e relatório PDF | Testar outro caso → etapa 3; Concluir exemplo é secundário |
@@ -180,3 +180,11 @@ A preparação do pitch foi solicitada para quinta-feira, 26/11/2026, e está na
 | 6. Publicação e revisão | Concluída | HTTPS público, testes em dois formatos e aceite do autor na #6 |
 
 A evolução de PDF foi publicada no [PR #57](https://github.com/MxK-rafas/Propertychain/pull/57) e aceita na [#56](https://github.com/MxK-rafas/Propertychain/issues/56). A [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md) separa testes automatizados, consulta pública e aceites manuais. As etapas concluídas não prometem ausência de bugs ou prontidão para operação imobiliária em produção.
+
+## Revisão de linguagem — 25/11/2026
+
+Após o autor confirmar funcionamento no computador e no celular, novos testadores ainda tiveram dúvidas sobre a finalidade e relataram excesso de texto. A revisão explica na entrada: comparar um documento de imóvel com uma versão registrada para conferir se o arquivo mudou. Não promete autenticidade, titularidade ou transferência.
+
+Instruções curtas por estado; hash apresentado como código do arquivo. Passos, código calculado e explicações de Phantom/blockchain/cartório ficam em detalhes fechados, disponíveis por toque e teclado. O exemplo mantém as quatro etapas e os três casos; carteira/cartório simulados e comparação real permanecem explícitos. Taxa, rede, código e carteira na revisão de uma transação real continuam visíveis antes da aprovação.
+
+O aceite anterior do percurso completo foi informado pelo autor em 24/11/2026. A compreensão desta nova redação ainda precisa de feedback; testes técnicos não comprovam melhora de entendimento.

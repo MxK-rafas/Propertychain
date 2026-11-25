@@ -14,18 +14,18 @@ type RegistrationStep = 0 | 1 | 2 | 3 | 4;
 type Comparison = VerificationResult['comparison'];
 const stages = ['Cadastro', 'Cartório', 'Verificação', 'Resultado'];
 const titles = ['Cadastro de exemplo.', 'O papel do cartório.', 'Verificar documento', 'Resultado da verificação'];
-const registrationActions = ['Anexar documento fictício', 'Calcular hash do documento', 'Simular conexão com a Phantom', 'Simular aprovação e publicação', 'Ir para o cartório'];
+const registrationActions = ['Anexar documento fictício', 'Calcular código do arquivo', 'Simular conexão com a Phantom', 'Simular aprovação e publicação', 'Ir para o cartório'];
 const registrationText = [
-  'Primeiro, vamos anexar um PDF fictício ao exemplo. Depois, calcularemos seu código, conectaremos uma carteira de exemplo e mostraremos como seria a publicação na Solana.',
-  'O PDF foi anexado ao exemplo. Agora, vamos calcular seu hash: um código que identifica exatamente este arquivo. O cálculo acontece neste aparelho.',
-  'O hash está pronto. No cadastro real, o próximo passo é conectar a carteira digital Phantom. Aqui, a conexão será apenas simulada, sem abrir ou instalar carteira.',
-  'A carteira de exemplo está conectada por simulação. Revise o hash abaixo. Vamos representar sua aprovação e a publicação na blockchain Solana, sem assinar ou enviar nada.',
-  'A publicação foi representada com um registro fictício que já existe na Solana Devnet. Conferimos esse registro de verdade; nenhum novo cadastro foi enviado por você.',
+  'Veja como conferir se uma cópia é igual ao arquivo registrado. Comece anexando o PDF de exemplo.',
+  'PDF anexado. Calcule seu código (hash) para comparar outras cópias depois.',
+  'Código pronto. A Phantom autoriza o cadastro real. Aqui, vamos apenas simular a conexão.',
+  'Conexão simulada. Agora, simule a autorização para registrar o código na Solana.',
+  'Exemplo de publicação concluído. Usamos um registro existente; você não enviou uma transação.',
 ];
 const cases: { id: Comparison; name: string; description: string }[] = [
-  { id: 'match', name: 'Com o mesmo arquivo', description: 'Usar a cópia exata do PDF anexado no cadastro.' },
-  { id: 'different', name: 'Com um arquivo diferente', description: 'Fazer uma pequena alteração em uma cópia do PDF, apenas na memória deste aparelho.' },
-  { id: 'none', name: 'Sem arquivo', description: 'Localizar o registro, sem comparar uma cópia digital.' },
+  { id: 'match', name: 'Com o mesmo arquivo', description: 'Comparar o PDF original.' },
+  { id: 'different', name: 'Com um arquivo diferente', description: 'Comparar uma cópia alterada.' },
+  { id: 'none', name: 'Sem arquivo', description: 'Consultar apenas o registro.' },
 ];
 
 export function ExampleGuide() {
@@ -146,52 +146,51 @@ export function ExampleGuide() {
   }
 
   return <section ref={root} className="screen-enter example-guide" aria-label="Exemplo guiado sem carteira">
-    <span className="role">ETAPA {stage} DE 4 · EXEMPLO GUIADO</span>
+    <span className="role">ETAPA {stage} DE 4 · EXEMPLO GUIADO</span><p className="example-scope">Carteira e cartório simulados · comparação real</p>
     <ol className="example-stages" aria-label="Etapas do exemplo">{stages.map((name, i) => <li key={name} aria-current={stage === i + 1 ? 'step' : undefined}><span>{i + 1}</span>{name}</li>)}</ol>
     <h1 className="screen-title" ref={heading} tabIndex={-1}>{titles[stage - 1]}</h1>
     <p className="screen-description">{stage === 1 ? registrationText[registrationStep] : stage === 2
-      ? 'Em um serviço real, o cartório avaliaria a veracidade do documento e, após a análise, poderia validá-lo. Vamos representar essa avaliação com o documento fictício.'
-      : stage === 3 ? 'Agora você vai consultar um registro já publicado na Solana e comparar uma cópia. Escolha um dos três casos abaixo, sem conectar carteira.'
-      : 'Veja o que a consulta encontrou e baixe o relatório desta verificação. O resultado abaixo vem da leitura real do registro de exemplo na rede de testes.'}</p>
+      ? 'O cartório analisaria o documento antes de validá-lo. Aqui, essa análise é simulada.'
+      : stage === 3 ? 'Escolha uma cópia para comparar com o registro existente. Não precisa de carteira.'
+      : 'Confira a comparação e baixe o relatório.'}</p>
 
     {stage !== 4 && stage !== 3 && <button className="primary" disabled={busy} onClick={primaryAction}>{busy ? 'Aguarde…' : error ? 'Tentar novamente' : primaryLabel}</button>}
-    {busy && <div className="learning-card"><p role="status">{activity}</p><p>Você não precisa instalar carteira, obter créditos de teste ou aprovar uma transação.</p></div>}
+    {busy && <div className="learning-card"><p role="status">{activity}</p></div>}
     {error && <><p role="alert" className="error-message">{error}</p><a className="text-link" href="#consulta">Consultar outro registro</a></>}
 
     {stage === 1 && <>
-      {digest && <div className="learning-card"><strong>Hash calculado neste aparelho (SHA-256)</strong><output className="digest">{digest}</output><p>O mesmo arquivo produz o mesmo código. Duas fotos diferentes do mesmo papel normalmente não.</p></div>}
+      {digest && <details className="learning-help"><summary>Ver código calculado (hash)</summary><output className="digest">{digest}</output><p>Outra foto do mesmo papel pode gerar um código diferente.</p></details>}
       {registrationStep >= 3 && <p className="status-chip">Carteira de exemplo conectada — simulação</p>}
-      {registered && <div className="learning-card"><a className="text-link" href={explorerUrl(registered.signature)} target="_blank" rel="noreferrer">Ver registro de exemplo na Solana Devnet</a><p role="status">Registro existente conferido. A publicação deste percurso foi simulada; nenhuma transação nova foi enviada.</p></div>}
+      {registered && <div className="learning-card"><a className="text-link" href={explorerUrl(registered.signature)} target="_blank" rel="noreferrer">Ver registro de exemplo na Solana Devnet</a><p role="status">Registro existente conferido. Publicação simulada, sem novo envio.</p></div>}
       <div className="learning-card example-document">
         <strong>{registrationStep === 0 ? 'Documento que será anexado' : 'Documento fictício anexado'}</strong>
-        <p>documento-ficticio.pdf · PDF de exemplo</p><p>Dados inteiramente fictícios. Seu documento pessoal não será solicitado.</p>
+        <p>documento-ficticio.pdf · sem dados reais</p>
         <a className="text-link" href={samplePdf} target="_blank" rel="noreferrer">Abrir o PDF fictício</a>
       </div>
-      <ol className="example-process" aria-label="Ações do cadastro de exemplo">
+      <details className="learning-help"><summary>Ver passos do cadastro</summary><ol className="example-process" aria-label="Ações do cadastro de exemplo">
         {['Anexar o documento fictício', 'Calcular o hash no aparelho', 'Conectar a carteira de exemplo', 'Aprovar e publicar na Solana'].map((text, i) => <li key={text} className={registrationStep > i ? 'complete' : registrationStep === i ? 'current' : ''}><span>{i + 1}</span><div><strong>{text}</strong><small>{i < 2 ? registrationStep > i ? 'Feito neste aparelho' : 'Ação local' : registrationStep > i ? 'Simulação concluída' : 'Será apenas simulado'}</small></div></li>)}
-      </ol>
-      <div className="learning-card"><h2>Para que serve a Phantom?</h2><p>A Phantom é uma carteira digital. No cadastro real, você a conecta para identificar a carteira que autorizará o registro. Depois, revisa o hash e a taxa e aprova a operação na própria Phantom. Conectar a carteira, por si só, não publica nada.</p><p>A publicação real usa SOL de teste para pagar a taxa da Solana Devnet, sem dinheiro real. Neste exemplo, a carteira e sua aprovação são simuladas: não é preciso instalar a Phantom nem ter saldo.</p><p>O PropertyChain nunca pede sua frase de recuperação ou chave privada.</p></div>
-      <div className="learning-card"><h2>Por que usar blockchain?</h2><p>A blockchain Solana permite que outras pessoas consultem o código registrado. Publicamos o hash, e não o PDF. Depois, esse código pode ser comparado com o de outra cópia do arquivo.</p><p>Para este exemplo, usaremos um registro que já existe na Solana Devnet, a rede de testes. O cadastro real só envia um novo registro após sua aprovação na Phantom.</p></div>
+      </ol></details>
+      <details className="learning-help"><summary>Saiba mais: Phantom e simulação</summary><p>A Phantom é a carteira que autoriza o cadastro real. Conectar não publica nada: é preciso revisar e aprovar a operação.</p><p>Aqui, conexão e publicação são simuladas. Consultamos um registro existente, sem instalar carteira ou pagar.</p><p>No cadastro real, a taxa usa SOL de teste. Nunca pedimos frase de recuperação ou chave privada.</p></details>
       <NetworkHelp />
     </>}
 
     {stage === 2 && <>
-      <div className="comparison-card"><h2>{validated ? 'Documento fictício validado — simulação' : 'Aguardando análise de exemplo'}</h2><p>{validated ? 'Esta aprovação mostra apenas como seria a etapa do cartório no fluxo proposto.' : 'Use o botão para representar a análise e a validação do documento de exemplo.'}</p></div>
-      <div className="learning-card"><strong>Documento em avaliação: PDF fictício do exemplo</strong><p>Em uma análise real, o cartório precisaria conferir os dados, a origem e a veracidade do documento antes de decidir pela validação.</p><ol><li>Receber e examinar o documento.</li><li>Avaliar a veracidade das informações.</li><li>Decidir se pode validar o documento.</li></ol></div>
-      <p className="result-limits">Nenhum cartório real recebeu ou analisou este PDF. A análise e a validação são somente visuais; não criam uma aprovação na blockchain nem comprovam propriedade.</p>
+      <div className="comparison-card"><h2>{validated ? 'Documento fictício validado — simulação' : 'Aguardando análise de exemplo'}</h2><p>{validated ? 'Aprovação ilustrativa, sem valor legal.' : 'Toque no botão para simular a análise.'}</p></div>
+      <details className="learning-help"><summary>Saiba mais: papel do cartório</summary><p>No fluxo proposto, o cartório examinaria o documento e sua origem antes de decidir pela validação. Registrar um código não substitui essa análise.</p></details>
+      <p className="result-limits">Nenhum cartório real recebeu ou analisou este PDF.</p>
     </>}
 
     {stage === 3 && <>
       <fieldset className="profile-options example-cases" disabled={busy}><legend>Qual caso você quer verificar?</legend>{cases.map(item => <label className="profile-option" key={item.id}><input type="radio" name="example-case" value={item.id} checked={selectedCase === item.id} onChange={() => { setSelectedCase(item.id); setResult(null); setError(''); }} /><span><strong>{item.name}</strong><small>{item.description}</small></span></label>)}</fieldset>
       <button className="primary" disabled={busy} onClick={verify}>{busy ? 'Consultando…' : error ? 'Tentar novamente' : 'Verificar documento'}</button>
-      <p className="file-help">{selectedCase === 'none' ? 'Nenhum arquivo será comparado. Encontrar o registro não confirma uma cópia que você tenha recebido.' : selectedCase === 'different' ? 'Uma cópia alterada será preparada somente na memória. O PDF original e o registro não mudam.' : 'O PDF anexado na etapa 1 será comparado com o hash lido na Solana Devnet.'}</p>
-      <div className="learning-card"><strong>Registro já publicado</strong><p>Usaremos o registro existente do PDF fictício. A etapa de cadastro apenas mostrou como ele seria criado.</p><a className="text-link" href={explorerUrl(EXAMPLE_SIGNATURE)} target="_blank" rel="noreferrer">Ver registro de exemplo na Solana Devnet</a></div>
+
+      <details className="learning-help"><summary>Ver registro usado no exemplo</summary><a className="text-link" href={explorerUrl(EXAMPLE_SIGNATURE)} target="_blank" rel="noreferrer">Ver registro de exemplo na Solana Devnet</a></details>
       <NetworkHelp />
     </>}
 
     {stage === 4 && result && <>
       <VerificationOutcome key={`${result.comparison}:${result.checkedAt}`} result={result} actionLabel="Testar outro caso" onAction={anotherCase} />
-      <p className="result-limits">A conexão da carteira, a nova publicação e a validação do cartório foram simuladas. O relatório descreve somente a consulta real ao registro de exemplo e a comparação escolhida.</p>
+      <p className="result-limits">O relatório descreve a comparação real, sem aprovação de cartório.</p>
       <a className="text-link" href="#entrada">Concluir exemplo</a>
     </>}
     {(stage === 2 || stage === 3) && <button className="text-button" disabled={busy} onClick={() => { setStage(stage === 2 ? 1 : 2); setError(''); }}>Voltar à etapa anterior</button>}

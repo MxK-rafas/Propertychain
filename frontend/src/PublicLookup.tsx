@@ -82,13 +82,13 @@ export function PublicLookup({ signature, showResult }: { signature: string; sho
           {showResult && resultForRoute ? <VerificationOutcome result={resultForRoute} actionLabel="Fazer nova consulta" onAction={() => {
             setFile(null); setResult(null); window.location.hash = lookupFragment(signature);
           }} /> : <form onSubmit={verify}>
-            <p className="screen-description">Cole o link de um registro e escolha sua cópia, se quiser comparar. Você não precisa de carteira para consultar.</p>
+            <p className="screen-description">Cole o link recebido e escolha sua cópia para comparar. Sem carteira.</p>
             <div className="reference-controls">
               <label htmlFor="lookup-reference">Cole o link do registro</label>
               <textarea id="lookup-reference" className="reference-input" rows={3} value={reference} disabled={busy} spellCheck={false} autoCapitalize="none" autoCorrect="off" aria-describedby="reference-help" onChange={event => {
                 setReference(event.target.value); setResult(null); setError('');
               }} />
-              <p id="reference-help" className="file-help">Use o link enviado por quem registrou o arquivo. Você também pode informar o código da transação.</p>
+              <p id="reference-help" className="file-help">Peça o link a quem cadastrou. Também aceitamos o código da transação.</p>
             </div>
             <div className="file-controls">
               <label className="file-label" htmlFor="lookup-file">Escolher arquivo para comparar (opcional)</label>

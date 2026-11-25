@@ -42,3 +42,5 @@ Relatórios PDF não são mais pendência de Depois: foram antecipados expressam
 Busca por matrícula/salt, atestação de titular, transferência de propriedade, painel/aprovação real de cartório, revogação, programa próprio e QR code do app continuam fora do recorte. Vídeo e capturas da #41 não foram entregues por esta revisão. `contracts/` e #39 preservam o legado Hardhat; não são dependência do frontend e não serão retomados por inferência.
 
 [ISSUES.md](ISSUES.md) diferencia o catálogo original, o estado no GitHub, as evoluções aceitas e a apresentação solicitada.
+
+Atualização de 25/11/2026: o autor confirmou funcionamento do guia no computador e celular. Novos relatos indicam dificuldade de compreensão e excesso de texto; revisão de linguagem autorizada e implementada, com instruções curtas e ajuda em detalhes. Aguardando feedback sobre a nova redação; ver a evolução #61.

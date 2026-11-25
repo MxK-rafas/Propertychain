@@ -28,7 +28,7 @@ describe('Download local do relatório', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Baixar relatório em PDF' }));
     expect(await screen.findByRole('link', { name: 'Abrir PDF' })).toHaveAttribute('href', 'blob:http://localhost/relatorio');
     expect(screen.getByRole('link', { name: 'Baixar PDF novamente' })).toHaveAttribute('download', 'propertychain-relatorio-devnet.pdf');
-    expect(screen.getByRole('status')).toHaveTextContent('Se o download não aparecer');
+    expect(screen.getByRole('status')).toHaveTextContent('Se não baixou');
     expect(createVerificationReport).toHaveBeenCalledExactlyOnceWith(result);
     expect(createUrl.mock.calls[0][0]).toHaveProperty('type', 'application/pdf');
     unmount();
