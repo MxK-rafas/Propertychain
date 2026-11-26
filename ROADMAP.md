@@ -1,6 +1,6 @@
 # Roadmap do PropertyChain
 
-Atualizado em 24/11/2026. A fonte operacional é [SPEC.md](SPEC.md), alinhada com o aplicativo público e a [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md). Não usar o estado de tarefas EVM antigas como fila de implementação Solana.
+Atualizado em 26/11/2026. A fonte operacional é [SPEC.md](SPEC.md), alinhada com o aplicativo público e a [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md). Não usar o estado de tarefas EVM antigas como fila de implementação Solana.
 
 ## Concluído e aceito
 
@@ -17,13 +17,11 @@ Atualizado em 24/11/2026. A fonte operacional é [SPEC.md](SPEC.md), alinhada co
 
 As seis etapas originais e seus critérios Pronto quando estão na spec. A medição registrada de dez leituras de um registro confirmado teve mediana de 0,45 s, máximo de 1,05 s e zero erros; não representa o tempo completo de uso, hash, assinatura ou confirmação. Ver [guia](frontend/README.md).
 
-## Prioridade atual — feedbacks e preparação da apresentação
+## Exemplo guiado e Demo Day
 
-- Revisar estrutura, spec e roadmap antes do pitch, conforme solicitado pelo autor em 24/11/2026. [Revisão #59](https://github.com/MxK-rafas/Propertychain/issues/59).
-- Preparar pitch, roteiro de demonstração e perguntas/respostas na [#7](https://github.com/MxK-rafas/Propertychain/issues/7), para quinta-feira, **26/11/2026**. Solicitação autorizada; material e ensaio ainda não concluídos nesta revisão.
-- O autor relatou que muitos testadores travaram na carteira, por não ter ou não conhecer Phantom/blockchain. Autorizou a evolução [#61](https://github.com/MxK-rafas/Propertychain/issues/61): exemplo guiado sem carteira, explicação passo a passo, ajuda e linguagem simplificada. Após testar a primeira versão, pediu aprofundar o percurso para cadastro (anexo/hash/carteira/publicação), análise de cartório, três casos de verificação e resultado com relatório. Carteira/publicação/análise são didáticas; hash e consultas são reais. Implementação e verificações técnicas documentadas no [registro da evolução](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md); issue aberta até o teste/aceite do autor. Sem contagem de participantes nem nova taxa de conclusão medida.
+O [exemplo guiado e a revisão de linguagem](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md) foram entregues na [#61](https://github.com/MxK-rafas/Propertychain/issues/61). O autor confirmou o funcionamento do percurso completo no computador e no celular. A próxima rodada com usuários vai avaliar a clareza da nova redação.
 
-A preparação do pitch é material de apresentação, sem nova funcionalidade ou alteração do aceite do MVP. Após o teste desta evolução, retomar o pitch. Outros itens de Depois/Um dia continuam sem autorização.
+A preparação para o Demo Day ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) foi entregue com dez slides e notas. O [roteiro e as respostas para a banca](docs/PITCH_DEMO_DAY.md) fazem parte da documentação. A realização da apresentação e o ensaio do autor ainda não foram confirmados.
 
 ## Depois — sem implementação autorizada
 
@@ -39,8 +37,6 @@ Relatórios PDF não são mais pendência de Depois: foram antecipados expressam
 
 ## Fora deste recorte e legado
 
-Busca por matrícula/salt, atestação de titular, transferência de propriedade, painel/aprovação real de cartório, revogação, programa próprio e QR code do app continuam fora do recorte. Vídeo e capturas da #41 não foram entregues por esta revisão. `contracts/` e #39 preservam o legado Hardhat; não são dependência do frontend e não serão retomados por inferência.
+Busca por matrícula/salt, atestação de titular, transferência de propriedade, painel/aprovação real de cartório, revogação, programa próprio e QR code do app continuam fora do recorte. O PDF do pitch oferece capturas para apresentar sem internet. O vídeo separado da [#41](https://github.com/MxK-rafas/Propertychain/issues/41) continua pendente. `contracts/` e #39 preservam o legado Hardhat; não são dependência do frontend e não serão retomados por inferência.
 
 [ISSUES.md](ISSUES.md) diferencia o catálogo original, o estado no GitHub, as evoluções aceitas e a apresentação solicitada.
-
-Atualização de 25/11/2026: o autor confirmou funcionamento do guia no computador e celular. Novos relatos indicam dificuldade de compreensão e excesso de texto; revisão de linguagem autorizada e implementada, com instruções curtas e ajuda em detalhes. Aguardando feedback sobre a nova redação; ver a evolução #61.

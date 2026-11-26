@@ -1,4 +1,4 @@
-> **Atualização de 24/11/2026:** o autor solicitou preparar o pitch para quinta-feira, 26/11/2026, após concluir o MVP e o relatório PDF. Em seguida, priorizou a revisão de estrutura/spec/roadmap antes de continuar o pitch. A preparação está autorizada; slides, roteiro final e ensaio ainda não estão concluídos nesta revisão. Ver [roadmap atual](../ROADMAP.md). O enquadramento anterior abaixo é histórico, não proibição dessa preparação expressamente solicitada.
+> **Atualização de 26/11/2026:** o material foi entregue com dez slides, notas e PDF. Veja o [roteiro do Demo Day](../docs/PITCH_DEMO_DAY.md) e as respostas para a banca. O registro documenta a preparação do material. O ensaio e a apresentação pelo autor ainda não foram confirmados.
 
 # [Apresentação autorizada] Pitch e preparação para a banca
 

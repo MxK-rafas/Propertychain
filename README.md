@@ -45,7 +45,9 @@ O [link do protótipo deste chat](https://documento-imovel-demo-rafael.equaltouc
 
 [Relatório de verificação em PDF — issue #56](https://github.com/MxK-rafas/Propertychain/issues/56): aprovado para implementação pelo autor. Geração local na tela de resultado, com hash, transação, comparação, data/hora da consulta e links públicos; sem anexar o documento original ou enviar nova transação. Entrega publicada e aceita pelo autor em 24/11/2026, após confirmar que o relatório funciona corretamente. [Como testar](frontend/README.md#relatório-pdf--evolução-56).
 
-[Feedbacks e exemplo guiado — issue #61](https://github.com/MxK-rafas/Propertychain/issues/61): percurso completo de cadastro → cartório → verificação → resultado, sem carteira pessoal, explicações da Phantom e blockchain e linguagem simples. [Detalhes e teste de aceite](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md). O aceite do autor desta evolução ainda está pendente.
+O [exemplo guiado e a revisão de linguagem](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md) foram entregues na [#61](https://github.com/MxK-rafas/Propertychain/issues/61). O autor confirmou o funcionamento do percurso completo no computador e no celular. A próxima rodada com usuários vai avaliar a clareza da nova redação.
+
+A preparação para o Demo Day ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) foi entregue com dez slides e notas. O [roteiro e as respostas para a banca](docs/PITCH_DEMO_DAY.md) fazem parte da documentação. A realização da apresentação e o ensaio do autor ainda não foram confirmados.
 
 ## Modelo fictício e documentos reais
 
