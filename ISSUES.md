@@ -1,14 +1,14 @@
 # Tarefas e estado do projeto
 
-Atualizado em 24/11/2026. A coluna de estado abaixo foi conferida no GitHub na base `843d6936fc067cd653dd70aa0db31d44bc89a032`; não confundir número de issue com ID do kit original.
+Atualizado em 26/11/2026. O catálogo abaixo registra o estado conferido no [GitHub](https://github.com/MxK-rafas/Propertychain/issues).
 
 ## Prioridades atuais
 
 - MVP aceito na [#6](https://github.com/MxK-rafas/Propertychain/issues/6), incluindo aceite informado do teste com foto real.
 - Relatório PDF entregue no PR #57 e aceito na [#56](https://github.com/MxK-rafas/Propertychain/issues/56), fechada. É uma evolução concluída, não uma proposta pendente de Depois.
 - [#59](https://github.com/MxK-rafas/Propertychain/issues/59): revisão de estrutura, spec e roadmap solicitada antes do pitch; evidências em [revisão de entregas](docs/REVISAO_DE_ENTREGAS.md).
-- [#7](https://github.com/MxK-rafas/Propertychain/issues/7): pitch solicitado para 26/11/2026, autorizado como material de apresentação. Slides e ensaio ainda não concluídos nesta revisão.
-- [#61](https://github.com/MxK-rafas/Propertychain/issues/61): autor relatou dificuldade de amigos com carteira e autorizou exemplo guiado sem instalação, explicações e linguagem simples. O autor pediu ampliar o exemplo para as quatro etapas do app: cadastro com anexo/hash/carteira/publicação ilustradas, cartório simulado, seleção dos três casos e resultado/relatório final. Implementação/testes em [registro da evolução](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md); aceite manual ainda pendente.
+- A preparação para o Demo Day ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) foi entregue com dez slides e notas. O [roteiro e as respostas para a banca](docs/PITCH_DEMO_DAY.md) fazem parte da documentação. A realização da apresentação e o ensaio do autor ainda não foram confirmados.
+- O [exemplo guiado e a revisão de linguagem](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md) foram entregues na [#61](https://github.com/MxK-rafas/Propertychain/issues/61). O autor confirmou o funcionamento do percurso completo no computador e no celular. A próxima rodada com usuários vai avaliar a clareza da nova redação.
 
 ## Catálogo original de 41 tarefas
 
@@ -52,7 +52,7 @@ Os arquivos em `issues/` preservam a conciliação de 12/11/2026 e as descriçõ
 | 32 | [#4](https://github.com/MxK-rafas/Propertychain/issues/4) | Atual | Fechada | [Publicar o frontend na Vercel](issues/32-deploy-do-frontend.md) |
 | 33 | [#5](https://github.com/MxK-rafas/Propertychain/issues/5) | Atual | Fechada | [Documentar a entrega conforme a spec atual](issues/33-documentacao-final.md) |
 | 34 | [#6](https://github.com/MxK-rafas/Propertychain/issues/6) | Atual | Fechada | [Modelo fictício e teste local com foto real](issues/34-cenario-de-demonstracao-e-dados-de-seed.md) |
-| 35 | [#7](https://github.com/MxK-rafas/Propertychain/issues/7) | Apresentação autorizada | Aberta | [Pitch e preparação para a banca](issues/35-pitch-e-preparacao-para-a-banca.md) |
+| 35 | [#7](https://github.com/MxK-rafas/Propertychain/issues/7) | Material de apresentação entregue | Fechada | [Pitch e preparação para a banca](issues/35-pitch-e-preparacao-para-a-banca.md) |
 | 36 | [#36](https://github.com/MxK-rafas/Propertychain/issues/36) | Documentação entregue | Fechada | [Retrospectiva e trabalhos futuros](issues/36-retrospectiva-e-trabalhos-futuros.md) |
 | 37 | [#37](https://github.com/MxK-rafas/Propertychain/issues/37) | Atual | Fechada | [Frontend: ler transação e Memo na Solana](issues/37-frontend-camada-de-leitura-e-eventos-da-blockchain.md) |
 | 38 | [#38](https://github.com/MxK-rafas/Propertychain/issues/38) | Atual | Fechada | [Avisos e linguagem do resultado](issues/38-frontend-aviso-legal-global-e-revisao-de-linguagem.md) |

@@ -1,6 +1,6 @@
 # PropertyChain — especificação atual
 
-Atualizada em 24/11/2026 com a evolução de feedbacks [#61](https://github.com/MxK-rafas/Propertychain/issues/61), sobre a main `41d633802e98c61751a347127ed2652a69b8e11e`, e os aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
+Atualizada em 26/11/2026 com a evolução de feedbacks [#61](https://github.com/MxK-rafas/Propertychain/issues/61), sobre a main `7943b9a1d15bf22572834187178d2638cc3d8976`, e os aceites das issues [#6](https://github.com/MxK-rafas/Propertychain/issues/6) e [#56](https://github.com/MxK-rafas/Propertychain/issues/56). Esta versão descreve o comportamento entregue. A [spec anterior](docs/historico/SPEC_ANTES_REVISAO_2026-11-24.md) preserva as decisões e os estados históricos; o canvas continua como fonte de hipóteses de negócio.
 
 ## Contexto
 
@@ -166,7 +166,9 @@ O relatório PDF saiu de Depois mediante aprovação e está entregue. Continuam
 
 Plano antes do código, uma etapa por vez e pausa para teste do autor, conforme [AGENTS.md](AGENTS.md). Explicar erros e testes em linguagem simples. Atualizar os documentos ativos, mantendo decisões anteriores em histórico. Não enviar mensagens a terceiros ou usar documentos reais em apresentações públicas sem instrução específica.
 
-A preparação do pitch foi solicitada para quinta-feira, 26/11/2026, e está na [issue #7](https://github.com/MxK-rafas/Propertychain/issues/7). O autor priorizou esta revisão antes de continuar o material; não declarar slides ou ensaio como concluídos. O autor relatou que muitos amigos travaram na carteira por desconhecer a tecnologia. A evolução #61 foi explicitamente autorizada: exemplo guiado, ajuda Phantom/blockchain e linguagem simples. A contagem de participantes e a melhora após a entrega ainda não foram medidas; o aceite desta evolução é separado dos aceites do MVP/PDF.
+A preparação para o Demo Day ([#7](https://github.com/MxK-rafas/Propertychain/issues/7)) foi entregue com dez slides e notas. O [roteiro e as respostas para a banca](docs/PITCH_DEMO_DAY.md) fazem parte da documentação. A realização da apresentação e o ensaio do autor ainda não foram confirmados.
+
+O [exemplo guiado e a revisão de linguagem](docs/FEEDBACKS_E_EXEMPLO_GUIADO.md) foram entregues na [#61](https://github.com/MxK-rafas/Propertychain/issues/61). O autor confirmou o funcionamento do percurso completo no computador e no celular. A próxima rodada com usuários vai avaliar a clareza da nova redação.
 
 ## Etapas e aceite
 
